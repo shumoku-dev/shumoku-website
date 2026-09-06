@@ -1,0 +1,163 @@
+---
+title: NetBox Integration
+description: Fetch devices and cables from NetBox DCIM/IPAM and auto-generate Shumoku diagrams
+---
+
+The NetBox plugin fetches devices, virtual machines, interfaces, and cables from [NetBox](https://netbox.dev/) DCIM/IPAM and builds a Shumoku topology from them.
+
+There are two ways to use it:
+
+- **Shumoku server (recommended)** — add NetBox as a data source and the topology is generated and kept in sync automatically. See the [server documentation](/docs/server) for setup.
+- **Library** — use the API client and converters from `shumoku-plugin-netbox` directly in your own code.
+
+<Callout type="info">
+The plugin is bundled with the Shumoku server — no separate installation is needed there. The rest of this page covers library usage.
+</Callout>
+
+## Installation
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npm install shumoku-plugin-netbox @shumoku/renderer-svg
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    yarn add shumoku-plugin-netbox @shumoku/renderer-svg
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm add shumoku-plugin-netbox @shumoku/renderer-svg
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bun add shumoku-plugin-netbox @shumoku/renderer-svg
+    ```
+  </Tab>
+</Tabs>
+
+## Quick Start
+
+Fetch data from NetBox, convert it to a `NetworkGraph`, and render:
+
+```typescript
+import { NetBoxClient, convertToNetworkGraph } from 'shumoku-plugin-netbox'
+import { renderGraphToSvg } from '@shumoku/renderer-svg'
+
+// Create a NetBox client
+const client = new NetBoxClient({
+  url: 'https://netbox.example.com',
+  token: 'your-api-token',
+})
+
+// Fetch devices, interfaces, and cables
+const { devices, interfaces, cables } = await client.fetchAll()
+
+// Convert to a Shumoku NetworkGraph and render
+const graph = convertToNetworkGraph(devices, interfaces, cables, { groupBy: 'site' })
+const svg = await renderGraphToSvg(graph)
+```
+
+To include virtual machines, use `client.fetchAllWithVMs()` together with `convertToNetworkGraphWithVMs()`. For interactive output, use `renderGraphToHtml` from `@shumoku/renderer-html` instead.
+
+## Grouping and Filtering
+
+Devices can be grouped into subgraphs by `tag`, `site`, `location`, `prefix`, or not at all (`none`), and filtered by site, tag, and role. When using the Shumoku server, these are configured in the UI as data-source options:
+
+| Option | Description |
+|--------|-------------|
+| `groupBy` | How to nest nodes: `tag` (default), `site`, `location`, `prefix`, `none` |
+| `siteFilter` | Include only these sites |
+| `tagFilter` | Include only these tags |
+| `roleFilter` | Include only these device roles |
+| `excludeRoleFilter` | Exclude these roles |
+| `excludeTagFilter` | Exclude these tags |
+
+When using the library, pass `groupBy` as a [converter option](/docs/npm/netbox/api#converteroptions) and use [query parameters](/docs/npm/netbox/api#queryparams) on the fetch methods for filtering.
+
+## NetBox Setup
+
+### Getting an API Token
+
+1. Log in to NetBox
+2. User menu (top right) → **API Tokens**
+3. Click **Add a token**
+4. Set the required permissions and create the token
+
+### Required Permissions
+
+For read-only access, the following permissions are needed:
+
+- `dcim.view_device`
+- `dcim.view_cable`
+- `dcim.view_site`
+- `dcim.view_interface`
+
+## Data Mapping
+
+NetBox data is converted to Shumoku as follows:
+
+| NetBox | Shumoku |
+|--------|---------|
+| Device | Node |
+| Cable | Link |
+| Site / Location / Tag / Prefix | Subgraph (depending on grouping) |
+| Interface | Port |
+| Device Role | Used for `type` inference |
+
+### Device Type Auto-Detection
+
+The Shumoku `type` is inferred from the NetBox device role (`useRoleForType` option, enabled by default). The mapping is defined in `ROLE_TO_TYPE`, which the plugin exports. Representative entries:
+
+| NetBox Device Role | Shumoku Type |
+|-------------------|--------------|
+| `router`, `core-router`, `border-router`, `edge-router` | `router` |
+| `switch`, `access-switch` | `l2-switch` |
+| `core-switch`, `distribution-switch` | `l3-switch` |
+| `firewall` | `firewall` |
+| `server`, `virtual-machine` | `server` |
+| `access-point`, `wireless-ap`, `ap` | `access-point` |
+| `load-balancer` | `load-balancer` |
+
+Roles without a mapping fall back to `generic`.
+
+## Troubleshooting
+
+### Connection Error
+
+- Verify the URL is correct
+- Verify the API token is valid
+- Check network connectivity
+
+### Self-Signed Certificate Error
+
+Pass `insecure: true` to the client for self-signed certificates:
+
+```typescript
+const client = new NetBoxClient({
+  url: 'https://localhost:1080',
+  token: 'your-api-token',
+  insecure: true, // Skip TLS certificate verification
+})
+```
+
+<Callout type="warn">
+`insecure: true` disables certificate validation. Use it only with self-signed certificates on trusted networks.
+</Callout>
+
+### Permission Error (403 Forbidden)
+
+- Verify the API token has the required permissions
+
+### Devices Not Showing
+
+- Check filter conditions (site, tag, role)
+- Verify devices and cables are properly registered in NetBox
+
+## Next Steps
+
+- [Visualization Features](/docs/npm/netbox/visualization) - How NetBox data maps to visuals: bandwidth, VLANs, cable types
+- [API Reference](/docs/npm/netbox/api) - Detailed library usage

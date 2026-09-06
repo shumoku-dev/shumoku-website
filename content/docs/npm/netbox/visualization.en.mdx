@@ -1,0 +1,179 @@
+---
+title: Visualization Features
+description: How NetBox data maps to Shumoku visuals
+---
+
+Data fetched from NetBox is mapped to visual properties of the diagram: link thickness, colors, line styles, node styles, and grouping.
+
+## Bandwidth Visualization
+
+Link speed is auto-detected from the NetBox interface `speed` field (kbps) and stored on the link as `rateBps`. The renderer maps the speed to stroke width on a continuous logarithmic scale — a 1G link renders as a thin line, a 10G link noticeably thicker, and a 100G trunk as a wide "pipe".
+
+When both endpoints report a speed, the source side's value takes precedence; links without any speed use the default width.
+
+---
+
+## VLAN Visualization
+
+VLAN information is collected from each interface's `tagged_vlans` and `untagged_vlan` and set on the link:
+
+- VLANs from both endpoint interfaces are merged into `link.vlan`
+- Each VLAN ID gets a deterministic color via `getVlanColor(vid)`
+
+---
+
+## Cable Type Color Coding
+
+With `colorByCableType: true` (the default), links are colored and styled based on the NetBox cable type. Fiber and copper render as solid lines, DAC/AOC as dashed lines:
+
+| Cable Type | Color | Line Style |
+|------------|-------|------------|
+| `smf`, `smf-os1` (Single Mode) | Yellow | Solid |
+| `smf-os2` | Amber | Solid |
+| `mmf-om3` | Green | Solid |
+| `mmf-om4` | Cyan | Solid |
+| `cat5e` | Gray | Solid |
+| `cat6` | Blue | Solid |
+| `cat6a` | Purple | Solid |
+| `cat7` | Pink | Solid |
+| `cat8` | Rose | Solid |
+| `dac-passive` | Orange | Dashed |
+| `dac-active` | Red | Dashed |
+| `aoc` | Pink | Dashed |
+
+If a cable has an explicit **color** set in NetBox, that color takes precedence over the type-based mapping. A cable's **label** and **length** are shown as the link label.
+
+---
+
+## Device Status Visualization
+
+With `colorByStatus: true`, node styles reflect the NetBox device status:
+
+| Status | Style |
+|--------|-------|
+| `active` | Default |
+| `planned` | Gray dashed border, semi-transparent |
+| `staged` | Yellow background, amber border |
+| `failed` | Red background, red border |
+| `offline` | Gray background, semi-transparent |
+| `inventory` | Blue background, dashed border |
+| `decommissioning` | Orange background, dashed border |
+
+---
+
+## Grouping Options
+
+The `groupBy` converter option controls how devices are nested into subgraphs:
+
+| Value | Description |
+|-------|-------------|
+| `tag` | Group by NetBox tag (default). Tags map to hierarchy levels via `DEFAULT_TAG_MAPPING` |
+| `site` | Group by site |
+| `location` | Group by location (falls back to site) |
+| `prefix` | Group by the /16 network of the device's primary IP |
+| `none` | No grouping |
+
+---
+
+## Virtual Machines
+
+When VMs are included (`convertToNetworkGraphWithVMs` with `includeVMs: true`):
+
+- VMs render as server nodes with a **dashed border**
+- The label shows the VM name, primary IP, and specs (vCPU / memory) when available
+- With `groupVMsByCluster: true`, VMs are nested into dashed subgraphs per cluster
+
+---
+
+## Legend
+
+Display a legend on the diagram with the `legend` option:
+
+```typescript
+// Simple enable
+const graph = convertToNetworkGraph(devices, interfaces, cables, {
+  legend: true,
+})
+
+// Customize
+const graph = convertToNetworkGraph(devices, interfaces, cables, {
+  legend: {
+    enabled: true,
+    position: 'top-right',
+    showDeviceTypes: true,
+    showBandwidth: true,
+    showCableTypes: true,
+    showVlans: false,
+  },
+})
+```
+
+### Legend Options
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| `enabled` | Show legend | `true` |
+| `position` | `top-left`, `top-right`, `bottom-left`, `bottom-right` | `top-right` |
+| `showDeviceTypes` | Show device type icons | `true` |
+| `showBandwidth` | Show bandwidth indicators | `true` |
+| `showCableTypes` | Show cable type colors | `true` |
+| `showVlans` | Show VLAN colors | `false` |
+
+---
+
+## Hierarchical Output
+
+Multi-site networks can be split into hierarchical YAML with `convertToHierarchicalYaml`:
+
+```typescript
+import { convertToHierarchicalYaml } from 'shumoku-plugin-netbox'
+
+const result = convertToHierarchicalYaml(deviceResp, interfaceResp, cableResp, {
+  hierarchyDepth: 'location', // 'site' | 'location' | 'rack'
+  fileBasePath: './',
+})
+
+console.log(result.main)       // Content of main.yaml
+console.log(result.files)      // Map<locationId, yamlContent>
+console.log(result.crossLinks) // Cables crossing location boundaries
+```
+
+### Hierarchy Depth
+
+| `hierarchyDepth` | Description |
+|------------------|-------------|
+| `site` | Split files by site |
+| `location` | By location (default) |
+| `rack` | By rack (most granular) |
+
+### Output Example
+
+```yaml
+# main.yaml
+name: "Network Overview"
+description: "Hierarchical network topology"
+
+settings:
+  direction: TB
+
+subgraphs:
+  - id: tokyo-dc
+    label: "Tokyo Dc"
+    file: "./tokyo-dc.yaml"
+    style:
+      fill: "accent-blue"
+  - id: osaka-dc
+    label: "Osaka Dc"
+    file: "./osaka-dc.yaml"
+    style:
+      fill: "accent-green"
+
+links:
+  # Cross-site links reference devices directly
+  - from:
+      node: tokyo-router
+      port: wan1
+    to:
+      node: osaka-router
+      port: wan1
+```

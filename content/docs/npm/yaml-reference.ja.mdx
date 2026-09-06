@@ -1,0 +1,554 @@
+---
+title: YAML Reference
+description: ネットワーク図定義のための YAML 記法リファレンス
+---
+
+YAML 形式で使用可能なすべてのオプションのリファレンスです。
+
+<Callout type="info">
+使い方を学ぶには [基本的な図の作成](/docs/npm/basic-diagram) や [グループで整理する](/docs/npm/organizing-groups) をご覧ください。
+</Callout>
+
+## 基本構造
+
+```yaml
+name: "Network Diagram"
+description: "Optional description"
+
+settings:
+  # グラフ設定
+
+subgraphs:
+  # サブグラフ（グループ）定義
+
+nodes:
+  # ノード（機器）定義
+
+links:
+  # リンク（接続）定義
+```
+
+---
+
+## Settings
+
+```yaml
+settings:
+  direction: TB          # レイアウト方向
+  theme: light           # テーマ
+  legend: true           # 凡例を表示
+  nodeSpacing: 50        # ノード間隔
+  rankSpacing: 100       # 階層間隔
+  subgraphPadding: 20    # サブグラフ内余白
+  canvas:                # キャンバス設定
+    preset: A4
+    orientation: landscape
+    width: 1920
+    height: 1080
+    dpi: 150
+    fit: true
+    padding: 20
+```
+
+### direction
+| 値 | エイリアス | 説明 |
+|----|-----------|------|
+| `TB` | `top-bottom` | 上から下 |
+| `BT` | `bottom-top` | 下から上 |
+| `LR` | `left-right` | 左から右 |
+| `RL` | `right-left` | 右から左 |
+
+### theme
+| 値 | 説明 |
+|----|------|
+| `light` | ライトテーマ |
+| `dark` | ダークテーマ |
+
+### legend (凡例)
+凡例を表示します。帯域幅、デバイスタイプ、ケーブルタイプなどの視覚要素を説明します。
+
+```yaml
+# シンプル（デフォルト位置: 右上）
+legend: true
+
+# 詳細設定
+legend:
+  enabled: true
+  position: top-right      # 位置
+  showDeviceTypes: true    # デバイスタイプを表示
+  showBandwidth: true      # 帯域幅を表示
+  showCableTypes: true     # ケーブルタイプを表示
+  showVlans: true          # VLANを表示
+```
+
+| position | 説明 |
+|----------|------|
+| `top-left` | 左上 |
+| `top-right` | 右上（デフォルト） |
+| `bottom-left` | 左下 |
+| `bottom-right` | 右下 |
+
+### canvas.preset (用紙サイズ)
+`A0`, `A1`, `A2`, `A3`, `A4`, `B0`, `B1`, `B2`, `B3`, `B4`, `letter`, `legal`, `tabloid`
+
+### canvas.orientation
+| 値 | エイリアス | 説明 |
+|----|-----------|------|
+| `portrait` | `p` | 縦向き |
+| `landscape` | `l` | 横向き |
+
+---
+
+## Nodes
+
+```yaml
+nodes:
+  - id: router-1
+    label: "Router 1"
+    type: router
+    shape: rounded
+    parent: subgraph-id
+    rank: 1
+    vendor: yamaha
+    model: rtx3510
+    style:
+      fill: "#ffffff"
+      stroke: "#000000"
+      strokeWidth: 2
+      strokeDasharray: "5 5"
+      textColor: "#333333"
+      fontSize: 12
+      fontWeight: bold
+      opacity: 1.0
+```
+
+### label
+単一行または複数行:
+```yaml
+label: "Single line"
+
+label:
+  - "<b>Bold title</b>"
+  - "Line 2"
+  - "---"           # 区切り線
+  - "Line 3"
+```
+
+### type (デバイスタイプ)
+| 値 | エイリアス | 説明 |
+|----|-----------|------|
+| `router` | - | ルーター |
+| `l3-switch` | - | L3 スイッチ |
+| `l2-switch` | `switch` | L2 スイッチ |
+| `firewall` | - | ファイアウォール |
+| `load-balancer` | `lb` | ロードバランサー |
+| `server` | - | サーバー |
+| `access-point` | `ap` | アクセスポイント |
+| `cpe` | `onu`, `ont` | CPE（ONU / ONT） |
+| `console-server` | `terminal-server` | コンソールサーバー |
+| `cloud` | - | クラウド |
+| `internet` | - | インターネット |
+| `vpn` | - | VPN |
+| `database` | `db` | データベース |
+| `generic` | - | 汎用 |
+
+### shape (ノード形状)
+| 値 | エイリアス | 説明 |
+|----|-----------|------|
+| `rounded` | `round` | 角丸四角形 (デフォルト) |
+| `rect` | `rectangle` | 四角形 |
+| `circle` | - | 円 |
+| `diamond` | `rhombus` | ひし形 |
+| `hexagon` | - | 六角形 |
+| `cylinder` | `database` | 円柱 |
+| `stadium` | `pill` | スタジアム形 |
+| `trapezoid` | - | 台形 |
+
+### vendor / model (ベンダーアイコン)
+ハードウェアベンダーのアイコンを表示:
+```yaml
+vendor: yamaha
+model: rtx3510
+```
+
+クラウドベンダーの場合:
+```yaml
+vendor: aws
+service: ec2
+resource: instances
+```
+
+### ports (ポート)
+
+リンクの接続先を機器のポート単位で表したい場合に書きます。
+
+```yaml
+nodes:
+  - id: sw-1
+    label: "Switch 1"
+    type: l2-switch
+    ports:
+      - id: p1
+        label: "Gi1/0/1"
+        interfaceName: GigabitEthernet1/0/1
+```
+
+| フィールド | 説明 |
+|-----------|------|
+| `id` | リンクから参照する識別子。ノード内で一意 |
+| `label` | 図に表示される名前（`Gi1/0/1` など） |
+| `interfaceName` | OS / API 上の完全なインターフェース名 |
+| `identity` | 監視データとの同定キー（後述） |
+
+**リンクが参照したポートは自動生成されます。** 以下のように `ports` を書かなくても `p1` / `ge-0/0/1` は作られるので、`label` や `interfaceName`、`identity` を持たせたいときだけ明示的に書けば十分です。
+
+```yaml
+links:
+  - from: { node: fw-1, port: p1 }
+    to: { node: sw-1, port: ge-0/0/1 }
+```
+
+### identity (同定キー)
+
+**手で描いた機器を、監視システムが観測した同じ機器と結びつけるためのキー**です。Zabbix や Prometheus などのデータソースと併用するときに使います。
+
+```yaml
+nodes:
+  - id: fw-1
+    label: "Firewall"
+    type: firewall
+    identity:
+      mgmtIp: 10.0.0.1
+      chassisId: "aa:bb:cc:dd:ee:ff"
+      sysName: fw01.example.com
+      vendorIds:
+        zabbix-hostid: "10780"
+    ports:
+      - id: p1
+        label: "eth1/1"
+        identity:
+          ifName: GigabitEthernet1/0/1
+```
+
+| フィールド | 階層 | 説明 |
+|-----------|------|------|
+| `mgmtIp` | ノード | 管理 IP（v4 / v6 の文字列） |
+| `chassisId` | ノード | LLDP の chassisId（MAC またはベンダー文字列） |
+| `sysName` | ノード | SNMP の sysName |
+| `vendorIds` | ノード | データソース固有の ID（`zabbix-hostid` など） |
+| `ifName` | ポート | インターフェース名。ポートの主キー |
+| `ifIndex` | ポート | ifIndex。再起動で変わりうるため補助的 |
+| `mac` | ポート | インターフェースの MAC |
+
+**これを書かないと、手描きの機器は監視ホストに恒久的に結びつきません。** 名前の一致だけに頼ることになり、表示名を変えた時点で対応が切れます。1つでも書けば同定できます（`mgmtIp` が最も確実です）。
+
+<Callout type="warn">
+  `sysName` には**機器が自分で名乗っている値**を書いてください。運用上の表示名（「コアスイッチ1号機」など）を入れてはいけません。表示名は `label` に書きます。
+
+  データソースが報告する sysName と食い違う値を入れると、同じ機器が**別々の機器として二重に登録されます**。
+</Callout>
+
+---
+
+## Links
+
+```yaml
+links:
+  # シンプル形式
+  - from: router-1
+    to: switch-1
+
+  # ポート指定
+  - from:
+      node: router-1
+      port: eth0
+      ip: 192.168.1.1
+    to:
+      node: switch-1
+      port: ge-0/0/0
+
+  # フル指定
+  - id: link-1
+    from: router-1
+    to: switch-1
+    label: "10G Uplink"
+    type: solid
+    arrow: none
+    standard: 10GBASE-SR
+    redundancy: mlag
+    vlan: [10, 20, 30]
+    style:
+      stroke: "#2196F3"
+      strokeWidth: 2
+      strokeDasharray: "5 5"
+      opacity: 1.0
+      minLength: 100
+```
+
+### type (リンクタイプ)
+| 値 | エイリアス | 説明 |
+|----|-----------|------|
+| `solid` | - | 実線 (デフォルト) |
+| `dashed` | `dotted` | 破線 |
+| `thick` | - | 太線 |
+| `double` | - | 二重線 |
+| `invisible` | `hidden` | 非表示 |
+
+### arrow (矢印)
+| 値 | エイリアス | 説明 |
+|----|-----------|------|
+| `none` | - | 矢印なし |
+| `forward` | `->` | 順方向 |
+| `back` | `<-` | 逆方向 |
+| `both` | `<->` | 双方向 |
+
+### standard (リンク速度)
+リンクのイーサネット規格を指定します。速い規格ほど線が太く描画され、凡例を有効にすると使用中の規格ごとの太さサンプルが表示されます。
+
+```yaml
+links:
+  - from: router-1
+    to: switch-1
+    standard: 10GBASE-SR
+```
+
+| standard | 速度 |
+|----------|------|
+| `1000BASE-T`, `1000BASE-SX`, `1000BASE-LX` | 1G |
+| `2.5GBASE-T` / `5GBASE-T` | 2.5G / 5G |
+| `10GBASE-T`, `10GBASE-SR`, `10GBASE-LR` | 10G |
+| `25GBASE-SR`, `25GBASE-LR` | 25G |
+| `40GBASE-SR4`, `40GBASE-LR4` | 40G |
+| `100GBASE-SR4`, `100GBASE-LR4` | 100G |
+
+DAC / AOC ケーブル（`10GBASE-CR`, `25G-AOC` など）も指定できます。
+
+リンクレベルの `standard` は両端に適用されるショートハンドです。非対称リンクではエンドポイントごとに `module.standard` を指定でき、リンクレベルの値を上書きします：
+
+```yaml
+links:
+  - from:
+      node: switch-1
+      port: xe-0/0/1
+      module:
+        standard: 10GBASE-SR
+    to:
+      node: server-1
+      port: eth0
+      module:
+        standard: 10GBASE-T
+```
+
+### redundancy (冗長化タイプ)
+| 値 | エイリアス | 説明 |
+|----|-----------|------|
+| `ha` | `vrrp`, `hsrp`, `glbp`, `keepalive` | HA ペア |
+| `vc` | `virtual-chassis` | Virtual Chassis |
+| `vss` | - | VSS |
+| `vpc` | - | vPC |
+| `mlag` | `mclag` | MLAG |
+| `stack` | `stacking`, `irf` | スタック |
+
+### vlan
+リンクに関連付けられた VLAN を指定します。VLAN ID に基づいて色分けされます。
+
+```yaml
+# 単一 VLAN
+vlan: 10
+
+# 複数 VLAN（トランク）
+vlan: [10, 20, 30]
+```
+
+- 単一 VLAN: VLAN ID に基づいた色で表示
+- 複数 VLAN: トランクリンクとして表示、ラベルに VLAN 一覧を表示
+
+---
+
+## Subgraphs
+
+```yaml
+subgraphs:
+  - id: datacenter
+    label: "Data Center"
+    parent: null          # ルートレベル
+    direction: LR         # 内部レイアウト方向
+    vendor: aws
+    service: vpc
+    style:
+      fill: "#f0f8ff"
+      stroke: "#0072bc"
+      strokeWidth: 2
+      strokeDasharray: "5 5"
+      labelPosition: top
+      labelFontSize: 14
+      padding: 20
+      nodeSpacing: 50
+      rankSpacing: 100
+
+  - id: rack-1
+    label: "Rack 1"
+    parent: datacenter    # ネスト
+```
+
+### style.labelPosition
+| 値 | 説明 |
+|----|------|
+| `top` | 上部 |
+| `bottom` | 下部 |
+| `left` | 左側 |
+| `right` | 右側 |
+
+---
+
+## Hierarchical Diagrams (階層型ダイアグラム)
+
+複数のサイトや拠点を持つネットワークを、マルチファイル構成で管理できます。
+
+### 基本構造
+
+```yaml
+# main.yaml - 親ファイル
+name: "Multi-Site Network"
+
+subgraphs:
+  - id: headquarters
+    label: "Headquarters"
+    file: "./headquarters.yaml"   # 外部ファイル参照
+    style:
+      fill: "#e3f2fd"
+      stroke: "#1565c0"
+
+  - id: branch
+    label: "Branch Office"
+    file: "./branch.yaml"
+    style:
+      fill: "#e8f5e9"
+      stroke: "#2e7d32"
+
+links:
+  # サブグラフを跨ぐリンクはデバイスを直接参照
+  - from:
+      node: hq-router      # headquarters.yaml 内のデバイス
+      port: wan1
+    to:
+      node: branch-router  # branch.yaml 内のデバイス
+      port: wan1
+    label: "Site-to-Site VPN"
+    type: dashed
+```
+
+```yaml
+# headquarters.yaml - 子ファイル
+name: "Headquarters Network"
+
+nodes:
+  - id: hq-router
+    label: "HQ-Router"
+    type: router
+
+  - id: hq-switch
+    label: "HQ-Switch"
+    type: l3-switch
+
+links:
+  - from: { node: hq-router, port: lan1 }
+    to: { node: hq-switch, port: uplink }
+    standard: 10GBASE-SR
+```
+
+### file (外部ファイル参照)
+
+サブグラフに `file` 属性を指定すると、その内容を外部ファイルから読み込みます。
+
+```yaml
+subgraphs:
+  - id: site-tokyo
+    label: "Tokyo DC"
+    file: "./sites/tokyo.yaml"
+```
+
+### クロスサブグラフリンク
+
+異なるサブグラフに属するデバイス間のリンクは、デバイス名を直接指定します。
+パーサーが自動的にどのサブグラフに属するか検出し、子シートビューにエクスポートコネクタを生成します。
+
+```yaml
+links:
+  - from:
+      node: tokyo-router    # tokyo.yaml 内のデバイス
+      port: wan1
+    to:
+      node: osaka-router    # osaka.yaml 内のデバイス
+      port: wan1
+    label: "WAN Link"
+    standard: 10GBASE-SR
+```
+
+### シートナビゲーション
+
+階層型ダイアグラムでは、サブグラフをクリックして詳細シートに移動できます。
+各シートにはブレッドクラムナビゲーションが表示され、親シートに戻ることができます。
+
+---
+
+## 完全な例
+
+```yaml
+name: "Enterprise Network"
+description: "本社ネットワーク構成図"
+
+settings:
+  direction: TB
+  theme: light
+
+subgraphs:
+  - id: edge
+    label: "Edge Layer"
+    style:
+      fill: "#fff5f5"
+      stroke: "#d4a017"
+
+  - id: core
+    label: "Core Layer"
+    style:
+      fill: "#f0fff0"
+      stroke: "#228b22"
+
+nodes:
+  - id: rt-01
+    label:
+      - "<b>RT-01</b>"
+      - "192.168.1.1"
+    type: router
+    vendor: yamaha
+    model: rtx3510
+    parent: edge
+
+  - id: sw-core-01
+    label: "<b>SW-CORE-01</b>"
+    type: l3-switch
+    vendor: juniper
+    model: ex4100-24mp
+    parent: core
+
+links:
+  - from:
+      node: rt-01
+      port: lan1
+    to:
+      node: sw-core-01
+      port: ge-0/0/0
+    standard: 10GBASE-SR
+    arrow: none
+```
+
+---
+
+## ベンダーアイコン
+
+| ベンダー | 使用例 |
+|---------|--------|
+| Yamaha | `vendor: yamaha`, `model: rtx3510` |
+| Aruba | `vendor: aruba`, `service: access-switch` |
+| AWS | `vendor: aws`, `service: ec2`, `resource: instances` |

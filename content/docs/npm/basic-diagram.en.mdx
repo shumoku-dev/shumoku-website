@@ -1,0 +1,246 @@
+---
+title: Basic Diagrams
+description: Basics of nodes, links, and labels
+---
+
+Learn how to define nodes (devices) and links (connections), the fundamental elements of network diagrams.
+
+## Nodes
+
+Nodes represent network devices such as routers, switches, and servers.
+
+```yaml
+nodes:
+  - id: router-1          # Required: unique identifier
+    label: "Core Router"  # Required: display name
+    type: router          # Device type
+```
+
+### Device Types
+
+| type | Aliases | Description |
+|------|---------|-------------|
+| `router` | - | Router |
+| `l3-switch` | - | L3 Switch |
+| `l2-switch` | `switch` | L2 Switch |
+| `firewall` | - | Firewall |
+| `load-balancer` | `lb` | Load Balancer |
+| `server` | - | Server |
+| `access-point` | `ap` | Access Point |
+| `cpe` | `onu`, `ont` | CPE (ONU / ONT) |
+| `console-server` | `terminal-server` | Console Server |
+| `cloud` | - | Cloud |
+| `internet` | - | Internet |
+| `vpn` | - | VPN |
+| `database` | `db` | Database |
+| `generic` | - | Generic |
+
+### Multi-line Labels
+
+```yaml
+nodes:
+  - id: router-1
+    label:
+      - "<b>RT-01</b>"      # Bold
+      - "192.168.1.1"       # IP address
+      - "---"               # Separator line
+      - "Tokyo DC"          # Additional info
+```
+
+### Node Shapes
+
+```yaml
+nodes:
+  - id: db-1
+    label: "Database"
+    type: database
+    shape: cylinder    # Specify shape
+```
+
+| shape | Aliases | Description |
+|-------|---------|-------------|
+| `rounded` | `round` | Rounded rectangle (default) |
+| `rect` | `rectangle` | Rectangle |
+| `circle` | - | Circle |
+| `diamond` | `rhombus` | Diamond |
+| `hexagon` | - | Hexagon |
+| `cylinder` | `database` | Cylinder |
+| `stadium` | `pill` | Stadium shape |
+| `trapezoid` | - | Trapezoid |
+
+---
+
+## Links
+
+Links represent connections between devices.
+
+```yaml
+links:
+  # Simple format
+  - from: router-1
+    to: switch-1
+
+  # With port specification
+  - from:
+      node: router-1
+      port: eth0
+    to:
+      node: switch-1
+      port: ge-0/0/0
+```
+
+### Link Speed (standard)
+
+Specify the Ethernet standard of the link with `standard:`. The faster the standard, the thicker the line is drawn (the legend, when enabled, shows a line-thickness sample for each standard used).
+
+```yaml
+links:
+  - from: router-1
+    to: switch-1
+    standard: 10GBASE-T
+```
+
+Common values:
+
+| standard | Speed |
+|----------|-------|
+| `1000BASE-T` | 1G |
+| `10GBASE-T`, `10GBASE-SR` | 10G |
+| `25GBASE-SR` | 25G |
+| `40GBASE-SR4` | 40G |
+| `100GBASE-SR4`, `100GBASE-LR4` | 100G |
+
+### VLAN
+
+```yaml
+links:
+  - from: switch-1
+    to: switch-2
+    vlan: 100           # Single VLAN
+
+  - from: switch-1
+    to: switch-3
+    vlan: [10, 20, 30]  # Trunk (multiple VLANs)
+```
+
+### Link Types
+
+```yaml
+links:
+  - from: router-1
+    to: router-2
+    type: dashed        # Dashed line (for VPN, etc.)
+```
+
+| type | Aliases | Description |
+|------|---------|-------------|
+| `solid` | - | Solid line (default) |
+| `dashed` | `dotted` | Dashed line |
+| `thick` | - | Thick line |
+| `double` | - | Double line |
+| `invisible` | `hidden` | Hidden |
+
+### Arrows
+
+```yaml
+links:
+  - from: client
+    to: server
+    arrow: forward      # Forward arrow
+```
+
+| arrow | Aliases | Description |
+|-------|---------|-------------|
+| `none` | - | No arrow (default) |
+| `forward` | `->` | Forward |
+| `back` | `<-` | Backward |
+| `both` | `<->` | Bidirectional |
+
+### Redundancy Types
+
+Express HA pairs and stack configurations.
+
+```yaml
+links:
+  - from: router-1
+    to: router-2
+    redundancy: ha      # HA pair
+```
+
+| redundancy | Aliases | Description |
+|------------|---------|-------------|
+| `ha` | `vrrp`, `hsrp`, `glbp`, `keepalive` | HA pair |
+| `vc` | `virtual-chassis` | Virtual Chassis |
+| `vss` | - | VSS |
+| `vpc` | - | vPC |
+| `mlag` | `mclag` | MLAG |
+| `stack` | `stacking`, `irf` | Stack |
+
+---
+
+## Complete Example
+
+```yaml
+name: "Office Network"
+
+nodes:
+  - id: inet
+    label: "Internet"
+    type: internet
+
+  - id: router
+    label:
+      - "<b>Edge Router</b>"
+      - "203.0.113.1"
+    type: router
+
+  - id: fw
+    label: "Firewall"
+    type: firewall
+
+  - id: sw-core
+    label: "Core Switch"
+    type: l3-switch
+
+  - id: srv-web
+    label: "Web Server"
+    type: server
+
+  - id: srv-db
+    label: "Database"
+    type: database
+    shape: cylinder
+
+links:
+  - from: inet
+    to: router
+
+  - from: router
+    to: fw
+    standard: 1000BASE-T
+
+  - from: fw
+    to: sw-core
+    standard: 10GBASE-T
+
+  - from: sw-core
+    to: srv-web
+    standard: 1000BASE-T
+    vlan: 100
+
+  - from: sw-core
+    to: srv-db
+    standard: 10GBASE-T
+    vlan: 200
+```
+
+## Next Steps
+
+<Cards>
+  <Card title="Organizing with Groups" href="/docs/npm/organizing-groups">
+    Group devices with subgraphs
+  </Card>
+  <Card title="Vendor Icons" href="/docs/npm/vendor-icons">
+    Use Yamaha, AWS icons and more
+  </Card>
+</Cards>

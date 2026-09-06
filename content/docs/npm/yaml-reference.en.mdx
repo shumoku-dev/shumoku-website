@@ -1,0 +1,554 @@
+---
+title: YAML Reference
+description: YAML syntax reference for network diagram definitions
+---
+
+Reference for all options available in YAML format.
+
+<Callout type="info">
+To learn how to use it, see [Basic Diagrams](/docs/npm/basic-diagram) or [Organizing with Groups](/docs/npm/organizing-groups).
+</Callout>
+
+## Basic Structure
+
+```yaml
+name: "Network Diagram"
+description: "Optional description"
+
+settings:
+  # Graph settings
+
+subgraphs:
+  # Subgraph (group) definitions
+
+nodes:
+  # Node (device) definitions
+
+links:
+  # Link (connection) definitions
+```
+
+---
+
+## Settings
+
+```yaml
+settings:
+  direction: TB          # Layout direction
+  theme: light           # Theme
+  legend: true           # Show legend
+  nodeSpacing: 50        # Node spacing
+  rankSpacing: 100       # Rank spacing
+  subgraphPadding: 20    # Subgraph inner padding
+  canvas:                # Canvas settings
+    preset: A4
+    orientation: landscape
+    width: 1920
+    height: 1080
+    dpi: 150
+    fit: true
+    padding: 20
+```
+
+### direction
+| Value | Aliases | Description |
+|-------|---------|-------------|
+| `TB` | `top-bottom` | Top to bottom |
+| `BT` | `bottom-top` | Bottom to top |
+| `LR` | `left-right` | Left to right |
+| `RL` | `right-left` | Right to left |
+
+### theme
+| Value | Description |
+|-------|-------------|
+| `light` | Light theme |
+| `dark` | Dark theme |
+
+### legend
+Display a legend explaining visual elements like bandwidth, device types, and cable types.
+
+```yaml
+# Simple (default position: top-right)
+legend: true
+
+# Detailed settings
+legend:
+  enabled: true
+  position: top-right      # Position
+  showDeviceTypes: true    # Show device types
+  showBandwidth: true      # Show bandwidth
+  showCableTypes: true     # Show cable types
+  showVlans: true          # Show VLANs
+```
+
+| position | Description |
+|----------|-------------|
+| `top-left` | Top left |
+| `top-right` | Top right (default) |
+| `bottom-left` | Bottom left |
+| `bottom-right` | Bottom right |
+
+### canvas.preset (Paper Size)
+`A0`, `A1`, `A2`, `A3`, `A4`, `B0`, `B1`, `B2`, `B3`, `B4`, `letter`, `legal`, `tabloid`
+
+### canvas.orientation
+| Value | Aliases | Description |
+|-------|---------|-------------|
+| `portrait` | `p` | Portrait |
+| `landscape` | `l` | Landscape |
+
+---
+
+## Nodes
+
+```yaml
+nodes:
+  - id: router-1
+    label: "Router 1"
+    type: router
+    shape: rounded
+    parent: subgraph-id
+    rank: 1
+    vendor: yamaha
+    model: rtx3510
+    style:
+      fill: "#ffffff"
+      stroke: "#000000"
+      strokeWidth: 2
+      strokeDasharray: "5 5"
+      textColor: "#333333"
+      fontSize: 12
+      fontWeight: bold
+      opacity: 1.0
+```
+
+### label
+Single line or multi-line:
+```yaml
+label: "Single line"
+
+label:
+  - "<b>Bold title</b>"
+  - "Line 2"
+  - "---"           # Separator line
+  - "Line 3"
+```
+
+### type (Device Type)
+| Value | Aliases | Description |
+|-------|---------|-------------|
+| `router` | - | Router |
+| `l3-switch` | - | L3 Switch |
+| `l2-switch` | `switch` | L2 Switch |
+| `firewall` | - | Firewall |
+| `load-balancer` | `lb` | Load Balancer |
+| `server` | - | Server |
+| `access-point` | `ap` | Access Point |
+| `cpe` | `onu`, `ont` | CPE (ONU / ONT) |
+| `console-server` | `terminal-server` | Console Server |
+| `cloud` | - | Cloud |
+| `internet` | - | Internet |
+| `vpn` | - | VPN |
+| `database` | `db` | Database |
+| `generic` | - | Generic |
+
+### shape (Node Shape)
+| Value | Aliases | Description |
+|-------|---------|-------------|
+| `rounded` | `round` | Rounded rectangle (default) |
+| `rect` | `rectangle` | Rectangle |
+| `circle` | - | Circle |
+| `diamond` | `rhombus` | Diamond |
+| `hexagon` | - | Hexagon |
+| `cylinder` | `database` | Cylinder |
+| `stadium` | `pill` | Stadium shape |
+| `trapezoid` | - | Trapezoid |
+
+### vendor / model (Vendor Icons)
+Display hardware vendor icons:
+```yaml
+vendor: yamaha
+model: rtx3510
+```
+
+For cloud vendors:
+```yaml
+vendor: aws
+service: ec2
+resource: instances
+```
+
+### ports
+
+Declare ports when you want links to attach to a specific interface on the device.
+
+```yaml
+nodes:
+  - id: sw-1
+    label: "Switch 1"
+    type: l2-switch
+    ports:
+      - id: p1
+        label: "Gi1/0/1"
+        interfaceName: GigabitEthernet1/0/1
+```
+
+| Field | Description |
+|-------|-------------|
+| `id` | Identifier links refer to. Unique within the node |
+| `label` | Name shown on the diagram (e.g. `Gi1/0/1`) |
+| `interfaceName` | Full OS / API interface name |
+| `identity` | Keys used to match monitoring data (see below) |
+
+**Ports referenced by a link are created automatically.** The example below produces `p1` and `ge-0/0/1` without a `ports` block, so declare ports explicitly only when you want to give them a `label`, an `interfaceName` or an `identity`.
+
+```yaml
+links:
+  - from: { node: fw-1, port: p1 }
+    to: { node: sw-1, port: ge-0/0/1 }
+```
+
+### identity
+
+**Keys that tie a device you drew by hand to the same device a monitoring system observed.** Use these when combining hand-authored topology with a data source such as Zabbix or Prometheus.
+
+```yaml
+nodes:
+  - id: fw-1
+    label: "Firewall"
+    type: firewall
+    identity:
+      mgmtIp: 10.0.0.1
+      chassisId: "aa:bb:cc:dd:ee:ff"
+      sysName: fw01.example.com
+      vendorIds:
+        zabbix-hostid: "10780"
+    ports:
+      - id: p1
+        label: "eth1/1"
+        identity:
+          ifName: GigabitEthernet1/0/1
+```
+
+| Field | Level | Description |
+|-------|-------|-------------|
+| `mgmtIp` | node | Management IP (v4 or v6, as a string) |
+| `chassisId` | node | LLDP chassisId (MAC or vendor string) |
+| `sysName` | node | SNMP sysName |
+| `vendorIds` | node | Source-specific ids (e.g. `zabbix-hostid`) |
+| `ifName` | port | Interface name. The strong port key |
+| `ifIndex` | port | ifIndex. Weak — it can change across reboots |
+| `mac` | port | Interface MAC |
+
+**Without these, a hand-drawn device never binds durably to a monitoring host.** Matching falls back to names alone, which breaks the moment a display name changes. One key is enough; `mgmtIp` is the most reliable.
+
+<Callout type="warn">
+  `sysName` must be the name the device **reports about itself**. Do not put an operational display name ("Core Switch #1") here — that belongs in `label`.
+
+  A `sysName` that disagrees with what the data source reports registers the same device **twice, as two separate devices**.
+</Callout>
+
+---
+
+## Links
+
+```yaml
+links:
+  # Simple format
+  - from: router-1
+    to: switch-1
+
+  # With port specification
+  - from:
+      node: router-1
+      port: eth0
+      ip: 192.168.1.1
+    to:
+      node: switch-1
+      port: ge-0/0/0
+
+  # Full specification
+  - id: link-1
+    from: router-1
+    to: switch-1
+    label: "10G Uplink"
+    type: solid
+    arrow: none
+    standard: 10GBASE-SR
+    redundancy: mlag
+    vlan: [10, 20, 30]
+    style:
+      stroke: "#2196F3"
+      strokeWidth: 2
+      strokeDasharray: "5 5"
+      opacity: 1.0
+      minLength: 100
+```
+
+### type (Link Type)
+| Value | Aliases | Description |
+|-------|---------|-------------|
+| `solid` | - | Solid line (default) |
+| `dashed` | `dotted` | Dashed line |
+| `thick` | - | Thick line |
+| `double` | - | Double line |
+| `invisible` | `hidden` | Hidden |
+
+### arrow
+| Value | Aliases | Description |
+|-------|---------|-------------|
+| `none` | - | No arrow |
+| `forward` | `->` | Forward |
+| `back` | `<-` | Backward |
+| `both` | `<->` | Bidirectional |
+
+### standard (Link Speed)
+Specify the Ethernet standard of the link. Faster standards are drawn with thicker lines, and the legend (when enabled) shows a thickness sample for each standard used.
+
+```yaml
+links:
+  - from: router-1
+    to: switch-1
+    standard: 10GBASE-SR
+```
+
+| standard | Speed |
+|----------|-------|
+| `1000BASE-T`, `1000BASE-SX`, `1000BASE-LX` | 1G |
+| `2.5GBASE-T` / `5GBASE-T` | 2.5G / 5G |
+| `10GBASE-T`, `10GBASE-SR`, `10GBASE-LR` | 10G |
+| `25GBASE-SR`, `25GBASE-LR` | 25G |
+| `40GBASE-SR4`, `40GBASE-LR4` | 40G |
+| `100GBASE-SR4`, `100GBASE-LR4` | 100G |
+
+DAC / AOC cable assemblies (`10GBASE-CR`, `25G-AOC`, etc.) are also accepted.
+
+Link-level `standard` is a shorthand applied to both endpoints. For asymmetric links, set `module.standard` per endpoint instead — it overrides the link-level value:
+
+```yaml
+links:
+  - from:
+      node: switch-1
+      port: xe-0/0/1
+      module:
+        standard: 10GBASE-SR
+    to:
+      node: server-1
+      port: eth0
+      module:
+        standard: 10GBASE-T
+```
+
+### redundancy (Redundancy Type)
+| Value | Aliases | Description |
+|-------|---------|-------------|
+| `ha` | `vrrp`, `hsrp`, `glbp`, `keepalive` | HA pair |
+| `vc` | `virtual-chassis` | Virtual Chassis |
+| `vss` | - | VSS |
+| `vpc` | - | vPC |
+| `mlag` | `mclag` | MLAG |
+| `stack` | `stacking`, `irf` | Stack |
+
+### vlan
+Specify VLANs associated with the link. Color-coded based on VLAN ID.
+
+```yaml
+# Single VLAN
+vlan: 10
+
+# Multiple VLANs (trunk)
+vlan: [10, 20, 30]
+```
+
+- Single VLAN: Displayed in color based on VLAN ID
+- Multiple VLANs: Displayed as trunk link with VLAN list in label
+
+---
+
+## Subgraphs
+
+```yaml
+subgraphs:
+  - id: datacenter
+    label: "Data Center"
+    parent: null          # Root level
+    direction: LR         # Internal layout direction
+    vendor: aws
+    service: vpc
+    style:
+      fill: "#f0f8ff"
+      stroke: "#0072bc"
+      strokeWidth: 2
+      strokeDasharray: "5 5"
+      labelPosition: top
+      labelFontSize: 14
+      padding: 20
+      nodeSpacing: 50
+      rankSpacing: 100
+
+  - id: rack-1
+    label: "Rack 1"
+    parent: datacenter    # Nested
+```
+
+### style.labelPosition
+| Value | Description |
+|-------|-------------|
+| `top` | Top |
+| `bottom` | Bottom |
+| `left` | Left |
+| `right` | Right |
+
+---
+
+## Hierarchical Diagrams
+
+Networks with multiple sites can be managed in multi-file configuration.
+
+### Basic Structure
+
+```yaml
+# main.yaml - Parent file
+name: "Multi-Site Network"
+
+subgraphs:
+  - id: headquarters
+    label: "Headquarters"
+    file: "./headquarters.yaml"   # External file reference
+    style:
+      fill: "#e3f2fd"
+      stroke: "#1565c0"
+
+  - id: branch
+    label: "Branch Office"
+    file: "./branch.yaml"
+    style:
+      fill: "#e8f5e9"
+      stroke: "#2e7d32"
+
+links:
+  # Links across subgraphs reference devices directly
+  - from:
+      node: hq-router      # Device in headquarters.yaml
+      port: wan1
+    to:
+      node: branch-router  # Device in branch.yaml
+      port: wan1
+    label: "Site-to-Site VPN"
+    type: dashed
+```
+
+```yaml
+# headquarters.yaml - Child file
+name: "Headquarters Network"
+
+nodes:
+  - id: hq-router
+    label: "HQ-Router"
+    type: router
+
+  - id: hq-switch
+    label: "HQ-Switch"
+    type: l3-switch
+
+links:
+  - from: { node: hq-router, port: lan1 }
+    to: { node: hq-switch, port: uplink }
+    standard: 10GBASE-SR
+```
+
+### file (External File Reference)
+
+Specifying the `file` attribute on a subgraph loads its content from an external file.
+
+```yaml
+subgraphs:
+  - id: site-tokyo
+    label: "Tokyo DC"
+    file: "./sites/tokyo.yaml"
+```
+
+### Cross-Subgraph Links
+
+Links between devices in different subgraphs are specified by device name directly.
+The parser automatically detects which subgraph each belongs to and generates export connectors in child sheet views.
+
+```yaml
+links:
+  - from:
+      node: tokyo-router    # Device in tokyo.yaml
+      port: wan1
+    to:
+      node: osaka-router    # Device in osaka.yaml
+      port: wan1
+    label: "WAN Link"
+    standard: 10GBASE-SR
+```
+
+### Sheet Navigation
+
+In hierarchical diagrams, click on a subgraph to navigate to its detail sheet.
+Each sheet displays breadcrumb navigation to return to parent sheets.
+
+---
+
+## Complete Example
+
+```yaml
+name: "Enterprise Network"
+description: "Headquarters network diagram"
+
+settings:
+  direction: TB
+  theme: light
+
+subgraphs:
+  - id: edge
+    label: "Edge Layer"
+    style:
+      fill: "#fff5f5"
+      stroke: "#d4a017"
+
+  - id: core
+    label: "Core Layer"
+    style:
+      fill: "#f0fff0"
+      stroke: "#228b22"
+
+nodes:
+  - id: rt-01
+    label:
+      - "<b>RT-01</b>"
+      - "192.168.1.1"
+    type: router
+    vendor: yamaha
+    model: rtx3510
+    parent: edge
+
+  - id: sw-core-01
+    label: "<b>SW-CORE-01</b>"
+    type: l3-switch
+    vendor: juniper
+    model: ex4100-24mp
+    parent: core
+
+links:
+  - from:
+      node: rt-01
+      port: lan1
+    to:
+      node: sw-core-01
+      port: ge-0/0/0
+    standard: 10GBASE-SR
+    arrow: none
+```
+
+---
+
+## Vendor Icons
+
+| Vendor | Example |
+|--------|---------|
+| Yamaha | `vendor: yamaha`, `model: rtx3510` |
+| Aruba | `vendor: aruba`, `service: access-switch` |
+| AWS | `vendor: aws`, `service: ec2`, `resource: instances` |

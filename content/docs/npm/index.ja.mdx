@@ -1,0 +1,129 @@
+---
+title: Getting Started
+description: Shumoku のインストールと最初のネットワーク図を作成
+---
+
+## Shumoku とは
+
+Shumoku は **Markdown でネットワーク構成図を作成**するためのライブラリです。
+
+- YAML でネットワークを定義 → SVG/HTML/PNG を生成
+- 900 以上のベンダーアイコン（Yamaha, Aruba, AWS, Juniper）
+- インタラクティブな HTML 出力（パン/ズーム、ツールチップ）
+- NetBox や独自 API との連携
+
+## Installation
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npm install shumoku
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    yarn add shumoku
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm add shumoku
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bun add shumoku
+    ```
+  </Tab>
+</Tabs>
+
+## Quick Start
+
+### 1. YAML でネットワークを定義
+
+```yaml title="network.yaml"
+name: "My Network"
+
+nodes:
+  - id: router
+    label: "Core Router"
+    type: router
+
+  - id: switch
+    label: "Main Switch"
+    type: switch
+
+  - id: server
+    label: "Web Server"
+    type: server
+
+links:
+  - from: router
+    to: switch
+    standard: 10GBASE-T
+
+  - from: switch
+    to: server
+    standard: 1000BASE-T
+```
+
+### 2. CLI でレンダリング
+
+```bash
+# SVG 出力
+npx @shumoku/cli render network.yaml -o diagram.svg
+
+# インタラクティブ HTML 出力
+npx @shumoku/cli render network.yaml -f html -o diagram.html
+
+# PNG 出力
+npx @shumoku/cli render network.yaml -f png -o diagram.png
+```
+
+### 3. ライブラリとして使う
+
+```typescript
+import { YamlParser, renderGraphToHtml } from 'shumoku'
+
+// parse() は { graph, warnings } を返す
+const { graph } = new YamlParser().parse(yamlString)
+
+// インタラクティブな HTML を生成（パン/ズーム、ツールチップ）
+const html = await renderGraphToHtml(graph, { title: 'My Network' })
+```
+
+PNG が必要な場合は `@shumoku/renderer-png` を使います（Node.js のみ）：
+
+```typescript
+import { renderGraphToPng } from '@shumoku/renderer-png'
+
+const png = await renderGraphToPng(graph, { scale: 2 })
+```
+
+### 4. ベンダーアイコンを使う
+
+```yaml
+nodes:
+  - id: router
+    label: "RTX3510"
+    type: router
+    vendor: yamaha
+    model: rtx3510
+```
+
+## Next Steps
+
+<Cards>
+  <Card title="基本的な図の作成" href="/docs/npm/basic-diagram">
+    ノード、リンク、ラベルの基本
+  </Card>
+  <Card title="グループで整理" href="/docs/npm/organizing-groups">
+    サブグラフでデバイスをグループ化
+  </Card>
+  <Card title="スタイルとテーマ" href="/docs/npm/styling-themes">
+    見た目のカスタマイズ
+  </Card>
+  <Card title="Playground" href="/playground">
+    ブラウザで試す
+  </Card>
+</Cards>
