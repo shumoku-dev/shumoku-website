@@ -22,6 +22,7 @@ Procedures for running the deployed website:
 Historical proposals and research are retained for context but are not implementation contracts:
 
 - [Original homepage draft](archive/homepage-draft.ja.md)
+- [Shumoku Meetup #1 photo selection record](archive/meetup-1-photo-editing.ja.md)
 
 When behavior changes, update the relevant architecture or operations document in the same pull
 request. Avoid putting current requirements only in an issue, pull request, or component comment.
