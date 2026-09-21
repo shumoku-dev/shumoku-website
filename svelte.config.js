@@ -14,6 +14,5 @@ export default {
   ],
   kit: {
     adapter: adapter({ runtime: 'nodejs24.x' }),
-    files: { assets: 'public' },
   },
 }

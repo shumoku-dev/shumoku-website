@@ -34,7 +34,7 @@ src/
     playground/       Public released-package demo
     ui/               Website component system
   routes/             SvelteKit routes and runtime endpoints
-public/               Stable public URLs and community media
+static/               Stable, unprocessed public URLs and community media
 scripts/              Website maintenance and generation scripts
 docs/
   architecture/       Current design and information architecture
@@ -43,6 +43,9 @@ docs/
 ```
 
 Read [docs/README.md](docs/README.md) before changing architectural or operational behavior.
+The layout follows SvelteKit's standard project directories; see
+[Repository structure](docs/architecture/repository-structure.md) for the small number of
+project-specific conventions.
 
 ## Ownership boundary
 

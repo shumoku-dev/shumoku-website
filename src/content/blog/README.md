@@ -83,7 +83,7 @@ draft: false
 
 ## Communityとの分離
 
-Communityの写真は `src/lib/community/photos.ts` と `public/images/community/` で別管理します。
+Communityの写真は `src/lib/community/photos.ts` と `static/images/community/` で別管理します。
 記事フォルダーをimportせず、同じ原本を使っていても配信用ファイルは別です。
 記事の写真・説明・並び替えや削除はCommunityへ影響しません。逆方向も同様です。
 Home/Aboutの既存紹介用画像URLは互換性のため保持しています。

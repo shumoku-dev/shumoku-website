@@ -66,7 +66,7 @@ describe('Independent photo collections', () => {
       for (const width of photoWidths) {
         const url = communityPhotoUrl(id, width)
         expect(url).toMatch(/^\/images\/community\//)
-        expect(existsSync(new URL(`../../../public${url}`, import.meta.url))).toBe(true)
+        expect(existsSync(new URL(`../../../static${url}`, import.meta.url))).toBe(true)
       }
     }
   })
