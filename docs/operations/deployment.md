@@ -16,6 +16,8 @@ bun run check
 ```
 
 Pull requests must pass the same sequence in GitHub Actions and produce a Vercel Preview.
+The `main` branch requires the `check` job to pass before merge. Dependency updates are opened
+weekly by Dependabot.
 
 ## Vercel project
 
@@ -27,14 +29,16 @@ Pull requests must pass the same sequence in GitHub Actions and produce a Vercel
 - Output directory: automatic
 - Node.js: 24
 
-The current production project should be transferred or reconnected only after a Preview from this
-repository matches the existing site. Do not disconnect the monorepo deployment first.
+The production project is connected directly to this repository. Global response headers are
+defined in `vercel.json`; keep them compatible with analytics, embedded media and the Playground.
 
 ## Production verification
 
-Check both `/en` and `/ja`, Playground render/export, legacy documentation redirects, responsive
-images, language preference, theme preference, privacy controls, GA4 consent behavior, and Vercel
-Web Analytics. Local and preview analytics are intentionally disabled.
+Automated Chromium smoke tests cover language negotiation, localized pages, the Playground,
+compatibility redirects, stable assets and layout API limits. For presentation or analytics
+changes, also check both `/en` and `/ja`, Playground render/export, responsive images, language and
+theme preferences, privacy controls, GA4 consent behavior, and Vercel Web Analytics. Local and
+preview analytics are intentionally disabled.
 
 ## Rollback
 

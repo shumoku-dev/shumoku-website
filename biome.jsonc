@@ -38,6 +38,8 @@
       "!**/node_modules",
       "!**/.svelte-kit",
       "!**/.vercel",
+      "!**/playwright-report",
+      "!**/test-results",
       "!**/*.webmanifest",
       "!**/*.svg",
       "!**/*.css"
