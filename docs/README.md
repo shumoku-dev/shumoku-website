@@ -7,6 +7,7 @@ Documentation is organized by decision lifetime rather than by implementation fo
 Current contracts that should change with the code:
 
 - [Information architecture](architecture/information-architecture.md)
+- [Repository structure](architecture/repository-structure.md)
 - [Color system](architecture/color-system.md)
 - [UI kit and layout](architecture/ui-kit.md)
 
