@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { homeTranslations, type Locale } from '@shumoku/website-content'
+  import { homeTranslations, type Locale } from '$lib/content/home'
 
   let { locale }: { locale: string } = $props()
   const faq = $derived((homeTranslations[locale as Locale] ?? homeTranslations.en).bottom.faq)

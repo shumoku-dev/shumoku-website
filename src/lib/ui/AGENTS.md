@@ -1,7 +1,7 @@
 # UI kit maintenance
 
 Before changing spacing, control dimensions, SVG viewports, or typography, read
-`docs/website-ui-kit-layout.md` from the repository root. It separates sources,
+`docs/architecture/ui-kit.md` from the repository root. It separates sources,
 project decisions, and verification limits.
 
 - `compact.css` owns compact density and input-modality sizing. Reuse its tokens;

@@ -30,4 +30,4 @@ with editable long lines to expose both bars. Check idle/hover/focus, arrow
 absence, thumb dragging, the bottom-right corner, gutter scrolling, and theme
 changes there. Reset files restores the sample; nothing is saved or transmitted.
 
-Rationale and sources: [layout decisions](../../../../../docs/website-ui-kit-layout.md).
+Rationale and sources: [layout decisions](../../../docs/architecture/ui-kit.md).

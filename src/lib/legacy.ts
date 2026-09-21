@@ -1,4 +1,4 @@
-import migration from '../../../../tooling/docs/migration.routes.json'
+import migration from '$lib/data/legacy-doc-routes.json'
 import { docsOrigin, docsUrl, editorOrigin, type Locale } from './site'
 
 // Last published source snapshot before moving the archive. Works in previews

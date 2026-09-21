@@ -1,4 +1,4 @@
-// Design inputs, not browser-runtime theme state. See docs/website-color-palette.md.
+// Design inputs, not browser-runtime theme state. See docs/architecture/color-system.md.
 export type Oklch = readonly [lightness: number, chroma: number, hue: number]
 type Rgb = readonly [number, number, number]
 
@@ -179,7 +179,7 @@ export function paletteCss() {
       .join('\n')
     return `${theme === 'light' ? ':root' : '.dark'} {\n${theme === 'light' ? `${foundation}\n` : ''}${declarations}\n  color-scheme: ${theme};\n}`
   })
-  return `/* Generated from palette-model.ts OKLCH design inputs. See docs/website-color-palette.md. */\n${blocks.join('\n\n')}\n`
+  return `/* Generated from palette-model.ts OKLCH design inputs. See docs/architecture/color-system.md. */\n${blocks.join('\n\n')}\n`
 }
 
 export function contrast(foreground: string, background: string) {

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { homeTranslations } from '@shumoku/website-content'
+  import { homeTranslations } from '$lib/content/home'
   import ActivitySection from '$lib/home/ActivitySection.svelte'
   import AdoptersSection from '$lib/home/AdoptersSection.svelte'
   import BottomSection from '$lib/home/BottomSection.svelte'

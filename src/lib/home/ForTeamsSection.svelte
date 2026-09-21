@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { homeTranslations, type Locale } from '@shumoku/website-content'
+  import { homeTranslations, type Locale } from '$lib/content/home'
   import LinkButton from '$lib/ui/LinkButton.svelte'
   import CoreNode from './CoreNode.svelte'
   import DashedConnector from './DashedConnector.svelte'

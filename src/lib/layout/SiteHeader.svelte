@@ -1,7 +1,9 @@
 <script lang="ts">
   import { Languages, Menu, Moon, Sun } from '@lucide/svelte'
-  import { rememberLanguage } from '@shumoku/site-i18n'
   import { onMount } from 'svelte'
+  import symbol from '$lib/assets/brand/logo-symbol.svg?url'
+  import wordmark from '$lib/assets/brand/logo-wordmark.svg?url'
+  import { rememberLanguage } from '$lib/i18n'
   import { type Locale, siteNavigation } from '$lib/site'
   import {
     darkSchemeQuery,
@@ -14,9 +16,7 @@
   import IconButton from '$lib/ui/IconButton.svelte'
   import LinkButton from '$lib/ui/LinkButton.svelte'
   import NavLink from '$lib/ui/NavLink.svelte'
-  import symbol from '../../../../../assets/logos/logo-symbol.svg?url'
-  import wordmark from '../../../../../assets/logos/logo-wordmark.svg?url'
-  import '../../../../../assets/logos/header-logo.css'
+  import '$lib/assets/brand/header-logo.css'
 
   let { locale, path }: { locale: Locale; path: string } = $props()
   const links = $derived(siteNavigation(locale))

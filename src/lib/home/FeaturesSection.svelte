@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { homeTranslations, type Locale } from '@shumoku/website-content'
   import alert from '$lib/assets/screenshots/alert.png?enhanced'
   import icon from '$lib/assets/screenshots/icon.png?enhanced'
   import netbox from '$lib/assets/screenshots/netbox.png?enhanced'
   import share from '$lib/assets/screenshots/share.png?enhanced'
   import weathermap from '$lib/assets/screenshots/wethermap.png?enhanced'
   import zoom from '$lib/assets/screenshots/zoom.png?enhanced'
+  import { homeTranslations, type Locale } from '$lib/content/home'
   import FeatureCard from './FeatureCard.svelte'
   import FeatureIconCard from './FeatureIconCard.svelte'
 
@@ -78,12 +78,12 @@
       <FeatureIconCard
         title={items[6].title}
         description={items[6].description}
-        icon={{ name: 'Radar', class: "w-5 h-5" }}
+        icon={{ name: 'Radar', class: 'w-5 h-5' }}
       ></FeatureIconCard>
       <FeatureIconCard
         title={items[7].title}
         description={items[7].description}
-        icon={{ name: 'LayoutGrid', class: "w-5 h-5" }}
+        icon={{ name: 'LayoutGrid', class: 'w-5 h-5' }}
       ></FeatureIconCard>
     </div>
   </div>

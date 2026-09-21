@@ -1,0 +1,66 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "style": { "noNonNullAssertion": "error" },
+      "complexity": { "noBannedTypes": "error", "useLiteralKeys": "off" },
+      "correctness": {
+        "noUnusedImports": { "level": "error", "fix": "safe" }
+      }
+    }
+  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "css": {
+    "parser": { "cssModules": true, "allowWrongLineComments": true },
+    "linter": { "enabled": false }
+  },
+  "javascript": {
+    "formatter": { "quoteStyle": "single", "semicolons": "asNeeded", "trailingCommas": "all" }
+  },
+  "html": {
+    "formatter": { "enabled": true, "indentScriptAndStyle": true },
+    "experimentalFullSupportEnabled": true
+  },
+  "files": {
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/build",
+      "!**/node_modules",
+      "!**/.svelte-kit",
+      "!**/.vercel",
+      "!**/*.webmanifest",
+      "!**/*.svg",
+      "!**/*.css"
+    ]
+  },
+  "overrides": [
+    {
+      "includes": ["**/*.svelte"],
+      "linter": {
+        "rules": {
+          "style": { "useConst": "off", "useImportType": "off" },
+          "correctness": { "noUnusedVariables": "off", "noUnusedImports": "off" },
+          "suspicious": { "noAssignInExpressions": "off" },
+          "a11y": {
+            "noLabelWithoutControl": "off",
+            "noInteractiveElementToNoninteractiveRole": "off",
+            "noStaticElementInteractions": "off",
+            "useAriaPropsSupportedByRole": "off",
+            "useKeyWithClickEvents": "off",
+            "useSemanticElements": "off"
+          }
+        }
+      }
+    }
+  ]
+}

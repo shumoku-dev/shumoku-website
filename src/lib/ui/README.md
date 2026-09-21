@@ -120,7 +120,7 @@ References:
 ## Visual discipline
 
 Theme colors are owned by `palette.css`, with independently tuned green-neutral
-light/dark palettes. See [palette rationale](../../../../../docs/website-color-palette.md)
+light/dark palettes. See [palette rationale](../../../docs/architecture/color-system.md)
 and `/ja/ui-preview#palette-title`. `palette.test.ts` guards intended text contrast.
 
 Current surface policy: ordinary secondary controls, fields, panels and dropdown

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { homeTranslations, type Locale } from '@shumoku/website-content'
+  import { homeTranslations, type Locale } from '$lib/content/home'
   import Icon from './Icon.svelte'
   import LayerCta from './LayerCta.svelte'
   import { cn, sectionStyles } from './styles'

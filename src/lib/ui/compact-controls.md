@@ -1,6 +1,6 @@
 # Compact controls
 
-Rationale, citations, and review checklist: [UI kit layout decisions](../../../../../docs/website-ui-kit-layout.md).
+Rationale, citations, and review checklist: [UI kit layout decisions](../../../docs/architecture/ui-kit.md).
 Density is owned by `compact.css`; do not redefine it in host styles.
 Scrollbar usage and interactive review: [scrollbar guide](scrollbar.md).
 

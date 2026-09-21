@@ -1,6 +1,6 @@
 # FileTabs
 
-See [layout decisions and sources](../../../../../docs/website-ui-kit-layout.md)
+See [layout decisions and sources](../../../docs/architecture/ui-kit.md)
 before changing dimensions, SVG viewports, or text metrics.
 
 Controlled file-tab presentation, separate from general-purpose `Tabs`.

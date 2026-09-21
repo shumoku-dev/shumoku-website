@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { homeTranslations, type Locale } from '@shumoku/website-content'
   import type { Picture } from 'vite-imagetools'
   import itcuecLogo from '$lib/assets/adopters/itcuec_logo_300.png?enhanced'
   import janog57Logo from '$lib/assets/adopters/janog57_logo.png?enhanced'
+  import { homeTranslations, type Locale } from '$lib/content/home'
 
   type Adopter = {
     name: string
@@ -34,7 +34,14 @@
     <div class="flex items-center gap-8">
       {#each adopters as adopter}
         {#if adopter.url}
-          <a href={adopter.url} target="_blank" rel="noopener noreferrer" title={adopter.name}>
+          <a
+            href={adopter.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={adopter.name}
+            aria-label={adopter.name}
+          >
+            <span class="sr-only">{adopter.name}</span>
             <enhanced:img
               src={adopter.logo}
               alt={adopter.name}

@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { homeTranslations, type Locale } from '@shumoku/website-content'
   import type { Picture } from 'vite-imagetools'
-  import dashboard from '../../../../../assets/screenshots/dashboard.png?enhanced'
-  import topology from '../../../../../assets/screenshots/topology.png?enhanced'
+  import dashboard from '$lib/assets/screenshots/dashboard.png?enhanced'
+  import topology from '$lib/assets/screenshots/topology.png?enhanced'
+  import { homeTranslations, type Locale } from '$lib/content/home'
   import { cn, sectionStyles } from './styles'
 
   // Content keeps stable public paths; the website serves optimized builds of the same images.

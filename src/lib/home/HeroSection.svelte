@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { homeTranslations, type Locale } from '@shumoku/website-content'
+  import topology from '$lib/assets/screenshots/topology.png?enhanced'
+  import { homeTranslations, type Locale } from '$lib/content/home'
   import LinkButton from '$lib/ui/LinkButton.svelte'
-  import topology from '../../../../../assets/screenshots/topology.png?enhanced'
   import { docsUrl } from './styles'
 
   let { locale }: { locale: string } = $props()
@@ -11,10 +11,14 @@
   <div class="hero-copy">
     <h1>{t.title1}<br>{t.title2}</h1>
     <p>
-      {locale === 'ja' ? 'YAMLや実際のインフラデータから、ネットワーク構成図を生成。ドキュメントへの埋め込みから、日々の運用・監視まで。' : 'Generate network diagrams from YAML and real infrastructure data. Embed them in documentation or use them for daily operations and monitoring.'}
+      {locale === 'ja'
+    ? 'YAMLや実際のインフラデータから、ネットワーク構成図を生成。ドキュメントへの埋め込みから、日々の運用・監視まで。'
+    : 'Generate network diagrams from YAML and real infrastructure data. Embed them in documentation or use them for daily operations and monitoring.'}
     </p>
     <p class="hero-position">
-      {locale === 'ja' ? 'オープンソースの自由を、ネットワーク運用に。' : 'Open-source freedom for network operations.'}
+      {locale === 'ja'
+    ? 'オープンソースの自由を、ネットワーク運用に。'
+    : 'Open-source freedom for network operations.'}
     </p>
     <div class="hero-actions">
       <LinkButton href={docsUrl(locale, 'server')} variant="primary" class="deploy-link">
@@ -32,7 +36,9 @@
       >
     </div>
     <p class="hero-business">
-      {locale === 'ja' ? '自分で導入。必要なときは、導入支援や連携開発を相談できます。' : 'Deploy it yourself, or work with us on deployment and integrations.'}
+      {locale === 'ja'
+    ? '自分で導入。必要なときは、導入支援や連携開発を相談できます。'
+    : 'Deploy it yourself, or work with us on deployment and integrations.'}
       <a href={`/${locale}/support`}>{locale === 'ja' ? '導入相談' : 'Talk to us'}</a>
     </p>
   </div>
@@ -44,7 +50,9 @@
       fetchpriority="high"
     />
     <figcaption>
-      {locale === 'ja' ? 'Shumoku Server — トポロジーとライブトラフィック' : 'Shumoku Server — topology and live traffic'}
+      {locale === 'ja'
+    ? 'Shumoku Server — トポロジーとライブトラフィック'
+    : 'Shumoku Server — topology and live traffic'}
     </figcaption>
   </figure>
 </section>

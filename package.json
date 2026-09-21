@@ -1,10 +1,13 @@
 {
-  "name": "@shumoku/website",
+  "name": "shumoku-website",
   "private": true,
-  "version": "0.2.25",
+  "version": "0.0.0",
   "type": "module",
   "engines": {
     "node": "24.x"
+  },
+  "overrides": {
+    "@shumoku/core": "0.4.1"
   },
   "scripts": {
     "dev": "vite dev --host 127.0.0.1",
@@ -12,27 +15,32 @@
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "lint": "biome check .",
-    "test": "vitest run src/lib"
+    "test": "vitest run src/lib",
+    "check": "bun run lint && bun run typecheck && bun run test && bun run knip && bun run build",
+    "knip": "svelte-kit sync && knip",
+    "palette": "bun scripts/palette.ts --write"
   },
   "dependencies": {
     "@lucide/svelte": "^1.41.0",
-    "@shumoku/core": "workspace:*",
-    "@shumoku/renderer": "workspace:*",
-    "@shumoku/renderer-html": "workspace:*",
-    "@shumoku/renderer-svg": "workspace:*",
-    "@shumoku/site-i18n": "workspace:*",
-    "@shumoku/website-content": "workspace:*",
+    "@shumoku/core": "0.4.1",
+    "@shumoku/renderer": "0.1.4",
+    "@shumoku/renderer-html": "0.2.28",
+    "@shumoku/renderer-svg": "0.2.28",
     "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.6.0",
     "vanilla-cookieconsent": "3.1.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.5.12",
     "@sveltejs/adapter-vercel": "^6.3.4",
     "@sveltejs/enhanced-img": "^0.11.0",
     "@sveltejs/kit": "^2.70.3",
     "@sveltejs/vite-plugin-svelte": "^7.3.0",
     "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^26.0.0",
+    "knip": "^6.35.1",
+    "lefthook": "^2.1.12",
     "mdsvex": "^0.12.8",
     "svelte": "^5.57.0",
     "svelte-check": "^4.7.6",
