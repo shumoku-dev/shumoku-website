@@ -2,6 +2,7 @@
   import type { Picture } from 'vite-imagetools'
   import itcuecLogo from '$lib/assets/adopters/itcuec_logo_300.png?enhanced'
   import janog57Logo from '$lib/assets/adopters/janog57_logo.png?enhanced'
+  import janog58Logo from '$lib/assets/adopters/janog58_logo.png?enhanced'
   import { homeTranslations, type Locale } from '$lib/content/home'
 
   type Adopter = {
@@ -20,6 +21,11 @@
       logo: janog57Logo,
       url: 'https://www.janog.gr.jp/meeting/janog57/',
     },
+    {
+      name: 'JANOG58',
+      logo: janog58Logo,
+      url: 'https://www.janog.gr.jp/meeting/janog58/',
+    },
   ]
   let { locale }: { locale: string } = $props()
   const label = $derived(
@@ -31,7 +37,7 @@
 <section class="py-6 sm:py-8">
   <div class="site-container flex flex-wrap items-center justify-between gap-5">
     <span class="text-sm text-neutral-500 dark:text-neutral-500">{label}</span>
-    <div class="flex items-center gap-8">
+    <div class="flex flex-wrap items-center gap-8">
       {#each adopters as adopter}
         {#if adopter.url}
           <a

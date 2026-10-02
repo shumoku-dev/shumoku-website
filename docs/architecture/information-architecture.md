@@ -96,6 +96,10 @@ The inventory includes footer and related official sites, not only header naviga
 
 ## Layout
 
+The Home adopter strip includes UEC, JANOG57 and JANOG58, linking to each
+organization or event. Logos use imported optimized assets and wrap at narrow
+widths. JANOG58 uses the supplied navy/orange logo (`01_2-1.png`).
+
 Following the Muller-Brockmann grid skill, new sections reuse `site-container` for
 shared outer edges, existing spacing tokens for gutters and a single-column narrow
 layout. No new card borders, palette, typography system or decorative grid overlay.
