@@ -16,7 +16,6 @@ Current contracts that should change with the code:
 Procedures for running the deployed website:
 
 - [Deployment and rollback](operations/deployment.md)
-- [Repository extraction](operations/repository-extraction.md)
 
 ## Archive
 
@@ -24,6 +23,7 @@ Historical proposals and research are retained for context but are not implement
 
 - [Original homepage draft](archive/homepage-draft.ja.md)
 - [Shumoku Meetup #1 photo selection record](archive/meetup-1-photo-editing.ja.md)
+- [Repository extraction record](archive/repository-extraction.md)
 
 When behavior changes, update the relevant architecture or operations document in the same pull
 request. Avoid putting current requirements only in an issue, pull request, or component comment.

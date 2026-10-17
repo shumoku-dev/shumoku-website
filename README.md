@@ -17,8 +17,8 @@ bun run dev
 bun run check
 ```
 
-`bun run check` runs formatting/lint checks, Svelte type checking, tests, unused-code detection,
-and the production build.
+`bun run check` runs formatting/lint checks, Svelte type checking, unit tests, unused-code detection,
+the production build, and Chromium smoke tests.
 
 ## Repository map
 
@@ -35,6 +35,7 @@ src/
     ui/               Website component system
   routes/             SvelteKit routes and runtime endpoints
 static/               Stable, unprocessed public URLs and community media
+tests/                Playwright browser smoke tests
 scripts/              Website maintenance and generation scripts
 docs/
   architecture/       Current design and information architecture

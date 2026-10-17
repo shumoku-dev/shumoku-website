@@ -15,5 +15,5 @@ This repository owns the Shumoku public website and Playground, not Shumoku prod
 
 ## Verification
 
-Run `bun run check` before committing. Inspect affected pages in both languages and at wide and
-narrow widths when presentation changes.
+Run `bun run check` before committing. This includes the production build and Chromium smoke tests.
+Inspect affected pages in both languages and at wide and narrow widths when presentation changes.

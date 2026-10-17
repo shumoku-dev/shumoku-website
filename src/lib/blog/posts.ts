@@ -63,14 +63,15 @@ export function readPost(path: string, value: unknown): Post {
   }
 }
 
-const metadata = import.meta.glob<unknown>('/src/content/blog/*/index.md', {
-  eager: true,
-  import: 'metadata',
-})
-const bodies = import.meta.glob<{ default: Component }>('/src/content/blog/*/index.md')
+const modules = import.meta.glob<{ default: Component; metadata: unknown }>(
+  '/src/content/blog/*/index.md',
+  {
+    eager: true,
+  },
+)
 
-export const posts = Object.entries(metadata)
-  .map(([path, data]) => readPost(path, data))
+export const posts = Object.entries(modules)
+  .map(([path, module]) => readPost(path, module.metadata))
   .filter((post) => !post.draft)
   .sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug))
 
@@ -82,8 +83,8 @@ export const postsFor = (locale: Locale) =>
 
 export async function loadPost(slug: string, locale: Locale) {
   const post = findPost(slug, locale)
-  const load = bodies[`/src/content/blog/${slug}/index.md`]
-  if (!post || !load) return undefined
-  const { default: Content } = await load()
+  const module = modules[`/src/content/blog/${slug}/index.md`]
+  if (!post || !module) return undefined
+  const { default: Content } = module
   return { post, Content, fallback: post.locale !== locale }
 }

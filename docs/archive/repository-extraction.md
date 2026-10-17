@@ -1,5 +1,7 @@
 # Repository extraction record
 
+This document is a historical record. The repository and production Vercel cutover are complete.
+
 The website was extracted from `apps/website` in `konoe-akitoshi/shumoku` on 2026-09-21.
 
 ## Preserved history
@@ -25,7 +27,7 @@ dependency. The root package override pins Core to `0.4.1` so an isolated instal
 the Shumoku packages during SSR. Remove these compatibility settings after corrected releases are
 adopted.
 
-## Cutover rule
+## Cutover rule at the time of extraction
 
 Remove Website sources from the product monorepo only after this repository passes CI and a Vercel
 Preview has been reviewed. DNS and the production Vercel project are operational changes, not part

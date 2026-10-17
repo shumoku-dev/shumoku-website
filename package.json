@@ -7,7 +7,9 @@
     "node": "24.x"
   },
   "overrides": {
-    "@shumoku/core": "0.4.1"
+    "@shumoku/core": "0.4.1",
+    "cookie": "0.7.2",
+    "sharp": "0.35.4"
   },
   "scripts": {
     "dev": "vite dev --host 127.0.0.1",
@@ -16,7 +18,9 @@
     "typecheck": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "lint": "biome check .",
     "test": "vitest run src/lib",
-    "check": "bun run lint && bun run typecheck && bun run test && bun run knip && bun run build",
+    "test:e2e": "bun run build && playwright test",
+    "audit": "bun audit --audit-level=high",
+    "check": "bun run lint && bun run typecheck && bun run test && bun run knip && bun run audit && bun run test:e2e",
     "knip": "svelte-kit sync && knip",
     "palette": "bun scripts/palette.ts --write"
   },
@@ -32,6 +36,7 @@
     "vanilla-cookieconsent": "3.1.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@biomejs/biome": "2.5.12",
     "@sveltejs/adapter-vercel": "^6.3.4",
     "@sveltejs/enhanced-img": "^0.11.0",

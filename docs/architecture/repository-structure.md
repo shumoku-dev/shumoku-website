@@ -15,12 +15,13 @@ The source tree has the following responsibilities:
 | `src/params` | Route parameter matchers |
 | `src/content` | Markdown article bundles and their article-local media |
 | `static` | Files that require stable public URLs and must be served without transformation |
+| `tests` | Browser-level Playwright smoke tests against the production build |
 | `scripts` | Repository maintenance and generated-source tooling |
 | `docs` | Architecture decisions, operating procedures and historical records |
 
-Unit tests stay next to the implementation as `*.test.ts`. Add a top-level `tests` directory only
-when browser-level Playwright tests are introduced. Keep files used only by one route beside that
-route; move reusable code to `src/lib` so it is available through SvelteKit's `$lib` alias.
+Unit tests stay next to the implementation as `*.test.ts`. Browser-level Playwright tests live in
+the top-level `tests` directory. Keep files used only by one route beside that route; move reusable
+code to `src/lib` so it is available through SvelteKit's `$lib` alias.
 
 ## Asset boundary
 
