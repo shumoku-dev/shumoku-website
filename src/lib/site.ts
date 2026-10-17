@@ -20,6 +20,12 @@ export const sitePages = [
     navigation: false,
   },
   {
+    path: '/connect',
+    label: { en: 'Connect', ja: 'リンク集' },
+    mode: 'presentation',
+    navigation: false,
+  },
+  {
     path: '/privacy',
     label: { en: 'Privacy', ja: 'プライバシー' },
     mode: 'content',

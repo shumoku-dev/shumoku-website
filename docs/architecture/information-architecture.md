@@ -103,3 +103,13 @@ widths. JANOG58 uses the supplied navy/orange logo (`01_2-1.png`).
 Following the Muller-Brockmann grid skill, new sections reuse `site-container` for
 shared outer edges, existing spacing tokens for gutters and a single-column narrow
 layout. No new card borders, palette, typography system or decorative grid overlay.
+
+## Exhibition quick links
+
+`/[lang]/connect` is a mobile-first list of direct links to the public demo,
+Discord, connpass and X, with secondary Playground and About links. It uses a
+presentation shell to omit the announcement and footer and retains language/theme
+navigation. The footer links to it; it is not a primary header destination.
+Localized copy and destinations live in `src/lib/content/connect.ts`.
+The narrow, single-column layout uses large tap targets with no QR codes or
+full-screen controls. The demo destination matches the existing home hero link.

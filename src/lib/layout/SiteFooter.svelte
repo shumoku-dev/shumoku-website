@@ -24,6 +24,10 @@
           label: locale === 'ja' ? 'イベント（connpass）' : 'Events (connpass)',
           href: communityUrl,
         },
+        {
+          label: locale === 'ja' ? '展示・イベント用リンク集' : 'Event quick links',
+          href: `/${locale}/connect`,
+        },
         { label: 'X', href: 'https://x.com/shumoku_dev' },
       ],
     },
