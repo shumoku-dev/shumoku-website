@@ -3,6 +3,7 @@
   import type { Locale } from '$lib/site'
   import { authors } from './authors'
   import { type Category, categories } from './categories'
+  import DraftBadge from './DraftBadge.svelte'
   import { articleImage } from './images'
   import { formatDate, type Post } from './post'
 
@@ -51,6 +52,9 @@
         <article lang={post.lang}>
           <div class="text">
             <p class="meta" {lang}>
+              {#if post.draft}
+                <DraftBadge {lang} />
+              {/if}
               <time datetime={post.published}>{formatDate(post.published)}</time>
               <a href={categoryHref(post.category)}>{categories[post.category][lang]}</a>
               {#if post.lang !== lang}
@@ -137,6 +141,7 @@
   .meta {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: var(--ui-space-1) var(--ui-space-3);
     color: var(--site-muted);
     font-size: 0.8125rem;

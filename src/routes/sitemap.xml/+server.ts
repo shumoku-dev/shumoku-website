@@ -1,10 +1,10 @@
-import { posts, usedCategories } from '$lib/blog/posts.server'
+import { categoriesOf, publishedPosts } from '$lib/blog/posts.server'
 import { locales, sitePages, websiteOrigin } from '$lib/site'
 export const prerender = true
 const entries: { path: string; lastmod?: string }[] = [
   ...sitePages.map((page) => ({ path: page.path })),
-  ...usedCategories.map((category) => ({ path: `/blog/category/${category}` })),
-  ...posts.map((post) => ({
+  ...categoriesOf(publishedPosts).map((category) => ({ path: `/blog/category/${category}` })),
+  ...publishedPosts.map((post) => ({
     path: `/blog/${post.slug}`,
     lastmod: post.updated ?? post.published,
   })),

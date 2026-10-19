@@ -2,6 +2,7 @@
   import ArticleBody from '$lib/blog/ArticleBody.svelte'
   import { authors } from '$lib/blog/authors'
   import { categories } from '$lib/blog/categories'
+  import DraftBadge from '$lib/blog/DraftBadge.svelte'
   import { articleImage } from '$lib/blog/images'
   import { formatDate } from '$lib/blog/post'
   import PageMeta from '$lib/PageMeta.svelte'
@@ -33,6 +34,9 @@
 </script>
 
 <svelte:head>
+  {#if post.draft}
+    <meta name="robots" content="noindex">
+  {/if}
   <meta property="article:published_time" content={post.published}>
   {#if post.updated}
     <meta property="article:modified_time" content={post.updated}>
@@ -58,9 +62,14 @@
   {/if}
   <article lang={post.lang}>
     <header>
-      <a class="category" href={`/${data.lang}/blog/category/${post.category}`} lang={data.lang}
-        >{categories[post.category][data.lang]}</a
-      >
+      <p class="labels" lang={data.lang}>
+        {#if post.draft}
+          <DraftBadge lang={data.lang} />
+        {/if}
+        <a class="category" href={`/${data.lang}/blog/category/${post.category}`}
+          >{categories[post.category][data.lang]}</a
+        >
+      </p>
       <h1>{post.title}</h1>
       <p class="meta">
         <span>
@@ -111,8 +120,13 @@
     display: grid;
     gap: var(--ui-space-3);
   }
+  .labels {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ui-space-3);
+  }
   .category {
-    justify-self: start;
     color: var(--site-accent);
     font-size: 0.875rem;
     font-weight: 600;
