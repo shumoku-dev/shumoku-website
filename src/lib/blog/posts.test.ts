@@ -3,12 +3,14 @@ import { describe, expect, it } from 'vitest'
 import { communityPhotos, photoUrl as communityPhotoUrl, photoWidths } from '../community/photos'
 import { articleImage } from './images'
 import { parsePost } from './post'
-import { getPost, posts, usedCategories } from './posts.server'
+import { getPost, posts, publishedPosts, selectPosts, usedCategories } from './posts.server'
 
 describe('Markdown articles', () => {
   it('discovers published articles', () => {
     expect(getPost('meetup-1')?.lang).toBe('ja')
-    expect(posts.every((post) => !post.draft)).toBe(true)
+    expect(publishedPosts.every((post) => !post.draft)).toBe(true)
+    // Vitest runs like the dev server, so drafts are listed there too.
+    expect(posts.length).toBeGreaterThanOrEqual(publishedPosts.length)
     expect(new Set(posts.map((post) => post.slug)).size).toBe(posts.length)
     // Category pages exist exactly for categories that have articles.
     expect(new Set(usedCategories)).toEqual(new Set(posts.map((post) => post.category)))
@@ -16,6 +18,24 @@ describe('Markdown articles', () => {
   it('does not find missing articles or traversal paths', () => {
     expect(getPost('missing')).toBeUndefined()
     expect(getPost('../meetup-1')).toBeUndefined()
+  })
+  it('lists drafts only when asked to', () => {
+    const make = (slug: string, published: string, draft: boolean) =>
+      parsePost(slug, {
+        title: 'T',
+        description: 'D',
+        published,
+        category: 'event',
+        authors: ['akitoshi'],
+        draft,
+      })
+    const list = [
+      make('old', '2026-01-01', false),
+      make('draft', '2026-03-01', true),
+      make('new', '2026-02-01', false),
+    ]
+    expect(selectPosts(list, false).map((post) => post.slug)).toEqual(['new', 'old'])
+    expect(selectPosts(list, true).map((post) => post.slug)).toEqual(['draft', 'new', 'old'])
   })
   it('validates metadata, dates and draft flags', () => {
     const valid = {

@@ -1,3 +1,4 @@
+import { dev } from '$app/environment'
 import { type Category, categories } from './categories'
 import { renderMarkdown, splitFrontmatter } from './markdown.server'
 import { type Post, parsePost } from './post'
@@ -15,17 +16,27 @@ const articles = Object.entries(sources).map(([path, source]) => {
 })
 const all = articles.map((article) => article.post)
 
-/** Published articles, newest first. Drafts are excluded everywhere. */
-export const posts: Post[] = all
-  .filter((post) => !post.draft)
-  .sort((a, b) => b.published.localeCompare(a.published) || a.slug.localeCompare(b.slug))
+/** Articles newest first; drafts only when asked for. */
+export const selectPosts = (list: Post[], includeDrafts: boolean) =>
+  list
+    .filter((post) => includeDrafts || !post.draft)
+    .sort((a, b) => b.published.localeCompare(a.published) || a.slug.localeCompare(b.slug))
+
+/** Published articles, for the sitemap and prerendering. Drafts never reach a build. */
+export const publishedPosts = selectPosts(all, false)
+
+/** Articles shown on the site. The dev server also lists drafts so authors can preview them. */
+export const posts = selectPosts(all, dev)
 
 export const getPost = (slug: string) => posts.find((post) => post.slug === slug)
 
-/** Categories that have at least one article, in the order they are defined. */
-export const usedCategories = (Object.keys(categories) as Category[]).filter((category) =>
-  posts.some((post) => post.category === category),
-)
+/** Categories that have at least one of the articles, in the order they are defined. */
+export const categoriesOf = (list: Post[]) =>
+  (Object.keys(categories) as Category[]).filter((category) =>
+    list.some((post) => post.category === category),
+  )
+
+export const usedCategories = categoriesOf(posts)
 
 /** The article body as nodes for `ArticleBody.svelte`. */
 export function articleBody(post: Post) {
