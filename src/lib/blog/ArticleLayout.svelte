@@ -1,8 +1,9 @@
 <script module lang="ts">
   // mdsvex replaces Markdown elements with the components exported here.
   import img from './ArticleImage.svelte'
+  import a from './ArticleLink.svelte'
 
-  export { img }
+  export { a, img }
 </script>
 
 <script lang="ts">
@@ -44,7 +45,8 @@
     list-style: decimal;
     padding-inline-start: 1.5em;
   }
-  .article-body :global(a) {
+  /* Cards and players (inside .embed) style their own links. */
+  .article-body :global(:not(.embed) > a) {
     text-decoration: underline;
     text-underline-offset: 0.2em;
   }

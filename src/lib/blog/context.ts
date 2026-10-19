@@ -1,4 +1,5 @@
 import { createContext } from 'svelte'
+import type { Locale } from '$lib/site'
 
-/** Lets Markdown images resolve paths relative to the article being rendered. */
-export const [getArticleSlug, setArticleSlug] = createContext<() => string>()
+/** The article being rendered, so Markdown images and links resolve relative to it. */
+export const [getArticle, setArticle] = createContext<() => { slug: string; lang: Locale }>()

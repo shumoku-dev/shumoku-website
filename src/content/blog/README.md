@@ -155,8 +155,13 @@ websiteディレクトリで `bun run typecheck`、`bun run test`、`bun run bui
 | `src/lib/blog/BlogIndex.svelte` | 記事一覧とカテゴリのナビ。一覧とカテゴリページで共用 |
 | `src/lib/blog/posts.server.ts` | 全記事のfrontmatterを読み、公開記事を日付順に並べる（サーバー専用） |
 | `src/lib/blog/images.ts` | 記事内画像（`./images/...`）の解決 |
-| `src/lib/blog/context.ts` | Markdownの画像に、表示中の記事を伝えるcontext |
-| `src/lib/blog/ArticleLayout.svelte` | mdsvexのlayout。本文のスタイルと、画像を `ArticleImage` へ置き換える指定 |
+| `src/lib/blog/context.ts` | Markdownの画像とリンクに、表示中の記事と表示言語を伝えるcontext |
+| `src/lib/blog/ArticleLayout.svelte` | mdsvexのlayout。本文のスタイルと、`img` / `a` を `ArticleImage` / `ArticleLink` へ置き換える指定 |
+| `src/lib/blog/remark-embeds.js` | 単独行の外部リンクに印を付けるremarkプラグイン（ビルド・取得スクリプト・テストで共用） |
+| `src/lib/blog/ArticleLink.svelte` | 印の付いたリンクを `LinkCard` / `PlayerEmbed` に、それ以外を通常のリンクにする |
+| `src/lib/blog/providers.ts` | プレーヤーにするサービスと、iframeを許可するホスト |
+| `src/lib/blog/embeds.ts` | `embeds.json` とサムネイルの読み込み |
+| `scripts/blog-embeds.ts` | `bun run blog:embeds` の本体 |
 | `routes/[lang=lang]/blog/+page.server.ts` | 一覧 |
 | `routes/[lang=lang]/blog/category/[category]/+page.server.ts` | カテゴリ別一覧。記事のあるカテゴリだけ静的生成 |
 | `routes/[lang=lang]/blog/[slug]/+page.server.ts` | 記事のメタデータ、404、prerenderの `entries` |
@@ -170,14 +175,50 @@ websiteディレクトリで `bun run typecheck`、`bun run test`、`bun run bui
 - [SvelteKit images](https://svelte.dev/docs/kit/images#sveltejs-enhanced-img-Dynamically-choosing-an-image): `?enhanced` のglobで、画像を動的に選ぶ。
 - [SvelteKit server-only modules](https://svelte.dev/docs/kit/server-only-modules): 記事一覧は `.server.ts` に置き、クライアントへ送らない。
 - [SvelteKit prerender entries](https://svelte.dev/docs/kit/page-options#entries): 記事から静的生成するURLを列挙する。
+- [Zenn: コンテンツの埋め込み](https://zenn.dev/zenn/articles/markdown-guide): URLだけの行をカードや埋め込みにする書き方。
+- [oEmbed](https://oembed.com/): Speaker Deck・Docswell・YouTubeの埋め込み情報を、ページの `application/json+oembed` から取得する。
+- [Third-party facades](https://developer.chrome.com/docs/lighthouse/performance/third-party-facades): 埋め込みはクリックまで読み込まない。
 
-## リンクカード
+## リンクカードと埋め込み
 
-外部リンクを段落として単独で置くと、タイトルとドメインを表示するカードになります。
-本文の文言にリンクを埋め込まず、関連する段落の直後に空行を挟んで置けます。
+外部のURLを、前後に空行を挟んで1行だけで置くと、カードや動画・スライドの埋め込みになります。
+特別な記法はなく、普通のMarkdownとしてもただのリンクとして読めます。
 
 ```markdown
+https://event.ospn.jp/osc2026-fall/
+
 [OSC Tokyo 2026 Fall 公式サイト](https://event.ospn.jp/osc2026-fall/)
+
+https://youtu.be/LD9rUmkCoRU?t=8410
+
+https://speakerdeck.com/<user>/<slide>
+
+https://www.docswell.com/s/<user>/<slide>
 ```
 
-本文中や箇条書き内のリンクは通常のリンクとして使います。カードのための外部メタデータ取得は行いません。
+| URL | 表示 |
+| --- | --- |
+| YouTube（`youtu.be`、`watch?v=`、Shorts、ライブ） | 動画プレーヤー。`?t=` の開始位置も引き継ぐ |
+| Speaker Deck、Docswell | スライドのプレーヤー |
+| それ以外 | タイトル・説明・サイト名・画像のカード |
+
+- `[文字](URL)` の形で書くと、その文字がカードやプレーヤーのタイトルになります。URLだけなら相手ページのタイトルを使います。
+- 文中のリンク、箇条書きや引用の中のリンクは通常のリンクのままです。
+- 動画とスライドは、最初はサムネイルと再生ボタンだけを表示し、クリックして初めて外部のiframe（YouTubeは `youtube-nocookie.com`）を読み込みます。
+  クリックするまで、読者のブラウザーは外部サービスに一切接続しません。
+
+### `bun run blog:embeds`
+
+単独のURLを足したり消したりしたら、次を実行して結果をコミットします。
+
+```sh
+bun run blog:embeds                 # 未取得のURLだけ取得
+bun run blog:embeds osc-tokyo-2026-fall   # 記事を指定
+bun run blog:embeds --refresh       # 取得済みのものも取り直す
+```
+
+- 相手ページのOGP（タイトル・説明・画像）とoEmbedを取得し、記事フォルダーの `embeds.json` に書きます。
+  サムネイルは `embeds/` に保存します。
+- サイトのビルドはこのファイルだけを読み、外部サイトには接続しません。相手のサイトが落ちていてもビルドは壊れません。
+- 実行を忘れると `bun run test` が失敗します。それまでの間、カードはリンクの文字かURLだけで表示されます。
+- 取得したタイトルや説明が不適切なら、`embeds.json` を直接直して構いません。`--refresh` を付けない限り上書きされません。

@@ -69,6 +69,11 @@ publication and update dates, and a category from a fixed vocabulary
 public routes. Use `/[lang]/blog/[slug]` for articles and `/[lang]/blog/category/[category]`
 for category listings; only categories with published articles are generated, so there
 are no empty category pages. Tags are intentionally not modelled yet.
+
+A standalone external URL in an article becomes a link card, or a click-to-load player for
+YouTube, Speaker Deck and Docswell. `bun run blog:embeds` resolves OGP and oEmbed data into a
+committed `embeds.json` with local thumbnails, so builds stay offline and readers contact no
+third party until they start a player.
 Only advertise language alternates for translations that exist.
 
 Reports should link to the original event, slides or recordings when available,

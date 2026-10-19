@@ -1,7 +1,7 @@
 <script lang="ts">
   import { authors } from '$lib/blog/authors'
   import { categories } from '$lib/blog/categories'
-  import { setArticleSlug } from '$lib/blog/context'
+  import { setArticle } from '$lib/blog/context'
   import { articleImage } from '$lib/blog/images'
   import { formatDate } from '$lib/blog/post'
   import PageMeta from '$lib/PageMeta.svelte'
@@ -12,7 +12,7 @@
   const post = $derived(data.post)
   const cover = $derived(post.image ? articleImage(post.slug, post.image) : undefined)
   // SvelteKit reuses this component between articles, so share a getter rather than a value.
-  setArticleSlug(() => post.slug)
+  setArticle(() => ({ slug: post.slug, lang: data.lang }))
 
   const credits = $derived(post.authors.map((id) => authors[id]))
   const url = $derived(`${websiteOrigin}/${post.lang}/blog/${post.slug}`)

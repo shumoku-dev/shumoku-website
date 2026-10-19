@@ -18,7 +18,8 @@
     "test": "vitest run src/lib",
     "check": "bun run lint && bun run typecheck && bun run test && bun run knip && bun run build",
     "knip": "svelte-kit sync && knip",
-    "palette": "bun scripts/palette.ts --write"
+    "palette": "bun scripts/palette.ts --write",
+    "blog:embeds": "bun scripts/blog-embeds.ts"
   },
   "dependencies": {
     "@lucide/svelte": "^1.41.0",

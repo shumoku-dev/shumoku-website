@@ -2,6 +2,7 @@ import { fileURLToPath } from 'node:url'
 import adapter from '@sveltejs/adapter-vercel'
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte'
 import { mdsvex } from 'mdsvex'
+import remarkEmbeds from './src/lib/blog/remark-embeds.js'
 
 export default {
   extensions: ['.svelte', '.md'],
@@ -9,6 +10,7 @@ export default {
     vitePreprocess(),
     mdsvex({
       extensions: ['.md'],
+      remarkPlugins: [remarkEmbeds],
       layout: fileURLToPath(new URL('./src/lib/blog/ArticleLayout.svelte', import.meta.url)),
     }),
   ],
