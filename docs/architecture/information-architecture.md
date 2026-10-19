@@ -53,9 +53,11 @@ The existing `/support#enterprise` link remains valid.
 ## Publishing follow-up
 
 Blog articles are ordinary Markdown bundles: `src/content/blog/<slug>/index.md`
-and a sibling `images/` folder. Frontmatter is read by a server-only module and drives
-listings, dates and the sitemap; the article route adds the compiled mdsvex component in a
-universal load. Relative Markdown images are resolved through an `?enhanced` glob, so every
+and a sibling `images/` folder. A server-only module reads the sources, parses the YAML
+frontmatter for listings, dates and the sitemap, and turns the body into serializable nodes
+with unified (remark-parse, remark-gfm, remark-rehype). The article page renders those nodes
+with Svelte components, so Markdown is never compiled as Svelte source and raw HTML is dropped.
+Relative Markdown images are resolved through an `?enhanced` glob, so every
 photo gets responsive AVIF/WebP sources. See the authoring README in `src/content/blog/`.
 No CMS or article-specific Svelte code is needed.
 The first report uses the supplied Meetup #1 photos and factual captions. Author
@@ -133,7 +135,7 @@ provenance and the MIT license are in `src/lib/assets/icons/`.
 
 ## Blog link cards
 
-Standalone external Markdown links render as cards with the authored link label and destination hostname.
-`scripts/remark-link-cards.js` marks single-link paragraphs during compilation;
-`ArticleLayout.svelte` styles them. No remote metadata or preview images are fetched.
-Cards sit after the relevant paragraph, preserving the original prose. Inline links remain ordinary links.
+Only a bare external URL alone in a top-level paragraph becomes a link card or player; a
+labelled link (`[text](url)`) always stays an ordinary link, so authored link text never turns
+into a card title or caption. Cards show the page title, site and a stored thumbnail, not the
+third-party description. See "Publishing follow-up" for how embed data is resolved.

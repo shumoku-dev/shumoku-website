@@ -29,8 +29,14 @@
     "@shumoku/renderer-svg": "0.2.28",
     "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
+    "property-information": "^7.2.0",
+    "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
     "tailwind-merge": "^3.6.0",
-    "vanilla-cookieconsent": "3.1.0"
+    "unified": "^11.0.5",
+    "vanilla-cookieconsent": "3.1.0",
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.12",
@@ -39,10 +45,11 @@
     "@sveltejs/kit": "^2.70.3",
     "@sveltejs/vite-plugin-svelte": "^7.3.0",
     "@tailwindcss/vite": "^4.3.3",
+    "@types/hast": "^3.0.5",
+    "@types/mdast": "^4.0.4",
     "@types/node": "^26.0.0",
     "knip": "^6.35.1",
     "lefthook": "^2.1.12",
-    "mdsvex": "^0.12.8",
     "svelte": "^5.57.0",
     "svelte-check": "^4.7.6",
     "tailwindcss": "^4.3.3",

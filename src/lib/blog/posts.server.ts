@@ -1,15 +1,19 @@
 import { type Category, categories } from './categories'
+import { renderMarkdown, splitFrontmatter } from './markdown.server'
 import { type Post, parsePost } from './post'
 
-// Only frontmatter is read here, so article bodies never reach list or sitemap bundles.
-const metadata = import.meta.glob('/src/content/blog/*/index.md', {
+// Server-only: article sources never reach the client; pages receive rendered nodes instead.
+const sources = import.meta.glob<string>('/src/content/blog/*/index.md', {
   eager: true,
-  import: 'metadata',
+  query: '?raw',
+  import: 'default',
 })
 
-const all = Object.entries(metadata).map(([path, data]) =>
-  parsePost(path.split('/').at(-2) ?? '', data),
-)
+const articles = Object.entries(sources).map(([path, source]) => {
+  const { data, body } = splitFrontmatter(source)
+  return { post: parsePost(path.split('/').at(-2) ?? '', data), body }
+})
+const all = articles.map((article) => article.post)
 
 /** Published articles, newest first. Drafts are excluded everywhere. */
 export const posts: Post[] = all
@@ -22,3 +26,9 @@ export const getPost = (slug: string) => posts.find((post) => post.slug === slug
 export const usedCategories = (Object.keys(categories) as Category[]).filter((category) =>
   posts.some((post) => post.category === category),
 )
+
+/** The article body as nodes for `ArticleBody.svelte`. */
+export function articleBody(post: Post) {
+  const article = articles.find((entry) => entry.post.slug === post.slug)
+  return article ? renderMarkdown(article.body, post.lang).nodes : []
+}

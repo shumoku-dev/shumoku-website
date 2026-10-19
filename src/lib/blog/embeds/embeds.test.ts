@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { embedUrls } from './collect'
+import { embedUrls } from '../markdown.server'
 import { cachedSlugs, embedImage, embedLock } from './lock'
 import { playerProvider, players, youtubeVideo } from './providers'
 
@@ -10,10 +10,12 @@ const slugs = readdirSync(root, { withFileTypes: true })
   .map((entry) => entry.name)
 
 describe('standalone link detection', () => {
-  it('embeds only links that are alone in a top-level paragraph', async () => {
-    const urls = await embedUrls(
+  it('embeds only bare URLs that are alone in a top-level paragraph', () => {
+    const urls = embedUrls(
       [
         'https://example.com/bare',
+        '',
+        '<https://example.com/angle>',
         '',
         '[Label](https://example.com/label)',
         '',
@@ -26,7 +28,7 @@ describe('standalone link detection', () => {
         '[Local](/ja/blog)',
       ].join('\n'),
     )
-    expect(urls).toEqual(['https://example.com/bare', 'https://example.com/label'])
+    expect(urls).toEqual(['https://example.com/bare', 'https://example.com/angle'])
   })
 })
 
@@ -49,8 +51,8 @@ describe('player providers', () => {
 })
 
 describe('embed lockfiles', () => {
-  it.each(slugs)('records every standalone URL of %s', async (slug) => {
-    const urls = await embedUrls(readFileSync(new URL(`${slug}/index.md`, root), 'utf8'))
+  it.each(slugs)('records every standalone URL of %s', (slug) => {
+    const urls = embedUrls(readFileSync(new URL(`${slug}/index.md`, root), 'utf8'))
     // Run `bun run blog:embeds` after adding or removing a standalone URL.
     expect(Object.keys(embedLock(slug)).sort()).toEqual([...urls].sort())
   })

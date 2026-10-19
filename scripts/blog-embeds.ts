@@ -5,9 +5,9 @@
 // reads only these files.
 import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
-import { embedUrls } from '../src/lib/blog/embeds/collect'
 import type { Embed, EmbedLock } from '../src/lib/blog/embeds/lock'
 import { playerProvider, players, youtubeVideo } from '../src/lib/blog/embeds/providers'
+import { embedUrls } from '../src/lib/blog/markdown.server'
 
 const root = new URL('../src/content/blog/', import.meta.url)
 const cache = new URL('../src/lib/blog/embeds/cache/', import.meta.url)
@@ -168,7 +168,7 @@ for (const slug of slugs) {
   const folder = new URL(`${slug}/`, cache)
   const lockUrl = new URL('embeds.json', folder)
   const previous: EmbedLock = existsSync(lockUrl) ? JSON.parse(readFileSync(lockUrl, 'utf8')) : {}
-  const urls = await embedUrls(readFileSync(new URL(`${slug}/index.md`, root), 'utf8'))
+  const urls = embedUrls(readFileSync(new URL(`${slug}/index.md`, root), 'utf8'))
   const next: EmbedLock = {}
   for (const url of urls) {
     if (previous[url] && !refresh) {

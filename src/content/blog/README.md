@@ -2,6 +2,8 @@
 
 記事は **1フォルダーにMarkdownと画像** をまとめます。記事を書くためのTypeScript、Svelte、HTMLは不要です。
 日本語記事だけで公開でき、英訳は必須ではありません。
+本文はGitHubと同じMarkdown（GFM: 表、脚注、取り消し線、タスクリスト）で書きます。
+HTMLタグは表示されず、`{` や `<` もそのまま文字として扱われます。
 
 ```text
 src/content/blog/
@@ -153,27 +155,26 @@ websiteディレクトリで `bun run typecheck`、`bun run test`、`bun run bui
 | `src/lib/blog/categories.ts` | カテゴリの選択肢と日英の表示名 |
 | `src/lib/blog/authors.ts` | 著者の表示名とリンク |
 | `src/lib/blog/BlogIndex.svelte` | 記事一覧とカテゴリのナビ。一覧とカテゴリページで共用 |
-| `src/lib/blog/posts.server.ts` | 全記事のfrontmatterを読み、公開記事を日付順に並べる（サーバー専用） |
+| `src/lib/blog/posts.server.ts` | 全記事を読み、公開記事を日付順に並べる。本文の変換もここから呼ぶ（サーバー専用） |
+| `src/lib/blog/markdown.server.ts` | frontmatterの分離と、本文をunified（remark-parse / remark-gfm / remark-rehype）でノードのデータに変換 |
+| `src/lib/blog/ArticleBody.svelte` | ノードを描画し、本文のスタイルを持つ。画像は `ArticleImage`、単独URLは `embeds/Embed` |
 | `src/lib/blog/images.ts` | 記事内画像（`./images/...`）の解決 |
-| `src/lib/blog/context.ts` | Markdownの画像とリンクに、表示中の記事と表示言語を伝えるcontext |
-| `src/lib/blog/ArticleLayout.svelte` | mdsvexのlayout。本文のスタイルと、`img` / `a` を `ArticleImage` / `embeds/ArticleLink` へ置き換える指定 |
-| `src/lib/blog/embeds/remark.js` | 単独行の外部リンクに印を付けるremarkプラグイン（ビルド時） |
-| `src/lib/blog/embeds/collect.ts` | 同じプラグインで記事中の単独URLを集める（取得スクリプトとテスト用） |
-| `src/lib/blog/embeds/ArticleLink.svelte` | 印の付いたリンクを `LinkCard` / `PlayerEmbed` に、それ以外を通常のリンクにする |
+| `src/lib/blog/embeds/remark.ts` | URLだけの行を埋め込みに変えるremarkプラグイン |
+| `src/lib/blog/embeds/Embed.svelte` | 埋め込みを `LinkCard` / `PlayerEmbed` に振り分ける |
 | `src/lib/blog/embeds/providers.ts` | プレーヤーにするサービスと、iframeを許可するホスト |
 | `src/lib/blog/embeds/lock.ts` | `cache/<slug>/embeds.json` の型と、サムネイルの読み込み |
 | `src/lib/blog/embeds/cache/` | `bun run blog:embeds` の生成物（コミットする。手で作らない） |
 | `scripts/blog-embeds.ts` | `bun run blog:embeds` の本体 |
 | `routes/[lang=lang]/blog/+page.server.ts` | 一覧 |
 | `routes/[lang=lang]/blog/category/[category]/+page.server.ts` | カテゴリ別一覧。記事のあるカテゴリだけ静的生成 |
-| `routes/[lang=lang]/blog/[slug]/+page.server.ts` | 記事のメタデータ、404、prerenderの `entries` |
-| `routes/[lang=lang]/blog/[slug]/+page.ts` | 記事本文（Markdownのコンポーネント）を遅延importする |
+| `routes/[lang=lang]/blog/[slug]/+page.server.ts` | 記事のメタデータと本文のノード、404、prerenderの `entries` |
 | `src/lib/Photo.svelte` | 写真・キャプション・拡大リンク。記事、Home、Aboutで共用 |
 
 ## 実装の参考
 
-- [MDsveX layouts](https://mdsvex.pngwn.io/docs#layouts): Markdownの要素（ここでは `img`）をlayoutのコンポーネントで置き換える。
-- [SvelteKit universal load](https://svelte.dev/docs/kit/load#Universal-vs-server): サーバーloadで得たデータに、universal loadでコンポーネントを足す。
+- [unified](https://unifiedjs.com/) / [remark-gfm](https://github.com/remarkjs/remark-gfm): Markdown（GFM）をサーバーで解析する。
+  Markdownを読むのはサーバーだけで、ページにはノードのデータが渡り、ブラウザーにパーサーは送られない。
+- [Svelte snippets](https://svelte.dev/docs/svelte/snippet): ノードを再帰的なスニペットで描画する。
 - [SvelteKit images](https://svelte.dev/docs/kit/images#sveltejs-enhanced-img-Dynamically-choosing-an-image): `?enhanced` のglobで、画像を動的に選ぶ。
 - [SvelteKit server-only modules](https://svelte.dev/docs/kit/server-only-modules): 記事一覧は `.server.ts` に置き、クライアントへ送らない。
 - [SvelteKit prerender entries](https://svelte.dev/docs/kit/page-options#entries): 記事から静的生成するURLを列挙する。
@@ -189,8 +190,6 @@ websiteディレクトリで `bun run typecheck`、`bun run test`、`bun run bui
 ```markdown
 https://event.ospn.jp/osc2026-fall/
 
-[OSC Tokyo 2026 Fall 公式サイト](https://event.ospn.jp/osc2026-fall/)
-
 https://youtu.be/LD9rUmkCoRU?t=8410
 
 https://speakerdeck.com/<user>/<slide>
@@ -204,8 +203,9 @@ https://www.docswell.com/s/<user>/<slide>
 | Speaker Deck、Docswell | スライドのプレーヤー |
 | それ以外 | タイトル・サイト名・画像のカード |
 
-- `[文字](URL)` の形で書くと、その文字がカードやプレーヤーのタイトルになります。URLだけなら相手ページのタイトルを使います。
-- 文中のリンク、箇条書きや引用の中のリンクは通常のリンクのままです。
+- 埋め込みになるのはURLだけの行です。`[文字](URL)` は単独の行でも通常のリンクのままです。
+  リンクの文字がカードのタイトルやキャプションになることはありません。タイトルは相手ページのものを使います。
+- 文中のリンク、箇条書きや引用の中のリンクも通常のリンクのままです。
 - 動画とスライドは、最初はサムネイルと再生ボタンだけを表示し、クリックして初めて外部のiframe（YouTubeは `youtube-nocookie.com`）を読み込みます。
   クリックするまで、読者のブラウザーは外部サービスに一切接続しません。サムネイルの上にタイトルとサービス名を重ね、下にキャプションは付けません。
 

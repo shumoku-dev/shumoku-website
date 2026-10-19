@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit'
-import { getPost, posts } from '$lib/blog/posts.server'
+import { articleBody, getPost, posts } from '$lib/blog/posts.server'
 import { locales } from '$lib/site'
 import type { EntryGenerator, PageServerLoad } from './$types'
 
@@ -11,5 +11,5 @@ export const entries: EntryGenerator = () =>
 export const load: PageServerLoad = ({ params }) => {
   const post = getPost(params.slug)
   if (!post) error(404, 'Article not found')
-  return { post }
+  return { post, body: articleBody(post) }
 }
