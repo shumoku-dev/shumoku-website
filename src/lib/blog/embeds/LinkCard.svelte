@@ -4,25 +4,20 @@
   let {
     href,
     title,
-    description,
     site,
     image,
-  }: { href: string; title: string; description?: string; site?: string; image?: Picture } =
-    $props()
+  }: { href: string; title: string; site?: string; image?: Picture } = $props()
   const host = $derived(new URL(href).hostname.replace(/^www\./, ''))
 </script>
 
 <a class="link-card" {href}>
   <span class="text">
     <span class="title">{title}</span>
-    {#if description}
-      <span class="description">{description}</span>
-    {/if}
     <span class="site">{site && site !== host ? `${site} · ${host}` : host} ↗</span>
   </span>
   {#if image}
     <span class="image">
-      <enhanced:img src={image} alt="" sizes="(max-width: 650px) 6rem, 12rem" loading="lazy" />
+      <enhanced:img src={image} alt="" sizes="(max-width: 650px) 5rem, 9rem" loading="lazy" />
     </span>
   {/if}
 </a>
@@ -55,16 +50,6 @@
     font-weight: 600;
     line-height: 1.5;
   }
-  .description {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    overflow: hidden;
-    color: var(--site-muted);
-    font-size: 0.875rem;
-    line-height: 1.6;
-  }
   .site {
     overflow: hidden;
     color: var(--site-muted);
@@ -72,8 +57,10 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+  /* og:image is usually 1.91:1; the card grows to that height rather than cropping it. */
   .image {
-    width: 12rem;
+    width: 9rem;
+    aspect-ratio: 1.91;
   }
   .image :global(picture) {
     display: contents;
@@ -86,10 +73,8 @@
   }
   @media (max-width: 650px) {
     .image {
-      width: 6rem;
-    }
-    .description {
-      display: none;
+      width: 5rem;
+      aspect-ratio: auto;
     }
   }
 </style>

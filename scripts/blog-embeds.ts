@@ -1,14 +1,16 @@
 #!/usr/bin/env bun
-// Resolves standalone URLs in blog articles into src/content/blog/<slug>/embeds.json and downloads
-// their thumbnails into embeds/. Existing entries are kept; pass --refresh to fetch them again, or
-// slugs to limit the run. Commit the results: the site build reads only these files.
+// Resolves standalone URLs in blog articles into src/lib/blog/embeds/cache/<slug>/embeds.json and
+// downloads their thumbnails next to it. Article folders stay author-only. Existing entries are kept;
+// pass --refresh to fetch them again, or slugs to limit the run. Commit the results: the site build
+// reads only these files.
 import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
-import { embedUrls } from '../src/lib/blog/embed-urls'
-import type { Embed, EmbedLock } from '../src/lib/blog/embeds'
-import { playerProvider, players, youtubeVideo } from '../src/lib/blog/providers'
+import { embedUrls } from '../src/lib/blog/embeds/collect'
+import type { Embed, EmbedLock } from '../src/lib/blog/embeds/lock'
+import { playerProvider, players, youtubeVideo } from '../src/lib/blog/embeds/providers'
 
 const root = new URL('../src/content/blog/', import.meta.url)
+const cache = new URL('../src/lib/blog/embeds/cache/', import.meta.url)
 const args = process.argv.slice(2)
 const refresh = args.includes('--refresh')
 const only = args.filter((arg) => !arg.startsWith('--'))
@@ -65,7 +67,6 @@ async function page(url: string) {
   return {
     url: response.url,
     title: meta('og:title', 'twitter:title') ?? (title ? decode(title) : undefined),
-    description: meta('og:description', 'description', 'twitter:description'),
     site: meta('og:site_name'),
     image: image ? new URL(image, response.url).href : undefined,
     oembed: tags.find((tag) => tag.tag === 'link' && tag.type === 'application/json+oembed')?.href,
@@ -88,12 +89,9 @@ async function thumbnail(slug: string, ...candidates: (string | undefined)[]) {
       const extension = extensions[response.headers.get('content-type')?.split(';')[0] ?? '']
       if (!extension) continue
       const name = `${createHash('sha256').update(candidate).digest('hex').slice(0, 16)}.${extension}`
-      mkdirSync(new URL(`${slug}/embeds/`, root), { recursive: true })
-      writeFileSync(
-        new URL(`${slug}/embeds/${name}`, root),
-        Buffer.from(await response.arrayBuffer()),
-      )
-      return `./embeds/${name}`
+      mkdirSync(new URL(`${slug}/`, cache), { recursive: true })
+      writeFileSync(new URL(`${slug}/${name}`, cache), Buffer.from(await response.arrayBuffer()))
+      return name
     } catch (error) {
       console.warn(`  thumbnail skipped: ${error}`)
     }
@@ -151,17 +149,24 @@ async function resolve(slug: string, url: string): Promise<Embed> {
   return {
     type: 'card',
     title: info.title ?? new URL(url).hostname,
-    ...(info.description && { description: info.description }),
     ...(info.site && { site: info.site }),
     image: await thumbnail(slug, info.image),
   }
 }
 
-for (const slug of readdirSync(root, { withFileTypes: true })
+const slugs = readdirSync(root, { withFileTypes: true })
   .filter((entry) => entry.isDirectory() && existsSync(new URL(`${entry.name}/index.md`, root)))
-  .map((entry) => entry.name)) {
+  .map((entry) => entry.name)
+
+// Remove the cache of articles that no longer exist.
+if (!only.length && existsSync(cache))
+  for (const slug of readdirSync(cache))
+    if (!slugs.includes(slug)) rmSync(new URL(`${slug}/`, cache), { recursive: true })
+
+for (const slug of slugs) {
   if (only.length && !only.includes(slug)) continue
-  const lockUrl = new URL(`${slug}/embeds.json`, root)
+  const folder = new URL(`${slug}/`, cache)
+  const lockUrl = new URL('embeds.json', folder)
   const previous: EmbedLock = existsSync(lockUrl) ? JSON.parse(readFileSync(lockUrl, 'utf8')) : {}
   const urls = await embedUrls(readFileSync(new URL(`${slug}/index.md`, root), 'utf8'))
   const next: EmbedLock = {}
@@ -179,11 +184,13 @@ for (const slug of readdirSync(root, { withFileTypes: true })
       else process.exitCode = 1
     }
   }
+  if (!urls.length) {
+    rmSync(folder, { recursive: true, force: true })
+    continue
+  }
+  mkdirSync(folder, { recursive: true })
+  writeFileSync(lockUrl, `${JSON.stringify(next, null, 2)}\n`)
   // Drop thumbnails that no entry refers to any more.
-  const used = new Set(Object.values(next).map((entry) => entry.image?.slice('./embeds/'.length)))
-  const folder = new URL(`${slug}/embeds/`, root)
-  if (existsSync(folder))
-    for (const file of readdirSync(folder)) if (!used.has(file)) rmSync(new URL(file, folder))
-  if (urls.length) writeFileSync(lockUrl, `${JSON.stringify(next, null, 2)}\n`)
-  else if (existsSync(lockUrl)) rmSync(lockUrl)
+  const used = new Set(['embeds.json', ...Object.values(next).map((entry) => entry.image)])
+  for (const file of readdirSync(folder)) if (!used.has(file)) rmSync(new URL(file, folder))
 }

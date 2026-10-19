@@ -1,10 +1,10 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { embedUrls } from './embed-urls'
-import { embedImage, embedLock } from './embeds'
+import { embedUrls } from './collect'
+import { cachedSlugs, embedImage, embedLock } from './lock'
 import { playerProvider, players, youtubeVideo } from './providers'
 
-const root = new URL('../../content/blog/', import.meta.url)
+const root = new URL('../../../content/blog/', import.meta.url)
 const slugs = readdirSync(root, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name)
@@ -53,6 +53,9 @@ describe('embed lockfiles', () => {
     const urls = await embedUrls(readFileSync(new URL(`${slug}/index.md`, root), 'utf8'))
     // Run `bun run blog:embeds` after adding or removing a standalone URL.
     expect(Object.keys(embedLock(slug)).sort()).toEqual([...urls].sort())
+  })
+  it('keeps no cache for deleted articles', () => {
+    for (const slug of cachedSlugs()) expect(slugs).toContain(slug)
   })
   it.each(slugs)('only frames allowed hosts and stored thumbnails in %s', (slug) => {
     for (const embed of Object.values(embedLock(slug))) {

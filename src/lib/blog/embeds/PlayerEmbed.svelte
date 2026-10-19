@@ -43,7 +43,7 @@
   )
 </script>
 
-<figure class="player">
+<div class="player">
   <!-- Portrait documents would outgrow the screen; cap the height and narrow the frame instead. -->
   <div class="frame" style:aspect-ratio={ratio} style:max-width={`calc(80svh * ${ratio})`}>
     {#if active}
@@ -67,22 +67,18 @@
         {#if image}
           <enhanced:img src={image} alt="" sizes="(max-width: 44rem) 100vw, 44rem" loading="lazy" />
         {/if}
+        <!-- The title sits on the thumbnail, as on YouTube's own player, instead of in a caption. -->
+        <span class="heading" aria-hidden="true">
+          <span class="title">{title}</span>
+          <span class="provider">{label}</span>
+        </span>
         <span class="play"><Play aria-hidden="true" /></span>
       </a>
     {/if}
   </div>
-  <figcaption>
-    <span>{title}</span>
-    <a {href}>{lang === 'ja' ? `${label}で開く` : `Open on ${label}`} ↗</a>
-  </figcaption>
-</figure>
+</div>
 
 <style>
-  .player {
-    display: grid;
-    gap: var(--ui-space-2);
-    margin: 0;
-  }
   .frame {
     position: relative;
     width: 100%;
@@ -107,6 +103,27 @@
     height: 100%;
     object-fit: cover;
   }
+  .heading {
+    position: absolute;
+    inset: 0 0 auto;
+    display: grid;
+    gap: var(--ui-space-1);
+    padding: var(--ui-space-3) var(--ui-space-4) var(--ui-space-8);
+    background: linear-gradient(rgb(0 0 0 / 0.7), transparent);
+    color: #fff;
+    text-align: start;
+  }
+  .heading .title {
+    overflow: hidden;
+    font-weight: 600;
+    line-height: 1.5;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .heading .provider {
+    font-size: 0.8125rem;
+    opacity: 0.85;
+  }
   .play {
     position: absolute;
     inset: 0;
@@ -127,16 +144,5 @@
   .frame > a:focus-visible {
     outline: 3px solid var(--ui-focus);
     outline-offset: -3px;
-  }
-  figcaption {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: var(--ui-space-1) var(--ui-space-4);
-    color: var(--site-muted);
-    font-size: 0.875rem;
-  }
-  figcaption a:hover {
-    text-decoration: underline;
   }
 </style>

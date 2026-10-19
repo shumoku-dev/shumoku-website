@@ -1,7 +1,7 @@
 <script module lang="ts">
   // mdsvex replaces Markdown elements with the components exported here.
   import img from './ArticleImage.svelte'
-  import a from './ArticleLink.svelte'
+  import a from './embeds/ArticleLink.svelte'
 
   export { a, img }
 </script>

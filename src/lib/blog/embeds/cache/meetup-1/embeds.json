@@ -2,8 +2,7 @@
   "https://shumoku.connpass.com/": {
     "type": "card",
     "title": "Shumoku Community",
-    "description": "Shumoku Communityの詳細ページです。",
     "site": "connpass",
-    "image": "./embeds/6211f3170ae0ff9a.png"
+    "image": "6211f3170ae0ff9a.png"
   }
 }

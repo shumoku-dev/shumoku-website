@@ -156,11 +156,13 @@ websiteディレクトリで `bun run typecheck`、`bun run test`、`bun run bui
 | `src/lib/blog/posts.server.ts` | 全記事のfrontmatterを読み、公開記事を日付順に並べる（サーバー専用） |
 | `src/lib/blog/images.ts` | 記事内画像（`./images/...`）の解決 |
 | `src/lib/blog/context.ts` | Markdownの画像とリンクに、表示中の記事と表示言語を伝えるcontext |
-| `src/lib/blog/ArticleLayout.svelte` | mdsvexのlayout。本文のスタイルと、`img` / `a` を `ArticleImage` / `ArticleLink` へ置き換える指定 |
-| `src/lib/blog/remark-embeds.js` | 単独行の外部リンクに印を付けるremarkプラグイン（ビルド・取得スクリプト・テストで共用） |
-| `src/lib/blog/ArticleLink.svelte` | 印の付いたリンクを `LinkCard` / `PlayerEmbed` に、それ以外を通常のリンクにする |
-| `src/lib/blog/providers.ts` | プレーヤーにするサービスと、iframeを許可するホスト |
-| `src/lib/blog/embeds.ts` | `embeds.json` とサムネイルの読み込み |
+| `src/lib/blog/ArticleLayout.svelte` | mdsvexのlayout。本文のスタイルと、`img` / `a` を `ArticleImage` / `embeds/ArticleLink` へ置き換える指定 |
+| `src/lib/blog/embeds/remark.js` | 単独行の外部リンクに印を付けるremarkプラグイン（ビルド時） |
+| `src/lib/blog/embeds/collect.ts` | 同じプラグインで記事中の単独URLを集める（取得スクリプトとテスト用） |
+| `src/lib/blog/embeds/ArticleLink.svelte` | 印の付いたリンクを `LinkCard` / `PlayerEmbed` に、それ以外を通常のリンクにする |
+| `src/lib/blog/embeds/providers.ts` | プレーヤーにするサービスと、iframeを許可するホスト |
+| `src/lib/blog/embeds/lock.ts` | `cache/<slug>/embeds.json` の型と、サムネイルの読み込み |
+| `src/lib/blog/embeds/cache/` | `bun run blog:embeds` の生成物（コミットする。手で作らない） |
 | `scripts/blog-embeds.ts` | `bun run blog:embeds` の本体 |
 | `routes/[lang=lang]/blog/+page.server.ts` | 一覧 |
 | `routes/[lang=lang]/blog/category/[category]/+page.server.ts` | カテゴリ別一覧。記事のあるカテゴリだけ静的生成 |
@@ -200,12 +202,12 @@ https://www.docswell.com/s/<user>/<slide>
 | --- | --- |
 | YouTube（`youtu.be`、`watch?v=`、Shorts、ライブ） | 動画プレーヤー。`?t=` の開始位置も引き継ぐ |
 | Speaker Deck、Docswell | スライドのプレーヤー |
-| それ以外 | タイトル・説明・サイト名・画像のカード |
+| それ以外 | タイトル・サイト名・画像のカード |
 
 - `[文字](URL)` の形で書くと、その文字がカードやプレーヤーのタイトルになります。URLだけなら相手ページのタイトルを使います。
 - 文中のリンク、箇条書きや引用の中のリンクは通常のリンクのままです。
 - 動画とスライドは、最初はサムネイルと再生ボタンだけを表示し、クリックして初めて外部のiframe（YouTubeは `youtube-nocookie.com`）を読み込みます。
-  クリックするまで、読者のブラウザーは外部サービスに一切接続しません。
+  クリックするまで、読者のブラウザーは外部サービスに一切接続しません。サムネイルの上にタイトルとサービス名を重ね、下にキャプションは付けません。
 
 ### `bun run blog:embeds`
 
@@ -217,8 +219,10 @@ bun run blog:embeds osc-tokyo-2026-fall   # 記事を指定
 bun run blog:embeds --refresh       # 取得済みのものも取り直す
 ```
 
-- 相手ページのOGP（タイトル・説明・画像）とoEmbedを取得し、記事フォルダーの `embeds.json` に書きます。
-  サムネイルは `embeds/` に保存します。
+- 相手ページのOGP（タイトル・サイト名・画像）とoEmbedを取得し、`src/lib/blog/embeds/cache/<slug>/embeds.json` に書きます。
+  サムネイルも同じフォルダーに保存します。記事フォルダーには何も追加されません。
+  相手サイトの説明文は取得しません。リンクを置いた理由や文脈は、前後の本文に書きます。
+- 記事を消して実行すると、その記事のcacheも消えます。記事フォルダーをコピーして新しい記事を書き始めても、cacheは付いてきません。
 - サイトのビルドはこのファイルだけを読み、外部サイトには接続しません。相手のサイトが落ちていてもビルドは壊れません。
 - 実行を忘れると `bun run test` が失敗します。それまでの間、カードはリンクの文字かURLだけで表示されます。
-- 取得したタイトルや説明が不適切なら、`embeds.json` を直接直して構いません。`--refresh` を付けない限り上書きされません。
+- 取得したタイトルが不適切なら、cacheの `embeds.json` を直接直して構いません。`--refresh` を付けない限り上書きされません。

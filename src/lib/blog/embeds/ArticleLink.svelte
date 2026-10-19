@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import type { HTMLAnchorAttributes } from 'svelte/elements'
-  import { getArticle } from './context'
-  import { articleEmbed, embedImage } from './embeds'
+  import { getArticle } from '../context'
   import LinkCard from './LinkCard.svelte'
+  import { articleEmbed, embedImage } from './lock'
   import PlayerEmbed from './PlayerEmbed.svelte'
 
   // mdsvex renders every Markdown link through this component. `remark-embeds.js` marks standalone
@@ -37,13 +37,7 @@
   />
 {:else if standalone}
   <!-- Until `bun run blog:embeds` records the page, the card shows the label or the URL. -->
-  <LinkCard
-    {href}
-    title={label ?? embed?.title ?? href}
-    description={embed?.description}
-    site={embed?.site}
-    {image}
-  />
+  <LinkCard {href} title={label ?? embed?.title ?? href} site={embed?.site} {image} />
 {:else}
   <a {href} {...rest}>{@render children?.()}</a>
 {/if}
