@@ -6,8 +6,8 @@ import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
 import { parse as parseYaml } from 'yaml'
 import type { Locale } from '$lib/site'
-import remarkEmbeds from './embeds/remark'
-import { embedTag, type MarkdownNode } from './markdown'
+import remarkEmbeds from './embeds/remark.ts'
+import { embedTag, type MarkdownNode } from './markdown.ts'
 
 const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/
 

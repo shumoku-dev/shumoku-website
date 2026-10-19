@@ -163,8 +163,10 @@ websiteディレクトリで `bun run typecheck`、`bun run test`、`bun run bui
 | `src/lib/blog/embeds/Embed.svelte` | 埋め込みを `LinkCard` / `PlayerEmbed` に振り分ける |
 | `src/lib/blog/embeds/providers.ts` | プレーヤーにするサービスと、iframeを許可するホスト |
 | `src/lib/blog/embeds/lock.ts` | `cache/<slug>/embeds.json` の型と、サムネイルの読み込み |
-| `src/lib/blog/embeds/cache/` | `bun run blog:embeds` の生成物（コミットする。手で作らない） |
-| `scripts/blog-embeds.ts` | `bun run blog:embeds` の本体 |
+| `src/lib/blog/embeds/cache/` | 自動取得の結果（コミットする。手で作らない） |
+| `src/lib/blog/embeds/resolver.ts` | OGPとoEmbedの取得、cacheの書き込みと掃除（Node専用） |
+| `src/lib/blog/embeds/vite.ts` | 保存時（dev）とビルド前に `resolver` を動かすViteプラグイン |
+| `scripts/blog-embeds.ts` | `bun run blog:embeds`。取り直し用 |
 | `routes/[lang=lang]/blog/+page.server.ts` | 一覧 |
 | `routes/[lang=lang]/blog/category/[category]/+page.server.ts` | カテゴリ別一覧。記事のあるカテゴリだけ静的生成 |
 | `routes/[lang=lang]/blog/[slug]/+page.server.ts` | 記事のメタデータと本文のノード、404、prerenderの `entries` |
@@ -209,20 +211,23 @@ https://www.docswell.com/s/<user>/<slide>
 - 動画とスライドは、最初はサムネイルと再生ボタンだけを表示し、クリックして初めて外部のiframe（YouTubeは `youtube-nocookie.com`）を読み込みます。
   クリックするまで、読者のブラウザーは外部サービスに一切接続しません。サムネイルの上にタイトルとサービス名を重ね、下にキャプションは付けません。
 
-### `bun run blog:embeds`
+### 埋め込みデータの取得（自動）
 
-単独のURLを足したり消したりしたら、次を実行して結果をコミットします。
+URLを貼って保存するだけで、埋め込みに必要なデータは自動で取得されます。コマンドを実行する必要はありません。
+
+- **devサーバー**: `index.md` を保存すると、その記事の新しいURLを取得し、画面も自動で更新されます。
+- **ビルド**: cacheにないURLがあれば、ビルドの最初に取得します。
+- 取得するのは、相手ページのOGP（タイトル・サイト名・画像）とoEmbedです。結果は `src/lib/blog/embeds/cache/<slug>/embeds.json` に書き、サムネイルも同じフォルダーに保存します。
+  記事フォルダーには何も追加されません。相手サイトの説明文は取得しません。リンクを置いた理由や文脈は、前後の本文に書きます。
+- 取得に失敗しても（相手のサイトが落ちている、オフラインなど）ビルドは止まりません。警告を出し、URLとドメインだけの簡易カードにします。
+- cacheは記事と一緒にコミットしてください。コミット済みのURLは本番のビルドで取り直さないので、外部サイトの状態に左右されず、毎回同じ表示になります。
+- 記事を消すと、その記事のcacheも消えます。記事フォルダーをコピーして新しい記事を書き始めても、cacheは付いてきません。
+- 取得したタイトルが不適切なら、cacheの `embeds.json` を直接直して構いません。取り直さない限り上書きされません。
+
+取り直したいときや、devサーバーを使わずに取得したいときは、コマンドも使えます。
 
 ```sh
-bun run blog:embeds                 # 未取得のURLだけ取得
+bun run blog:embeds                       # 未取得のURLだけ取得
 bun run blog:embeds osc-tokyo-2026-fall   # 記事を指定
-bun run blog:embeds --refresh       # 取得済みのものも取り直す
+bun run blog:embeds --refresh             # 取得済みのものも取り直す
 ```
-
-- 相手ページのOGP（タイトル・サイト名・画像）とoEmbedを取得し、`src/lib/blog/embeds/cache/<slug>/embeds.json` に書きます。
-  サムネイルも同じフォルダーに保存します。記事フォルダーには何も追加されません。
-  相手サイトの説明文は取得しません。リンクを置いた理由や文脈は、前後の本文に書きます。
-- 記事を消して実行すると、その記事のcacheも消えます。記事フォルダーをコピーして新しい記事を書き始めても、cacheは付いてきません。
-- サイトのビルドはこのファイルだけを読み、外部サイトには接続しません。相手のサイトが落ちていてもビルドは壊れません。
-- 実行を忘れると `bun run test` が失敗します。それまでの間、カードはリンクの文字かURLだけで表示されます。
-- 取得したタイトルが不適切なら、cacheの `embeds.json` を直接直して構いません。`--refresh` を付けない限り上書きされません。

@@ -51,10 +51,10 @@ describe('player providers', () => {
 })
 
 describe('embed lockfiles', () => {
-  it.each(slugs)('records every standalone URL of %s', (slug) => {
+  it.each(slugs)('caches only URLs that %s still embeds', (slug) => {
+    // The dev server and build fetch missing URLs; stale entries mean the cache was edited by hand.
     const urls = embedUrls(readFileSync(new URL(`${slug}/index.md`, root), 'utf8'))
-    // Run `bun run blog:embeds` after adding or removing a standalone URL.
-    expect(Object.keys(embedLock(slug)).sort()).toEqual([...urls].sort())
+    for (const url of Object.keys(embedLock(slug))) expect(urls).toContain(url)
   })
   it('keeps no cache for deleted articles', () => {
     for (const slug of cachedSlugs()) expect(slugs).toContain(slug)

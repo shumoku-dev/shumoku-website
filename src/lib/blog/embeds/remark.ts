@@ -1,5 +1,5 @@
 import type { Root } from 'mdast'
-import { embedTag } from '../markdown'
+import { embedTag } from '../markdown.ts'
 
 /**
  * A top-level paragraph that holds nothing but an external URL becomes an embed, as on Zenn:

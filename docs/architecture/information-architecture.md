@@ -73,9 +73,11 @@ for category listings; only categories with published articles are generated, so
 are no empty category pages. Tags are intentionally not modelled yet.
 
 A standalone external URL in an article becomes a link card, or a click-to-load player for
-YouTube, Speaker Deck and Docswell. `bun run blog:embeds` resolves OGP and oEmbed data into a
+YouTube, Speaker Deck and Docswell. A Vite plugin resolves OGP and oEmbed data on save in dev
+and for missing entries before a build (`bun run blog:embeds` refreshes them) into a
 committed cache under `src/lib/blog/embeds/cache/<slug>/` with local thumbnails, keeping
-article folders author-only. Builds stay offline and readers contact no
+article folders author-only. A build with a complete committed cache makes no network
+requests; a failed fetch only warns and falls back to a plain card. Readers contact no
 third party until they start a player.
 Only advertise language alternates for translations that exist.
 
