@@ -1,19 +1,25 @@
 <script lang="ts">
-  import { page } from '$app/state'
-  import { articleAsset } from './assets'
+  import type { Picture } from 'vite-imagetools'
 
+  // Inline elements only: Markdown places images inside a paragraph.
   let {
     src,
-    alt = '',
-    title,
-    href,
-  }: { src: string; alt?: string; title?: string; href?: string } = $props()
-  const imageUrl = $derived(articleAsset(page.params.slug ?? '', src))
+    alt,
+    href = src.img.src,
+    sizes = '(max-width: 650px) 100vw, 66vw',
+    loading = 'lazy',
+  }: {
+    src: Picture
+    alt: string
+    href?: string
+    sizes?: string
+    loading?: 'lazy' | 'eager'
+  } = $props()
 </script>
 
-<span class="article-photo">
-  <a href={href ?? imageUrl} aria-label={alt || title}>
-    <img src={imageUrl} alt={alt || ''} {title} loading="lazy" decoding="async">
+<span class="photo">
+  <a {href} aria-label={alt}>
+    <enhanced:img {src} {alt} {sizes} {loading} decoding="async" />
   </a>
   {#if alt}
     <span class="caption">{alt}</span>
@@ -21,7 +27,7 @@
 </span>
 
 <style>
-  .article-photo {
+  .photo {
     display: block;
     min-width: 0;
   }
@@ -34,7 +40,10 @@
     outline: 2px solid var(--ui-focus);
     outline-offset: var(--ui-space-1);
   }
-  img {
+  a :global(picture) {
+    display: contents;
+  }
+  a :global(img) {
     display: block;
     width: 100%;
     height: auto;

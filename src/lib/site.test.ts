@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { docsUrl, locales, siteNavigation, sitePages } from './site'
+import { docsUrl, locales, navigationCurrent, siteNavigation, sitePages } from './site'
 
 describe('site page registry', () => {
   it('keeps registered paths unique and backed by page routes', () => {
@@ -10,9 +10,19 @@ describe('site page registry', () => {
         existsSync(new URL(`../routes/[lang=lang]${entry.path}/+page.svelte`, import.meta.url)),
       ).toBe(true)
       expect(
-        existsSync(new URL(`../routes/[lang=lang]${entry.path}/+page.ts`, import.meta.url)),
+        ['+page.ts', '+page.server.ts'].some((file) =>
+          existsSync(new URL(`../routes/[lang=lang]${entry.path}/${file}`, import.meta.url)),
+        ),
       ).toBe(true)
     }
+  })
+
+  it('marks the current section, including pages below it', () => {
+    expect(navigationCurrent('/blog', '/blog')).toBe('page')
+    expect(navigationCurrent('/blog/meetup-1', '/blog')).toBe('true')
+    expect(navigationCurrent('/blog/category/event', '/blog')).toBe('true')
+    expect(navigationCurrent('/blogger', '/blog')).toBeUndefined()
+    expect(navigationCurrent('/blog', null)).toBeUndefined()
   })
 
   it.each(locales)('uses localized labels and links for %s', (locale) => {

@@ -1,8 +1,9 @@
 ---
 title: "写真で振り返る Shumoku Meetup #1"
 description: "2026年9月8日、さくらインターネット東京支社で開催したShumoku Meetup #1。受付から登壇、交流までを写真で振り返ります。"
-date: "2026-09-08"
-category: "イベント開催記"
+published: "2026-09-08"
+category: event
+authors: [akitoshi]
 image: "./images/group.webp"
 imageAlt: "Shumoku Meetup #1の集合写真。ご参加ありがとうございました。"
 draft: false

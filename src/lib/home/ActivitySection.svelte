@@ -1,30 +1,35 @@
 <script lang="ts">
-  import MarkdownImage from '$lib/blog/MarkdownImage.svelte'
-  import { findPost } from '$lib/blog/posts'
+  import toast from '$lib/assets/photos/meetup-1-toast.webp?enhanced'
+  import { categories } from '$lib/blog/categories'
+  import { formatDate, type Post } from '$lib/blog/post'
+  import Photo from '$lib/Photo.svelte'
   import type { Locale } from '$lib/site'
 
-  let { locale }: { locale: Locale } = $props()
+  let { locale, post }: { locale: Locale; post?: Post } = $props()
   const ja = $derived(locale === 'ja')
-  const meetup = $derived(findPost('meetup-1', locale))
+  const href = $derived(`/${locale}/blog/${post?.slug}`)
+  const label = $derived(
+    post ? `${categories[post.category][locale]} · ${formatDate(post.published)}` : '',
+  )
 </script>
 
-{#if meetup}
+{#if post}
   <section class="site-section" aria-labelledby="activity-title">
     <div class="site-container activity-grid">
       <h2 id="activity-title" class="site-section-title">
         {ja ? 'Shumokuを育てるコミュニティ' : 'The community growing Shumoku'}
       </h2>
       <div class="activity-photo">
-        <MarkdownImage
-          src="/images/blog/meetup-1/toast-1280.webp"
+        <Photo
+          src={toast}
           alt={ja ? '会場のみなさんと乾杯。' : 'A toast together at the venue.'}
-          href={`/${locale}${meetup.path}`}
+          {href}
         />
       </div>
       <div class="activity-story">
-        <p class="event-label">{ja ? 'イベント開催記' : 'Event report'} · 2026.09.08</p>
-        <h3 lang={meetup.locale}><a href={`/${locale}${meetup.path}`}>{meetup.title}</a></h3>
-        <p class="site-section-subtitle" lang={meetup.locale}>{meetup.description}</p>
+        <p class="event-label">{label}</p>
+        <h3 lang={post.lang}><a {href}>{post.title}</a></h3>
+        <p class="site-section-subtitle" lang={post.lang}>{post.description}</p>
         <h3>
           <a href={`/${locale}/community`}
             >{ja ? 'コミュニティに参加する' : 'Join the community'}</a

@@ -1,42 +1,61 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { communityPhotos, photoUrl as communityPhotoUrl, photoWidths } from '../community/photos'
-import { articleAsset } from './assets'
-import { findPost, loadPost, posts, postsFor, readPost } from './posts'
+import { articleImage } from './images'
+import { parsePost } from './post'
+import { getPost, posts, usedCategories } from './posts.server'
 
 describe('Markdown articles', () => {
-  it('discovers Japanese articles without requiring a translation', async () => {
-    expect(findPost('meetup-1', 'ja')?.path).toBe('/blog/meetup-1')
-    expect(findPost('meetup-1', 'en')?.locale).toBe('ja')
-    expect((await loadPost('meetup-1', 'ja'))?.Content).toBeDefined()
-    expect(postsFor('ja').every((post) => !post.draft)).toBe(true)
-    expect(postsFor('en')).toEqual(postsFor('ja'))
-    expect((await loadPost('meetup-1', 'ja'))?.fallback).toBe(false)
-    expect((await loadPost('meetup-1', 'en'))?.fallback).toBe(true)
+  it('discovers published articles', () => {
+    expect(getPost('meetup-1')?.lang).toBe('ja')
+    expect(posts.every((post) => !post.draft)).toBe(true)
+    expect(new Set(posts.map((post) => post.slug)).size).toBe(posts.length)
+    // Category pages exist exactly for categories that have articles.
+    expect(new Set(usedCategories)).toEqual(new Set(posts.map((post) => post.category)))
   })
-  it('does not load missing articles or traversal paths', async () => {
-    expect(await loadPost('missing', 'ja')).toBeUndefined()
-    expect(await loadPost('../meetup-1', 'ja')).toBeUndefined()
+  it('does not find missing articles or traversal paths', () => {
+    expect(getPost('missing')).toBeUndefined()
+    expect(getPost('../meetup-1')).toBeUndefined()
   })
   it('validates metadata, dates and draft flags', () => {
-    const path = '/src/content/blog/example/index.md'
-    const valid = { title: 'Example', description: 'Description', date: '2026-09-10' }
-    expect(readPost(path, valid).draft).toBe(false)
-    expect(readPost(path, { ...valid, draft: true }).draft).toBe(true)
+    const valid = {
+      title: 'Example',
+      description: 'Description',
+      published: '2026-09-10',
+      category: 'event',
+      authors: ['akitoshi'],
+    }
+    expect(parsePost('example', valid)).toMatchObject({ lang: 'ja', draft: false })
+    expect(parsePost('example', { ...valid, draft: true }).draft).toBe(true)
+    expect(parsePost('example', { ...valid, updated: '2026-09-12' }).updated).toBe('2026-09-12')
+    expect(() => parsePost('Example_1', valid)).toThrow()
     for (const invalid of [
       { ...valid, title: '' },
-      { ...valid, date: '2026-02-30' },
-      { ...valid, date: new Date() },
+      { ...valid, published: '2026-02-30' },
+      { ...valid, published: new Date() },
+      { ...valid, published: undefined },
+      { ...valid, updated: '2026-09-01' },
+      { ...valid, updated: '2026-9-12' },
+      { ...valid, category: undefined },
+      { ...valid, category: 'イベント開催記' },
+      { ...valid, category: 'toString' },
+      { ...valid, authors: undefined },
+      { ...valid, authors: [] },
+      { ...valid, authors: 'akitoshi' },
+      { ...valid, authors: ['someone'] },
+      { ...valid, authors: ['akitoshi', 'akitoshi'] },
       { ...valid, draft: 'false' },
       { ...valid, lang: 'xx' },
       { ...valid, image: './images/cover.webp' },
+      { ...valid, image: '/cover.webp', imageAlt: 'Cover' },
     ])
-      expect(() => readPost(path, invalid)).toThrow()
+      expect(() => parsePost('example', invalid)).toThrow()
   })
-  it('resolves colocated assets and reports missing files', () => {
-    expect(articleAsset('meetup-1', './images/group.webp')).toBeTruthy()
-    expect(() => articleAsset('meetup-1', './images/missing.webp')).toThrow('Missing article image')
-    expect(new Set(posts.map((post) => `${post.locale}${post.path}`)).size).toBe(posts.length)
+  it('resolves colocated images and reports missing files', () => {
+    expect(articleImage('meetup-1', './images/group.webp').img.src).toBeTruthy()
+    expect(() => articleImage('meetup-1', './images/missing.webp')).toThrow('Missing article image')
+    for (const post of posts)
+      if (post.image) expect(articleImage(post.slug, post.image)).toBeTruthy()
   })
 })
 
@@ -56,7 +75,7 @@ describe('Independent photo collections', () => {
       expect(existsSync(new URL(`../../content/blog/meetup-1/${image[2]}`, import.meta.url))).toBe(
         true,
       )
-      expect(articleAsset('meetup-1', image[2])).toBeTruthy()
+      expect(articleImage('meetup-1', image[2])).toBeTruthy()
     }
   })
   it('keeps Community selection and files independent', () => {

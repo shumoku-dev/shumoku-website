@@ -53,18 +53,32 @@ The existing `/support#enterprise` link remains valid.
 ## Publishing follow-up
 
 Blog articles are ordinary Markdown bundles: `src/content/blog/<slug>/index.md`
-and a sibling `images/` folder. Frontmatter drives listings, dates and the sitemap;
-relative Markdown images are resolved at build time. See the authoring README in
-`src/content/blog/`. No CMS or article-specific Svelte code is needed.
+and a sibling `images/` folder. A server-only module reads the sources, parses the YAML
+frontmatter for listings, dates and the sitemap, and turns the body into serializable nodes
+with unified (remark-parse, remark-gfm, remark-rehype). The article page renders those nodes
+with Svelte components, so Markdown is never compiled as Svelte source and raw HTML is dropped.
+Relative Markdown images are resolved through an `?enhanced` glob, so every
+photo gets responsive AVIF/WebP sources. See the authoring README in `src/content/blog/`.
+No CMS or article-specific Svelte code is needed.
 The first report uses the supplied Meetup #1 photos and factual captions. Author
 credits have not been invented. Untranslated pages show the original text with a
 notice, following Docs; the article content itself remains Japanese only.
 Community photo selection and assets are independent of article bundles.
 
-When implementing article publishing, use one collection with locale, stable slug,
-title, description, author, publication date and category. Keep draft content out of
-lists, sitemap and direct public routes. Add a category filter only when real articles
-justify it; do not create empty category pages. Use `/[lang]/blog/[slug]` for articles.
+Articles are one collection with language, stable slug, title, description, authors,
+publication and update dates, and a category from a fixed vocabulary
+(`src/lib/blog/categories.ts`). Keep draft content out of lists, sitemap and direct
+public routes. Use `/[lang]/blog/[slug]` for articles and `/[lang]/blog/category/[category]`
+for category listings; only categories with published articles are generated, so there
+are no empty category pages. Tags are intentionally not modelled yet.
+
+A standalone external URL in an article becomes a link card, or a click-to-load player for
+YouTube, Speaker Deck and Docswell. A Vite plugin resolves OGP and oEmbed data on save in dev
+and for missing entries before a build (`bun run blog:embeds` refreshes them) into a
+committed cache under `src/lib/blog/embeds/cache/<slug>/` with local thumbnails, keeping
+article folders author-only. A build with a complete committed cache makes no network
+requests; a failed fetch only warns and falls back to a plain card. Readers contact no
+third party until they start a player.
 Only advertise language alternates for translations that exist.
 
 Reports should link to the original event, slides or recordings when available,
@@ -120,3 +134,10 @@ Meetup and demo keep the existing Lucide `CalendarDays` and `MonitorPlay`
 components. Only Discord and X use inline brand SVGs, matching Lucide’s 20px
 rendered size, 24-unit viewBox, 2-unit stroke and rounded caps/joins. Brand path
 provenance and the MIT license are in `src/lib/assets/icons/`.
+
+## Blog link cards
+
+Only a bare external URL alone in a top-level paragraph becomes a link card or player; a
+labelled link (`[text](url)`) always stays an ordinary link, so authored link text never turns
+into a card title or caption. Cards show the page title, site and a stored thumbnail, not the
+third-party description. See "Publishing follow-up" for how embed data is resolved.

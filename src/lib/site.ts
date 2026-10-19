@@ -33,6 +33,13 @@ export const sitePages = [
   },
 ] as const
 
+/** `page` on the linked page itself, `true` anywhere below it (e.g. a blog article). */
+export function navigationCurrent(path: string, linkPath: string | null) {
+  if (!linkPath) return undefined
+  if (path === linkPath) return 'page'
+  return path.startsWith(`${linkPath}/`) ? 'true' : undefined
+}
+
 export function siteNavigation(locale: Locale) {
   return [
     { href: docsUrl(locale), label: 'Docs', path: null },

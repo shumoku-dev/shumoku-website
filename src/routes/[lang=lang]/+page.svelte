@@ -28,7 +28,9 @@
   <GallerySection locale={lang} />
   <div class="home-band home-band--surface"><PlatformSection locale={lang} /></div>
   <GettingStartedSection locale={lang} />
-  <div class="home-band home-band--brand"><ActivitySection locale={lang} /></div>
+  <div class="home-band home-band--brand">
+    <ActivitySection locale={lang} post={data.featuredPost} />
+  </div>
   <div class="home-band home-band--surface"><BottomSection locale={lang} /></div>
 </main>
 

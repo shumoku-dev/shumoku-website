@@ -1,10 +1,11 @@
 <script lang="ts">
-  import MarkdownImage from '$lib/blog/MarkdownImage.svelte'
+  import laptops from '$lib/assets/photos/meetup-1-laptops.webp?enhanced'
   import OverviewSection from '$lib/home/OverviewSection.svelte'
   import ProjectBackgroundSection from '$lib/home/ProjectBackgroundSection.svelte'
   import ContentBand from '$lib/layout/ContentBand.svelte'
   import PageHeading from '$lib/layout/PageHeading.svelte'
   import PageMeta from '$lib/PageMeta.svelte'
+  import Photo from '$lib/Photo.svelte'
   import type { PageData } from './$types'
 
   let { data }: { data: PageData } = $props()
@@ -23,8 +24,8 @@
     id="about-community"
     title={data.lang === 'ja' ? 'コミュニティと育てる' : 'Growing with the community'}
   >
-    <MarkdownImage
-      src="/images/blog/meetup-1/laptops-1280.webp"
+    <Photo
+      src={laptops}
       alt={data.lang === 'ja' ? 'テーブルには参加者のノートPCがずらり。' : 'Attendees’ laptops lined up on the table.'}
       href={`/${data.lang}/blog/meetup-1`}
     />
