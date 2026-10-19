@@ -140,6 +140,7 @@
     font-weight: 600;
     letter-spacing: -0.01em;
     text-wrap: balance;
+    word-break: auto-phrase;
   }
   .meta {
     display: flex;

@@ -49,14 +49,14 @@
     {#each posts as post}
       {@const href = `/${lang}/blog/${post.slug}`}
       <li>
-        <!-- Media object: thumbnail left, text right. The title link covers the whole row. -->
+        <!-- Media object on wide screens, stacked card on phones. The title link covers the row. -->
         <article lang={post.lang} class:has-image={post.image}>
           {#if post.image}
             <div class="thumbnail">
               <enhanced:img
                 src={articleImage(post.slug, post.image)}
                 alt=""
-                sizes="(max-width: 640px) 6rem, 16rem"
+                sizes="(max-width: 640px) 100vw, 16rem"
                 loading="lazy"
               />
             </div>
@@ -181,6 +181,8 @@
     font-size: 1.1875rem;
     font-weight: 600;
     line-height: 1.5;
+    /* Break Japanese titles between phrases rather than inside words where supported. */
+    word-break: auto-phrase;
   }
   h2,
   .description {
@@ -222,26 +224,23 @@
     padding-block: var(--ui-space-8);
     color: var(--site-muted);
   }
-  /* Phones: keep the image on the left as a small square so the text keeps most of the width. */
+  /* Phones: a side-by-side row leaves too little room for either, so stack a card with the
+     event photo full width on top. */
   @media (max-width: 640px) {
     article {
-      gap: var(--ui-space-4);
-      padding-block: 1.25rem;
+      gap: var(--ui-space-3);
+      padding-block: var(--ui-space-6);
     }
     article.has-image {
-      grid-template-columns: 6rem minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr);
     }
-    .thumbnail :global(img) {
-      aspect-ratio: 1;
+    .thumbnail {
+      margin-block-end: var(--ui-space-1);
     }
     h2 {
-      font-size: 1rem;
-      -webkit-line-clamp: 3;
-      line-clamp: 3;
+      font-size: 1.125rem;
     }
     .description {
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
       font-size: 0.875rem;
     }
   }
