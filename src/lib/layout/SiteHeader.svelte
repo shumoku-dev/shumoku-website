@@ -4,7 +4,7 @@
   import symbol from '$lib/assets/brand/logo-symbol.svg?url'
   import wordmark from '$lib/assets/brand/logo-wordmark.svg?url'
   import { rememberLanguage } from '$lib/i18n'
-  import { type Locale, siteNavigation } from '$lib/site'
+  import { type Locale, navigationCurrent, siteNavigation } from '$lib/site'
   import {
     darkSchemeQuery,
     isDarkTheme,
@@ -68,7 +68,7 @@
       aria-label={locale === 'ja' ? 'メインナビゲーション' : 'Main navigation'}
     >
       {#each links as link}
-        <NavLink href={link.href} aria-current={path === link.path ? 'page' : undefined}
+        <NavLink href={link.href} aria-current={navigationCurrent(path, link.path)}
           >{link.label}</NavLink
         >
       {/each}
@@ -130,7 +130,7 @@
             <Menu size={20} />
           {/snippet}
           {#each links as link}
-            <NavLink href={link.href} aria-current={path === link.path ? 'page' : undefined}
+            <NavLink href={link.href} aria-current={navigationCurrent(path, link.path)}
               >{link.label}</NavLink
             >
           {/each}
