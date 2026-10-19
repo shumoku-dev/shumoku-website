@@ -1,0 +1,16 @@
+{
+  "https://event.ospn.jp/osc2026-fall/": {
+    "type": "card",
+    "title": "オープンソースカンファレンス2026 Tokyo/Fall",
+    "site": "OSPN.jp",
+    "image": "9188a44f5e020609.jpg"
+  },
+  "https://youtu.be/LD9rUmkCoRU?t=8410": {
+    "type": "player",
+    "provider": "youtube",
+    "title": "OSC2026 Tokyo/Fall ステージ中継",
+    "embedUrl": "https://www.youtube-nocookie.com/embed/LD9rUmkCoRU?start=8410",
+    "ratio": 1.7777777777777777,
+    "image": "62f9daf1a2ad7c52.jpg"
+  }
+}
