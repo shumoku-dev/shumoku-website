@@ -22,7 +22,7 @@ export const sitePages = [
   {
     path: '/connect',
     label: { en: 'Connect', ja: 'リンク集' },
-    mode: 'presentation',
+    mode: 'content',
     navigation: false,
   },
   {

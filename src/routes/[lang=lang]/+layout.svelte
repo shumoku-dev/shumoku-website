@@ -12,7 +12,7 @@
   let { data, children }: { data: LayoutData; children: Snippet } = $props()
   const path = $derived(page.url.pathname.replace(/^\/(en|ja)/, '').replace(/\/$/, ''))
   const workspace = $derived(
-    sitePages.some((entry) => entry.path === path && entry.mode !== 'content'),
+    sitePages.some((entry) => entry.path === path && entry.mode === 'workspace'),
   )
   $effect(() => {
     document.documentElement.lang = data.lang

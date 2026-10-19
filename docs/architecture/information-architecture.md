@@ -106,10 +106,17 @@ layout. No new card borders, palette, typography system or decorative grid overl
 
 ## Exhibition quick links
 
-`/[lang]/connect` is a mobile-first list of direct links to the public demo,
-Discord, connpass and X, with secondary Playground and About links. It uses a
-presentation shell to omit the announcement and footer and retains language/theme
-navigation. The footer links to it; it is not a primary header destination.
-Localized copy and destinations live in `src/lib/content/connect.ts`.
-The narrow, single-column layout uses large tap targets with no QR codes or
-full-screen controls. The demo destination matches the existing home hero link.
+`/[lang]/connect` is a mobile-first list of direct links to
+Discord, connpass, X and the live demo, in that order, with secondary Playground
+and About links. It keeps the
+standard site header, announcement and footer. The footer links to it; it is not
+a primary header destination. Localized copy and destinations live in
+`src/lib/content/connect.ts`. The narrow, single-column body uses simple outlined
+link buttons with small purpose icons and descriptive labels (such as Community
+Discord). There is no extra logo, gradient or full-screen control.
+The demo destination matches the existing home hero link.
+
+Meetup and demo keep the existing Lucide `CalendarDays` and `MonitorPlay`
+components. Only Discord and X use inline brand SVGs, matching Lucide’s 20px
+rendered size, 24-unit viewBox, 2-unit stroke and rounded caps/joins. Brand path
+provenance and the MIT license are in `src/lib/assets/icons/`.
