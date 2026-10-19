@@ -53,18 +53,22 @@ The existing `/support#enterprise` link remains valid.
 ## Publishing follow-up
 
 Blog articles are ordinary Markdown bundles: `src/content/blog/<slug>/index.md`
-and a sibling `images/` folder. Frontmatter drives listings, dates and the sitemap;
-relative Markdown images are resolved at build time. See the authoring README in
-`src/content/blog/`. No CMS or article-specific Svelte code is needed.
+and a sibling `images/` folder. Frontmatter is read by a server-only module and drives
+listings, dates and the sitemap; the article route adds the compiled mdsvex component in a
+universal load. Relative Markdown images are resolved through an `?enhanced` glob, so every
+photo gets responsive AVIF/WebP sources. See the authoring README in `src/content/blog/`.
+No CMS or article-specific Svelte code is needed.
 The first report uses the supplied Meetup #1 photos and factual captions. Author
 credits have not been invented. Untranslated pages show the original text with a
 notice, following Docs; the article content itself remains Japanese only.
 Community photo selection and assets are independent of article bundles.
 
-When implementing article publishing, use one collection with locale, stable slug,
-title, description, author, publication date and category. Keep draft content out of
-lists, sitemap and direct public routes. Add a category filter only when real articles
-justify it; do not create empty category pages. Use `/[lang]/blog/[slug]` for articles.
+Articles are one collection with language, stable slug, title, description, authors,
+publication and update dates, and a category from a fixed vocabulary
+(`src/lib/blog/categories.ts`). Keep draft content out of lists, sitemap and direct
+public routes. Use `/[lang]/blog/[slug]` for articles and `/[lang]/blog/category/[category]`
+for category listings; only categories with published articles are generated, so there
+are no empty category pages. Tags are intentionally not modelled yet.
 Only advertise language alternates for translations that exist.
 
 Reports should link to the original event, slides or recordings when available,
@@ -120,3 +124,10 @@ Meetup and demo keep the existing Lucide `CalendarDays` and `MonitorPlay`
 components. Only Discord and X use inline brand SVGs, matching Lucide’s 20px
 rendered size, 24-unit viewBox, 2-unit stroke and rounded caps/joins. Brand path
 provenance and the MIT license are in `src/lib/assets/icons/`.
+
+## Blog link cards
+
+Standalone external Markdown links render as cards with the authored link label and destination hostname.
+`scripts/remark-link-cards.js` marks single-link paragraphs during compilation;
+`ArticleLayout.svelte` styles them. No remote metadata or preview images are fetched.
+Cards sit after the relevant paragraph, preserving the original prose. Inline links remain ordinary links.

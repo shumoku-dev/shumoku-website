@@ -1,186 +1,155 @@
 <script lang="ts">
+  import { authors } from '$lib/blog/authors'
+  import { categories } from '$lib/blog/categories'
+  import { setArticleSlug } from '$lib/blog/context'
+  import { articleImage } from '$lib/blog/images'
+  import { formatDate } from '$lib/blog/post'
   import PageMeta from '$lib/PageMeta.svelte'
+  import { websiteOrigin } from '$lib/site'
   import type { PageData } from './$types'
 
   let { data }: { data: PageData } = $props()
   const post = $derived(data.post)
-  const Content = $derived(data.Content)
+  const cover = $derived(post.image ? articleImage(post.slug, post.image) : undefined)
+  // SvelteKit reuses this component between articles, so share a getter rather than a value.
+  setArticleSlug(() => post.slug)
+
+  const credits = $derived(post.authors.map((id) => authors[id]))
+  const url = $derived(`${websiteOrigin}/${post.lang}/blog/${post.slug}`)
+  // The description and cover are not repeated above the body; they feed listings, OGP and JSON-LD.
+  // https://developers.google.com/search/docs/appearance/structured-data/article
+  const jsonLd = $derived(
+    JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: post.title,
+      description: post.description,
+      inLanguage: post.lang,
+      url,
+      datePublished: post.published,
+      dateModified: post.updated ?? post.published,
+      author: credits.map((author) => ({ '@type': 'Person', ...author })),
+      ...(cover && { image: `${websiteOrigin}${cover.img.src}` }),
+    }).replaceAll('<', '\\u003c'),
+  )
 </script>
+
+<svelte:head>
+  <meta property="article:published_time" content={post.published}>
+  {#if post.updated}
+    <meta property="article:modified_time" content={post.updated}>
+  {/if}
+  {@html `<script type="application/ld+json">${jsonLd}</script>`}
+</svelte:head>
 
 <PageMeta
   title={post.title}
   description={post.description}
-  image={post.image}
+  image={cover?.img.src}
   type="article"
-  alternateLocales={[post.locale]}
-  canonicalPath={`/${post.locale}${post.path}`}
+  alternateLocales={[post.lang]}
+  canonicalPath={`/${post.lang}/blog/${post.slug}`}
 />
-<main id="main" class="site-container report">
-  {#if data.fallback}
+<main id="main" class="site-container post">
+  {#if post.lang !== data.lang}
     <p class="language-note" lang={data.lang}>
       {data.lang === 'en'
         ? 'This article is currently available in Japanese only. The original text is shown below.'
         : 'この記事の日本語版はまだありません。英語の原文を表示しています。'}
     </p>
   {/if}
-  <article lang={post.locale}>
-    <header class="report-heading">
-      <a href={`/${data.lang}/blog`} lang={data.lang}
-        >{data.lang === 'ja' ? 'ブログに戻る' : 'Back to the blog'}</a
+  <article lang={post.lang}>
+    <header>
+      <a class="category" href={`/${data.lang}/blog/category/${post.category}`} lang={data.lang}
+        >{categories[post.category][data.lang]}</a
       >
-      <p class="eyebrow">
-        {#if post.category}
-          {post.category}
-          ·
-        {/if}
-        <time datetime={post.date}>{post.date.replaceAll('-', '.')}</time>
-      </p>
       <h1>{post.title}</h1>
-      <p class="intro">{post.description}</p>
+      <p class="meta">
+        <span>
+          {#each credits as author, index}
+            {#if index > 0}
+              ,
+            {/if}
+            {#if author.url}
+              <a href={author.url} rel="author">{author.name}</a>
+            {:else}
+              {author.name}
+            {/if}
+          {/each}
+        </span>
+        <time datetime={post.published} lang={data.lang}>{formatDate(post.published)}</time>
+        {#if post.updated}
+          <span lang={data.lang}>
+            {data.lang === 'ja' ? '更新' : 'Updated'}
+            <time datetime={post.updated}>{formatDate(post.updated)}</time>
+          </span>
+        {/if}
+      </p>
     </header>
-    {#if post.image}
-      <figure class="cover">
-        <a href={post.image}><img src={post.image} alt={post.imageAlt} fetchpriority="high"></a>
-        <figcaption>{post.imageAlt}</figcaption>
-      </figure>
-    {/if}
-    <div class="article-body"><Content /></div>
+    <data.Content />
   </article>
+  <footer lang={data.lang}>
+    <a href={`/${data.lang}/blog`}>← {data.lang === 'ja' ? 'ブログ一覧へ' : 'All articles'}</a>
+  </footer>
 </main>
 
 <style>
+  .post {
+    max-width: 44rem;
+    padding-block: var(--ui-space-12);
+  }
   .language-note {
-    margin-block-end: var(--ui-space-6);
+    margin-block-end: var(--ui-space-8);
     padding: var(--ui-space-4);
     background: var(--ui-surface);
+    font-size: 0.875rem;
     line-height: 1.8;
   }
-  .report {
-    padding-block: var(--ui-space-8);
-  }
-  article,
-  .report-heading {
+  article {
     display: grid;
     gap: var(--ui-space-8);
   }
-  .report-heading {
-    gap: var(--ui-space-4);
+  header {
+    display: grid;
+    gap: var(--ui-space-3);
   }
-  .eyebrow,
-  figcaption {
+  .category {
+    justify-self: start;
+    color: var(--site-accent);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  .category:hover {
+    text-decoration: underline;
+  }
+  h1 {
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    line-height: 1.4;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ui-space-1) var(--ui-space-4);
     color: var(--site-muted);
     font-size: 0.875rem;
   }
-  h1 {
-    font-size: clamp(1.75rem, 3vw, 3rem);
-    line-height: 1.4;
-    font-weight: 600;
-    text-wrap: balance;
+  .meta a {
+    color: var(--site-fg);
+    font-weight: 500;
   }
-  .intro {
-    max-width: 44rem;
-    line-height: 1.8;
-  }
-  figure {
-    margin: 0;
-  }
-  a,
-  .article-body :global(a) {
+  .meta a:hover {
     text-decoration: underline;
-    text-underline-offset: 0.2em;
   }
-  .cover a {
-    display: block;
-    border-radius: var(--ui-panel-radius);
-    overflow: hidden;
+  footer {
+    margin-block-start: var(--ui-space-12);
+    padding-block-start: var(--ui-space-6);
+    border-block-start: 1px solid var(--site-line);
+    font-size: 0.875rem;
   }
-  .cover img {
-    display: block;
-    width: 100%;
-    aspect-ratio: 2 / 1;
-    object-fit: cover;
-    object-position: center bottom;
-  }
-  figcaption {
-    margin-block-start: var(--ui-space-2);
-    line-height: 1.5rem;
-  }
-  .article-body {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: var(--ui-space-4) var(--ui-space-6);
-    line-height: 1.8;
-    overflow-wrap: anywhere;
-    min-width: 0;
-  }
-  .article-body > :global(*) {
-    grid-column: 5 / -1;
-  }
-  .article-body > :global(h2) {
-    grid-column: 1 / 5;
-  }
-  .article-body :global(p:has(> .article-photo)) {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--ui-space-6);
-    max-width: none;
-  }
-  .article-body :global(p:has(> .article-photo:nth-of-type(3))) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .article-body :global(p:has(> .article-photo:only-child)) {
-    grid-template-columns: 1fr;
-  }
-  .article-body :global(p:has(> .article-photo:nth-of-type(2)) img) {
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-  }
-  .article-body > :global(*) {
-    margin-block: 0 var(--ui-space-6);
-  }
-  .article-body :global(h2) {
-    font-size: 1.25rem;
-    line-height: 2rem;
-    font-weight: 500;
-  }
-  .article-body :global(h3) {
-    font-size: 1.125rem;
-    font-weight: 500;
-  }
-  .article-body :global(p),
-  .article-body :global(ul),
-  .article-body :global(ol) {
-    max-width: 44rem;
-  }
-  .article-body :global(ul) {
-    list-style: disc;
-    padding-inline-start: 1.5em;
-  }
-  .article-body :global(ol) {
-    list-style: decimal;
-    padding-inline-start: 1.5em;
-  }
-  .article-body :global(blockquote) {
-    padding: var(--ui-space-4);
-    background: var(--ui-surface);
-  }
-  .article-body :global(pre) {
-    padding: var(--ui-space-4);
-    overflow: auto;
-    border-radius: var(--ui-panel-radius);
-  }
-  .article-body :global(img) {
-    max-width: 100%;
-  }
-  @media (max-width: 650px) {
-    .article-body > :global(*),
-    .article-body > :global(h2) {
-      grid-column: 1 / -1;
-    }
-    .article-body :global(p:has(> .article-photo)),
-    .article-body :global(p:has(> .article-photo:nth-of-type(3))) {
-      grid-template-columns: 1fr;
-    }
+  .post > footer a:hover {
+    text-decoration: underline;
   }
 </style>

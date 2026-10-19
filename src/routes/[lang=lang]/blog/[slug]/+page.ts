@@ -1,15 +1,13 @@
 import { error } from '@sveltejs/kit'
-import { loadPost, posts } from '$lib/blog/posts'
-import { locales } from '$lib/site'
-import type { EntryGenerator, PageLoad } from './$types'
+import type { Component } from 'svelte'
+import type { PageLoad } from './$types'
 
-export const prerender = true
-export const entries: EntryGenerator = () =>
-  posts.flatMap((post) => locales.map((lang) => ({ lang, slug: post.slug })))
+const bodies = import.meta.glob<Component>('/src/content/blog/*/index.md', { import: 'default' })
 
-export const load: PageLoad = async ({ params, parent }) => {
-  const { lang } = await parent()
-  const result = await loadPost(params.slug, lang)
-  if (!result) error(404, 'Article not found')
-  return result
+// The compiled Markdown component cannot be serialized, so it is imported in a universal load.
+// https://svelte.dev/docs/kit/load#Universal-vs-server
+export const load: PageLoad = async ({ data, params }) => {
+  const Content = await bodies[`/src/content/blog/${params.slug}/index.md`]?.()
+  if (!Content) error(404, 'Article not found')
+  return { ...data, Content }
 }

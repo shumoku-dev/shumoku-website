@@ -9,7 +9,7 @@ export default {
     vitePreprocess(),
     mdsvex({
       extensions: ['.md'],
-      layout: fileURLToPath(new URL('./src/lib/blog/MarkdownLayout.svelte', import.meta.url)),
+      layout: fileURLToPath(new URL('./src/lib/blog/ArticleLayout.svelte', import.meta.url)),
     }),
   ],
   kit: {

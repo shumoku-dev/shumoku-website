@@ -10,7 +10,9 @@ describe('site page registry', () => {
         existsSync(new URL(`../routes/[lang=lang]${entry.path}/+page.svelte`, import.meta.url)),
       ).toBe(true)
       expect(
-        existsSync(new URL(`../routes/[lang=lang]${entry.path}/+page.ts`, import.meta.url)),
+        ['+page.ts', '+page.server.ts'].some((file) =>
+          existsSync(new URL(`../routes/[lang=lang]${entry.path}/${file}`, import.meta.url)),
+        ),
       ).toBe(true)
     }
   })
