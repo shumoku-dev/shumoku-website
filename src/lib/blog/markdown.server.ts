@@ -7,7 +7,7 @@ import { unified } from 'unified'
 import { parse as parseYaml } from 'yaml'
 import type { Locale } from '$lib/site'
 import remarkEmbeds from './embeds/remark.ts'
-import { embedTag, type MarkdownNode } from './markdown.ts'
+import { embedTag, galleryTag, type MarkdownNode } from './markdown.ts'
 
 const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/
 
@@ -44,6 +44,13 @@ function toNode(node: ElementContent): MarkdownNode | undefined {
     attrs[info.attribute] = text
   }
   const children = node.children.flatMap((child) => toNode(child) ?? [])
+  // Images on consecutive lines share a paragraph; two or more of them form a row.
+  const images = children.filter((child) => typeof child !== 'string' && child.tag === 'img')
+  const onlyImages = children.every(
+    (child) => (typeof child === 'string' && !child.trim()) || images.includes(child),
+  )
+  if (node.tagName === 'p' && images.length > 1 && onlyImages)
+    return { tag: galleryTag, children: images }
   return {
     tag: node.tagName,
     ...(Object.keys(attrs).length > 0 && { attrs }),

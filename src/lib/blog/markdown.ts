@@ -9,3 +9,6 @@ export type MarkdownNode =
 
 /** Element that `remarkEmbeds` puts in place of a standalone URL. */
 export const embedTag = 'x-embed'
+
+/** A paragraph of two or more images written on consecutive lines, shown side by side. */
+export const galleryTag = 'x-gallery'
