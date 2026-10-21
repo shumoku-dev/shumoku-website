@@ -2,7 +2,7 @@
   import type { Locale } from '$lib/site'
   import ArticleImage from './ArticleImage.svelte'
   import Embed from './embeds/Embed.svelte'
-  import { embedTag, type MarkdownNode } from './markdown'
+  import { embedTag, galleryTag, type MarkdownNode } from './markdown'
 
   // Renders the nodes made by `markdown.server.ts`. Images and standalone URLs become components;
   // everything else is the HTML element the Markdown describes.
@@ -16,6 +16,20 @@
       {node}
     {:else if node.tag === 'img'}
       <ArticleImage {slug} src={node.attrs?.src ?? ''} alt={node.attrs?.alt} />
+    {:else if node.tag === galleryTag}
+      {@const images = node.children ?? []}
+      <div class="gallery" style:--columns={images.length === 2 || images.length === 4 ? 2 : 3}>
+        {#each images as image}
+          {#if typeof image !== 'string'}
+            <ArticleImage
+              {slug}
+              src={image.attrs?.src ?? ''}
+              alt={image.attrs?.alt}
+              sizes="(max-width: 44rem) 50vw, 22rem"
+            />
+          {/if}
+        {/each}
+      </div>
     {:else if node.tag === embedTag}
       <Embed {slug} {lang} href={node.attrs?.href ?? ''} />
     {:else if voidTags.has(node.tag)}
@@ -47,10 +61,22 @@
     font-size: 1.125rem;
     font-weight: 600;
   }
-  /* Consecutive images share one paragraph; stack them one per row. */
-  .article-body :global(p:has(> .photo)) {
+  /* Images on consecutive lines: 2 or 4 make two columns, 3 or more otherwise three. Frames share
+     4:3 so the row lines up; clicking still opens the whole photo. */
+  .gallery {
     display: grid;
-    gap: var(--ui-space-6);
+    grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+    gap: var(--ui-space-4);
+  }
+  .gallery :global(img) {
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  @media (max-width: 640px) {
+    .gallery {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--ui-space-3);
+    }
   }
   .article-body :global(ul) {
     list-style: disc;

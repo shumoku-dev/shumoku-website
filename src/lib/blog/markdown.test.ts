@@ -36,6 +36,26 @@ describe('Markdown rendering', () => {
     expect(embeds).toEqual(['https://example.com/'])
   })
 
+  it('turns images on consecutive lines into a row', () => {
+    const { nodes } = renderMarkdown(
+      ['![A](./images/a.webp)', '![B](./images/b.webp)', '', '![C](./images/c.webp)'].join('\n'),
+    )
+    expect(nodes.filter((node) => typeof node !== 'string')).toEqual([
+      {
+        tag: 'x-gallery',
+        children: [
+          { tag: 'img', attrs: { src: './images/a.webp', alt: 'A' } },
+          { tag: 'img', attrs: { src: './images/b.webp', alt: 'B' } },
+        ],
+      },
+      { tag: 'p', children: [{ tag: 'img', attrs: { src: './images/c.webp', alt: 'C' } }] },
+    ])
+    // Text in the paragraph keeps it an ordinary paragraph.
+    expect(JSON.stringify(renderMarkdown('![A](./a.webp) and ![B](./b.webp)').nodes)).not.toContain(
+      'x-gallery',
+    )
+  })
+
   it('labels footnotes in the article language', () => {
     expect(JSON.stringify(renderMarkdown('a[^1]\n\n[^1]: b', 'ja').nodes)).toContain('脚注')
     expect(JSON.stringify(renderMarkdown('a[^1]\n\n[^1]: b', 'en').nodes)).toContain('Footnotes')
