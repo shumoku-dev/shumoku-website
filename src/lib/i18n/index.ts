@@ -50,7 +50,8 @@ export function rememberLanguage(locale: Locale): void {
   }
 }
 
-export function languageRedirect(request: Request): Response {
+/** Redirect an unprefixed path (the home page by default) to the visitor's language. */
+export function languageRedirect(request: Request, path = ''): Response {
   const locale = preferredLanguage(
     request.headers.get('accept-language'),
     request.headers.get('cookie'),
@@ -59,7 +60,7 @@ export function languageRedirect(request: Request): Response {
   return new Response(null, {
     status: 307,
     headers: {
-      location: `/${locale}${url.search}`,
+      location: `/${locale}${path}${url.search}`,
       'cache-control': 'private, no-store',
       vary: 'Accept-Language, Cookie',
     },
