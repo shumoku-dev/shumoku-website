@@ -21,7 +21,7 @@ describe('legacy website links', () => {
   })
   it('keeps standalone entry links working', () => {
     expect(legacyDestination('/ja/editor')).toBe('https://editor.shumoku.dev')
-    expect(legacyDestination('/playground')).toBe('/en/playground')
+    expect(legacyDestination('/playground')).toBeNull()
   })
   it('keeps old machine-readable links on text destinations', () => {
     expect(legacyDestination('/llms-full.txt')).toBe('https://docs.shumoku.dev/llms.txt')

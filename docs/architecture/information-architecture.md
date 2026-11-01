@@ -118,6 +118,20 @@ Following the Muller-Brockmann grid skill, new sections reuse `site-container` f
 shared outer edges, existing spacing tokens for gutters and a single-column narrow
 layout. No new card borders, palette, typography system or decorative grid overlay.
 
+## Language-neutral URLs
+
+Every page lives under `/en` or `/ja`. The same page without the prefix (for example
+`/connect`, `/about` or `/blog/<slug>`) redirects to the visitor's language with the same
+negotiation as `/`: an explicit language choice in the cookie first, then
+`Accept-Language`. Use these URLs for printed QR codes and anywhere the reader's language is
+unknown. The query string is kept, so `?utm_source=qr` survives.
+
+The set of redirecting paths is derived from `sitePages`, published articles and their
+categories, the same sources as the sitemap. Unknown unprefixed paths stay 404 rather than
+redirecting to a 404. Prefixed pages remain prerendered; only the redirect itself runs as a
+function, and it is not cached because it depends on the visitor (`Vary: Accept-Language,
+Cookie`). Legacy documentation redirects take precedence.
+
 ## Exhibition quick links
 
 `/[lang]/connect` is a mobile-first list of direct links to
