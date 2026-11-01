@@ -3,7 +3,8 @@
 ## Runtime boundary
 
 The site is a SvelteKit application deployed on Vercel. Most localized pages are prerendered.
-Runtime endpoints are limited to language negotiation, analytics policy, compatibility redirects,
+Runtime endpoints are limited to language negotiation (`/` and unprefixed page paths such as
+`/connect`), analytics policy, compatibility redirects,
 the links-page contact signup, and the legacy layout API.
 
 ## Required checks
@@ -34,7 +35,7 @@ repository matches the existing site. Do not disconnect the monorepo deployment 
 
 ## Production verification
 
-Check both `/en` and `/ja`, Playground render/export, legacy documentation redirects, responsive
+Check both `/en` and `/ja`, an unprefixed path such as `/connect`, Playground render/export, legacy documentation redirects, responsive
 images, language preference, theme preference, privacy controls, GA4 consent behavior, and Vercel
 Web Analytics, and the links-page contact signup. Local and preview analytics are intentionally disabled.
 

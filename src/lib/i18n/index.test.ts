@@ -37,5 +37,12 @@ describe('entry language negotiation', () => {
     expect(response.headers.get('cache-control')).toBe('private, no-store')
     expect(response.headers.get('vary')).toBe('Accept-Language, Cookie')
     expect(response.headers.has('set-cookie')).toBe(false)
+    const page = languageRedirect(
+      new Request('https://www.shumoku.dev/connect?utm_source=qr', {
+        headers: { 'accept-language': 'en-US' },
+      }),
+      '/connect',
+    )
+    expect(page.headers.get('location')).toBe('/en/connect?utm_source=qr')
   })
 })

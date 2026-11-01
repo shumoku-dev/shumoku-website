@@ -16,7 +16,6 @@ export function legacyDestination(pathname: string): string | null {
   const locale: Locale = path.startsWith('/ja/') || path === '/ja' ? 'ja' : 'en'
   const local = path.replace(/^\/(en|ja)(?=\/|$)/, '')
   if (local === '/editor') return editorOrigin
-  if (path === '/playground') return '/en/playground'
   if (local === '/og' || path.startsWith('/og/docs/')) return '/screenshots/topology.png'
   if (path === '/icon.svg') return '/logo-symbol.svg'
   if (path === '/llms-full.txt') return `${docsOrigin}/llms.txt`
