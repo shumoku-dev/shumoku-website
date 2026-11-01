@@ -130,6 +130,20 @@ link buttons with small purpose icons and descriptive labels (such as Community
 Discord). There is no extra logo, gradient or full-screen control.
 The demo destination matches the existing home hero link.
 
+Below the links, a single email field lets people who want to hear from the maintainers
+sign up. The purpose is direct conversation: signup sends one plain-text greeting from
+`contact@shumoku.dev` that invites a reply, and the address joins the Resend segment for the
+page language ("Shumoku (ja)" or "Shumoku (en)"), later reused for manual event and release
+Broadcasts. The form copy and greeting are written natively for each language, not
+translated, and are signed by the Shumoku team rather than a person, since any maintainer may
+answer replies. The form copy states that
+announcements may follow and can be stopped. There is no double opt-in; a honeypot field,
+a best-effort per-IP limit and "greet each address only once" keep the form from being
+used to mail third parties. The page stays prerendered; the form posts to
+`/api/contact`, which answers JSON to the script or redirects back when JavaScript is off.
+Copy and the greeting live in `src/lib/content/contact.ts`; Resend calls in
+`src/lib/server/contact.ts`. The privacy page documents Resend under `#email`.
+
 Meetup and demo keep the existing Lucide `CalendarDays` and `MonitorPlay`
 components. Only Discord and X use inline brand SVGs, matching Lucide’s 20px
 rendered size, 24-unit viewBox, 2-unit stroke and rounded caps/joins. Brand path

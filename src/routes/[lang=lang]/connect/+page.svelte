@@ -3,6 +3,7 @@
   import { connectCopy, connectLinks } from '$lib/content/connect'
   import PageMeta from '$lib/PageMeta.svelte'
   import type { PageData } from './$types'
+  import ContactSignup from './ContactSignup.svelte'
 
   let { data }: { data: PageData } = $props()
   const copy = $derived(connectCopy[data.lang])
@@ -49,6 +50,7 @@
       </a>
     {/each}
   </nav>
+  <ContactSignup lang={data.lang} />
   <div class="more">
     <a href={`/${data.lang}/playground`}>{copy.try}</a>
     <a href={`/${data.lang}/about`}>{copy.about}</a>

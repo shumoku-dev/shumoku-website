@@ -4,7 +4,7 @@
 
 The site is a SvelteKit application deployed on Vercel. Most localized pages are prerendered.
 Runtime endpoints are limited to language negotiation, analytics policy, compatibility redirects,
-and the legacy layout API.
+the links-page contact signup, and the legacy layout API.
 
 ## Required checks
 
@@ -26,6 +26,8 @@ Pull requests must pass the same sequence in GitHub Actions and produce a Vercel
 - Build command: `bun run build`
 - Output directory: automatic
 - Node.js: 24
+- Environment variables: `RESEND_API_KEY`, `RESEND_CONTACT_SEGMENT_JA` and
+  `RESEND_CONTACT_SEGMENT_EN` (see [contact email](contact-email.md))
 
 The current production project should be transferred or reconnected only after a Preview from this
 repository matches the existing site. Do not disconnect the monorepo deployment first.
@@ -34,7 +36,7 @@ repository matches the existing site. Do not disconnect the monorepo deployment 
 
 Check both `/en` and `/ja`, Playground render/export, legacy documentation redirects, responsive
 images, language preference, theme preference, privacy controls, GA4 consent behavior, and Vercel
-Web Analytics. Local and preview analytics are intentionally disabled.
+Web Analytics, and the links-page contact signup. Local and preview analytics are intentionally disabled.
 
 ## Rollback
 
