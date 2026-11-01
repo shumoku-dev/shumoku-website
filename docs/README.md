@@ -16,6 +16,7 @@ Current contracts that should change with the code:
 Procedures for running the deployed website:
 
 - [Deployment and rollback](operations/deployment.md)
+- [Contact email and announcements](operations/contact-email.md)
 - [Repository extraction](operations/repository-extraction.md)
 
 ## Archive

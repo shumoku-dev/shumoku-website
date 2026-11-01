@@ -9,8 +9,8 @@
   const title = $derived(ja ? 'プライバシーとアクセス解析' : 'Privacy and website analytics')
   const description = $derived(
     ja
-      ? 'このウェブサイトの解析と保存される設定について。'
-      : 'Analytics and preferences stored by this website.',
+      ? 'このウェブサイトの解析、保存される設定、メールアドレスの扱いについて。'
+      : 'Analytics, stored preferences and email addresses on this website.',
   )
 </script>
 <PageMeta {title} {description} />
@@ -52,6 +52,16 @@
       </p>
       <p>
         この説明はwww.shumoku.devとshumoku.devのHPに適用します。DocsとEditorには、この変更によるGA4の追加は行っていません。
+      </p>
+      <h2 id="email">メールでの連絡</h2>
+      <p>
+        リンク集のフォームに入力されたメールアドレスは、運営からの連絡とイベント・リリースのお知らせのために、メール配信サービスの<a
+          href="https://resend.com/legal/privacy-policy"
+          >Resend</a
+        >に保存し、同サービスを通じてメールを送ります。登録時のIPアドレスは短時間の連続送信を防ぐためだけに一時的に使い、保存しません。
+      </p>
+      <p>
+        お知らせの配信は、各メールの停止リンクからいつでも解除できます。登録の削除は、メールへの返信かcontact@shumoku.devへのご連絡で受け付けます。
       </p>
       <p>お問い合わせ：<a href="mailto:contact@shumoku.dev">contact@shumoku.dev</a></p>
     {:else}
@@ -105,6 +115,17 @@
       <p>
         This notice covers the homepage application on www.shumoku.dev and shumoku.dev. This
         integration does not add GA4 to Docs or Editor.
+      </p>
+      <h2 id="email">Email contact</h2>
+      <p>
+        Email addresses entered in the form on the links page are stored with the email service
+        <a href="https://resend.com/legal/privacy-policy">Resend</a>, which we use to write to you
+        and to send event and release announcements. Your IP address is used briefly to limit
+        repeated submissions and is not stored.
+      </p>
+      <p>
+        Every announcement includes an unsubscribe link. To have your address deleted, reply to any
+        of our emails or write to contact@shumoku.dev.
       </p>
       <p>Questions: <a href="mailto:contact@shumoku.dev">contact@shumoku.dev</a></p>
     {/if}
