@@ -7,15 +7,42 @@
   --site-header-height: 4.5rem;
   --site-control-size: var(--ui-control-height);
   --site-space: var(--ui-space-2);
+  /*
+   * Layout tokens for the marketing pages (Home, Features, Integrations). Components take their
+   * widths, gutters and spacing from here instead of setting their own, so edges line up across
+   * sections. Multi-column content uses --layout-gutter so its column edges fall on the 12-column grid.
+   */
+  --layout-gutter: var(--ui-space-12);
+  --layout-section: clamp(3rem, 7vw, 5.5rem);
+  --layout-block: var(--ui-space-8);
+  --layout-flow: var(--ui-space-4);
+  --layout-media-ratio: 3 / 2;
 }
+@media (max-width: 850px) { :root { --layout-gutter: var(--ui-space-8); } }
 body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: var(--site-bg); color: var(--site-fg); }
 .site-shell { display: flex; flex-direction: column; min-height: 100svh; }
 .site-shell > main { flex: 1; }
 .site-container { width: min(var(--site-width), calc(100% - 3rem)); margin-inline: auto; }
 .site-section { padding-block: 4rem; }
+/* 12 columns inside .site-container; children place themselves with grid-column. */
+.layout-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--layout-gutter); row-gap: var(--layout-block); align-items: start; }
+.layout-grid > * { grid-column: 1 / -1; min-width: 0; }
+/* Eleven gutters do not fit a phone; below the split breakpoint the grid is one column. */
+@media (max-width: 850px) { .layout-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (min-width: 851px) {
+  .layout-grid > .span-text { grid-column: 1 / 6; }
+  .layout-grid > .span-media { grid-column: 7 / -1; }
+  .layout-grid > .span-reading { grid-column: 1 / 8; }
+  .layout-grid > .span-wide { grid-column: 1 / 10; }
+}
 .site-section + .site-section { border-top: 1px solid var(--site-line); }
 .site-section-title { font-size: clamp(1.5rem, 2.8vw, 2rem); line-height: 1.35; letter-spacing: -.025em; font-weight: 600; }
 .site-section-subtitle { font-size: 1rem; color: var(--site-muted); line-height: 1.8; }
+/* Japanese headings: proportional kana and trimmed punctuation, so titles read as typeset rather than as body text enlarged. */
+:lang(ja) :is(h1, h2, h3) { font-feature-settings: 'palt'; letter-spacing: 0.02em; text-spacing-trim: trim-start; }
+/* Secondary calls to action on marketing pages: a visible neutral outline. Green is kept for the primary action. */
+.ui-control.outline { background: transparent; color: var(--site-fg); border-color: var(--site-control-line); padding-inline: var(--ui-space-4); }
+.ui-control.outline:hover { border-color: var(--site-accent); color: var(--site-accent); }
 a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--ui-focus); outline-offset: 5px; }
 @media (max-width: 850px) { :root { --site-header-height: 4rem; } }
 @media (max-width: 650px) { .site-container { width: calc(100% - 2rem); } .site-section { padding-block: 2.75rem; } }
