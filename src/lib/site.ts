@@ -9,6 +9,8 @@ export const docsUrl = (locale: string, section = '') =>
 /** Shared by navigation and sitemap; route files own their content. */
 export const sitePages = [
   { path: '', label: { en: 'Home', ja: 'ホーム' }, mode: 'content' },
+  { path: '/features', label: { en: 'Features', ja: '機能' }, mode: 'content' },
+  { path: '/integrations', label: { en: 'Integrations', ja: '連携' }, mode: 'content' },
   { path: '/playground', label: { en: 'Playground', ja: 'Playground' }, mode: 'workspace' },
   { path: '/blog', label: { en: 'Blog', ja: 'ブログ' }, mode: 'content' },
   { path: '/community', label: { en: 'Community', ja: 'コミュニティ' }, mode: 'content' },

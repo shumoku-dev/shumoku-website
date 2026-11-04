@@ -177,6 +177,21 @@
   .mobile-nav {
     display: none;
   }
+  .desktop-nav :global(.ui-nav-link) {
+    white-space: nowrap;
+  }
+  /* Seven destinations (with Features and Integrations) need the menu below this width. */
+  @media (max-width: 1100px) {
+    .desktop-nav {
+      display: none;
+    }
+    .header-controls {
+      margin-left: auto;
+    }
+    .mobile-nav {
+      display: block;
+    }
+  }
   @media (max-width: 850px) {
     .header-controls :global(.locale-link) {
       width: var(--ui-control-height);
@@ -185,17 +200,10 @@
     .header-controls :global(.locale-link span) {
       display: none;
     }
-    .desktop-nav {
-      display: none;
-    }
     .header-controls {
-      margin-left: auto;
       border: 0;
       padding: 0;
       gap: 0;
-    }
-    .mobile-nav {
-      display: block;
     }
     .header-row {
       gap: var(--ui-space-4);

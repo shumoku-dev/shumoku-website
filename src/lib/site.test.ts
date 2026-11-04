@@ -48,6 +48,8 @@ describe('site page registry', () => {
   it.each(locales)('keeps the publishing destination discoverable in %s', (locale) => {
     expect(siteNavigation(locale).map((entry) => entry.path)).toEqual([
       null,
+      '/features',
+      '/integrations',
       '/playground',
       '/blog',
       '/community',

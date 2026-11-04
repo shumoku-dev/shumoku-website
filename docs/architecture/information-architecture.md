@@ -7,7 +7,9 @@ maintained usage instructions. Do not put dated event reports in the reference d
 
 | Destination | Reader intent | Content |
 | --- | --- | --- |
-| Home | Understand the product | Overview, features, examples, entry points |
+| Home | Understand the product | Overview, scenes, evidence, entry points |
+| Features | Check what it can do | Generation, monitoring, sharing, CLI/library, Editor |
+| Integrations | Check fit with existing tools | Topology sources, monitoring sources, mapping |
 | Docs | Learn and look up | Installation, current usage, reference |
 | Playground | Try it | Interactive workspace |
 | Blog | Follow the project | Event reports, development stories, release introductions, use cases |
@@ -16,7 +18,8 @@ maintained usage instructions. Do not put dated event reports in the reference d
 | Support / For teams | Evaluate commercial help | Deployment, integration and operations services |
 | connpass (external) | Participate | Event dates, venues and registration |
 
-Header order: Docs, Playground, Blog, Community, For teams (導入相談). About remains
+Header order: Docs, Features (機能), Integrations (連携), Playground, Blog, Community,
+For teams (導入相談). The header switches to the menu at 1100px and below. About remains
 in the footer and contextual links; its URL is unchanged. Footer groups remain
 Use Shumoku / Project / Support. Home provides an activity entry point rather than
 claiming that unpublished articles are recent news. The shared `sitePages` registry
@@ -34,11 +37,11 @@ commercial infrastructure product. Do not bury the commercial route in the foote
 or imply that community participation is only for individuals. Keep both paths visible.
 This is a positioning decision, not a new pricing, licensing or SLA program.
 
-The Home sequence is overview → adopters → capabilities → integrations → production
-examples → product forms → getting started → project activity → FAQ. Capability and
-integration headings answer what the reader can accomplish; evidence, community and FAQ
-keep concise category labels instead of forcing every heading into the same sentence form. The hero
-explicitly connects open-source deployment with optional hands-on commercial help.
+The Home sequence follows the site copy plan: hero → scenes in operations → adoption
+(JANOG57) → treating the network as data → existing integrations → open source → try and
+deploy. Details move to Features and Integrations; Home links to each. How the sections are
+expressed is recorded in [expression.md](expression.md). The closing section connects
+open-source deployment with optional hands-on commercial help.
 Community links to commercial support for private/environment-specific work;
 Support links back to public community channels and self-service documentation.
 
