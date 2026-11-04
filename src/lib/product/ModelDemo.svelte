@@ -110,10 +110,9 @@
   .panes {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 10px;
-    padding: 10px;
-    background: var(--ui-workspace-shell);
-    border-radius: 16px;
+    border: 1px solid var(--site-line);
+    border-radius: 8px;
+    overflow: hidden;
   }
   .code {
     min-width: 0;
@@ -121,8 +120,6 @@
     align-content: space-between;
     background: var(--brand-neutral-900);
     color: var(--brand-neutral-50);
-    border-radius: 6px;
-    overflow: hidden;
   }
   pre {
     margin: 0;
@@ -164,8 +161,6 @@
     display: grid;
     grid-template-rows: minmax(0, 1fr) auto;
     background: #fff;
-    border-radius: 6px;
-    overflow: hidden;
   }
   .svg {
     display: grid;

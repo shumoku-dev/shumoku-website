@@ -22,7 +22,7 @@
 <main id="main">
   <PageHeading title={t.title} description={t.description} />
 
-  <Section id="generate" title={s.generate.title} actions={[s.generate.action]} surface>
+  <Section id="generate" title={s.generate.title} actions={[s.generate.action]}>
     {#each s.generate.body as paragraph (paragraph)}
       <p>{paragraph}</p>
     {/each}
@@ -37,14 +37,16 @@
     {/each}
     {#snippet media()}
       <div class="evidence">
-        <Shot src={weathermap} alt={s.monitor.weathermapAlt} sizes={half} />
-        <Shot src={alert} alt={s.monitor.alertAlt} sizes={half} />
+        <div class="ratio">
+          <Shot src={weathermap} alt={s.monitor.weathermapAlt} sizes={half} fill />
+        </div>
+        <div class="ratio"><Shot src={alert} alt={s.monitor.alertAlt} sizes={half} fill /></div>
         <div class="wide"><Shot src={dashboard} alt={s.monitor.dashboardAlt} /></div>
       </div>
     {/snippet}
   </Section>
 
-  <Section id="share" title={s.share.title} actions={[s.share.action]} surface>
+  <Section id="share" title={s.share.title} actions={[s.share.action]}>
     {#each s.share.body as paragraph (paragraph)}
       <p>{paragraph}</p>
     {/each}
@@ -59,7 +61,7 @@
       <p>{paragraph}</p>
     {/each}
     {#snippet media()}
-      <!-- Examples from `shumoku render --help` in the released @shumoku/cli 0.2.28. -->
+      <!-- Examples from `shumoku render --help` in the released @shumoku/cli (unchanged in 0.3.0). -->
       <pre
         class="command"
       ><code><span class="prompt">$</span> shumoku render network.yaml -o diagram.svg
@@ -68,13 +70,7 @@
     {/snippet}
   </Section>
 
-  <Section
-    id="editor"
-    title={s.editor.title}
-    badge={s.editor.badge}
-    actions={[s.editor.action]}
-    surface
-  >
+  <Section id="editor" title={s.editor.title} badge={s.editor.badge} actions={[s.editor.action]}>
     {#each s.editor.body as paragraph (paragraph)}
       <p>{paragraph}</p>
     {/each}
@@ -88,8 +84,15 @@
   .evidence {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--ui-space-6);
+    gap: var(--layout-gutter);
     align-items: start;
+  }
+  /* The pair shares one ratio so their bottoms line up. */
+  .ratio {
+    aspect-ratio: var(--layout-media-ratio);
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
   }
   .wide {
     grid-column: 1 / -1;

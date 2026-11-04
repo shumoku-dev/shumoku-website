@@ -4,14 +4,17 @@
   import Actions from './Actions.svelte'
 
   /**
-   * One section shape for Home, Features and Integrations: claim → evidence → next step.
+   * The base section for Home, Features and Integrations: claim → evidence → next step.
    * `split` puts the evidence beside the text; `stack` puts it below at full width.
+   * Sections are separated by a rule, not alternating bands; `large` marks the few sections
+   * that carry the page.
    */
   let {
     id,
     title,
     layout = 'split',
-    surface = false,
+    large = false,
+    plainActions = false,
     badge,
     actions = [],
     children,
@@ -20,7 +23,9 @@
     id: string
     title: string
     layout?: 'split' | 'stack'
-    surface?: boolean
+    large?: boolean
+    /** Show every action as a text link, for a set of equal destinations. */
+    plainActions?: boolean
     badge?: string
     actions?: readonly Action[]
     children?: Snippet
@@ -30,10 +35,10 @@
   const stacked = $derived(layout === 'stack' || !media)
 </script>
 
-<section class="product-section" class:surface aria-labelledby={id}>
-  <div class="site-container grid" class:stack={stacked}>
-    <div class="text">
-      <h2 {id} class="site-section-title">
+<section class="product-section" aria-labelledby={id}>
+  <div class="site-container layout-grid">
+    <div class="text" class:span-text={!stacked} class:span-reading={stacked}>
+      <h2 {id} class="site-section-title" class:large>
         {title}
         {#if badge}
           <span class="badge">{badge}</span>
@@ -43,47 +48,41 @@
         <div class="body">{@render children()}</div>
       {/if}
       {#if actions.length && !stacked}
-        <Actions {actions} />
+        <Actions {actions} plain={plainActions} />
       {/if}
     </div>
     {#if media}
-      <div class="media">{@render media()}</div>
+      <div class="media" class:span-media={!stacked}>{@render media()}</div>
     {/if}
     {#if actions.length && stacked}
-      <Actions {actions} />
+      <div><Actions {actions} plain={plainActions} /></div>
     {/if}
   </div>
 </section>
 
 <style>
   .product-section {
-    padding-block: clamp(3rem, 7vw, 5.5rem);
-  }
-  .surface {
-    background: var(--ui-surface);
-  }
-  .grid {
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    gap: var(--ui-space-12);
-    align-items: center;
-  }
-  .grid.stack {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--ui-space-8);
+    padding-block: var(--layout-section);
+    border-top: 1px solid var(--site-line);
   }
   .text {
-    min-width: 0;
     display: grid;
-    gap: var(--ui-space-6);
-    align-content: start;
-  }
-  .stack .text {
-    max-width: 44rem;
+    gap: var(--layout-flow);
   }
   h2 {
-    margin: 0;
+    margin: 0 0 var(--ui-space-2);
     text-wrap: balance;
+  }
+  h2.large {
+    font-weight: 700;
+    font-size: clamp(1.875rem, 4vw, 2.75rem);
+    line-height: 1.25;
+    letter-spacing: -0.03em;
+  }
+  /* Latin display tracking crowds kana; Japanese headings keep the site-wide palt setting. */
+  h2:lang(ja) {
+    letter-spacing: 0.02em;
+    word-break: auto-phrase;
   }
   .badge {
     display: inline-block;
@@ -96,23 +95,17 @@
     letter-spacing: 0;
     vertical-align: 0.3em;
   }
+  .text > :global(.actions) {
+    margin-top: var(--layout-flow);
+  }
   .body {
     display: grid;
-    gap: var(--ui-space-4);
+    gap: var(--layout-flow);
     color: var(--site-muted);
     line-height: 1.85;
   }
   .body :global(p) {
     margin: 0;
     text-wrap: pretty;
-  }
-  .media {
-    min-width: 0;
-  }
-  @media (max-width: 850px) {
-    .grid {
-      grid-template-columns: minmax(0, 1fr);
-      gap: var(--ui-space-8);
-    }
   }
 </style>

@@ -3,7 +3,7 @@ import { docsUrl, editorOrigin, type Locale } from '$lib/site'
 /** Copy for Home, Features and Integrations. The Japanese text is the reviewed source. */
 
 export const liveDemoUrl = 'https://demo.shumoku.dev/share/topologies/R71ZG1gEigiVY82YKpgDT03I'
-const repo = 'https://github.com/shumoku-dev/shumoku'
+const repo = 'https://github.com/konoe-akitoshi/shumoku'
 
 export type Action = { label: string; href: string }
 export type Row = readonly string[]
@@ -16,7 +16,8 @@ const ja = (l: Locale) => ({
         'Shumoku は、機器とポートの接続情報からネットワーク構成図を生成するオープンソースのソフトウェアです。',
     },
     hero: {
-      title: 'ネットワークにも、地図が必要だ。',
+      // Particles in [brackets] are set smaller so the nouns carry the line.
+      title: ['ネットワーク[にも]、', '地図[が]必要だ。'],
       body: [
         'Shumoku は、機器とポートの接続情報からネットワーク構成図を生成するオープンソースのソフトウェアです。',
         '自分たちの環境で動かす運用アプリ Shumoku Server では、構成図に通信量やアラートを重ねて表示できます。気になる機器や接続を見つけ、その周辺に何がつながっているかを同じ図で確認できます。',
@@ -27,32 +28,33 @@ const ja = (l: Locale) => ({
       detailAlt:
         '接続線にカーソルを合わせた画面。SW-J5-01 から SW-J5-EPS への帯域、通信量、使用率、状態が表示されている',
       caption: 'JANOG57 NOC で使われた Shumoku Server の画面',
-    },
-    why: {
-      title: 'WiFi は、天から降ってくるわけではない。',
-      body: [
-        'その裏には、ケーブルとスイッチとルーターでできた、地に足のついた構造があります。誰かが設計し、敷設し、維持している現実のインフラです。',
-        '見えない構造は理解されず、いざというとき頼れません。だから、見えたほうがいい。Shumoku は、すでにそこにある接続に輪郭を与え、人が読める地図にするための道具です。',
-      ],
-      action: { label: '名前の由来と設計の考え方', href: `/${l}/about` },
+      released: (date: string, name: string) => {
+        const [, month, day] = date.split('-').map(Number)
+        return `${month}月${day}日に ${name} を公開しました。`
+      },
+      notes: 'リリースノート',
     },
     scenes: {
       title: '運用で役立つ場面',
+      problem:
+        '手で描いた構成図は、配線や機器の変更に更新が追いつかず、いつの間にか実態とずれていきます。Shumoku は接続情報から図を生成し直すので、図を変更に追従させられます。',
       items: [
         {
-          title: '配線変更後の図を更新する。',
+          title: '配線変更後の図を更新する',
           body: '接続先のデータを修正して図を生成し直すと、変更後のつながりを確認できます。',
         },
         {
-          title: '負荷の高いリンクの接続先を調べる。',
+          title: '負荷の高いリンクの接続先を調べる',
           body: '使用率を図で見つけ、その線をたどって両端の機器とポートを確認できます。',
         },
         {
-          title: '調査中の接続をチームに伝える。',
+          title: '調査中の接続をチームに伝える',
           body: '閲覧専用リンクで同じ図を開き、対象の機器やポートを指しながら引き継げます。',
         },
       ],
       slot: '配線変更の前後で生成し直した構成図',
+      before: '変更前（Ethernet1）',
+      after: '変更後（Ethernet2）',
       loadAlt: '接続線にカーソルを合わせ、両端の機器と使用率を確認している画面',
       shareAlt: '閲覧専用リンクを作成する Share Link ダイアログ',
       action: { label: '機能を見る', href: `/${l}/features` },
@@ -75,6 +77,16 @@ const ja = (l: Locale) => ({
       diagramAlt: (port: string) => `edge-01 の xe-0/0/0 と core-01 の ${port} が接続された構成図`,
       action: { label: 'Playground で図をつくる', href: `/${l}/playground` },
     },
+    gallery: {
+      title: '生成した図',
+      body: '公開中のパッケージで、例の YAML から生成した図です。拠点ごとのまとまり、機器の状態、サブネットごとのグループを描き分けます。',
+      items: {
+        'full-featured': '複数拠点と冗長構成、仮想化基盤',
+        'device-status': '稼働中・障害・計画中など機器の状態',
+        'prefix-subgraph': 'サブネットごとのグループ',
+      },
+      action: { label: 'Playground で図をつくる', href: `/${l}/playground` },
+    },
     integrations: {
       title: 'いまある環境との連携',
       body: [
@@ -94,30 +106,62 @@ const ja = (l: Locale) => ({
         { label: 'ライセンス', href: `${repo}/blob/main/LICENSE` },
         { label: 'ブログ', href: `/${l}/blog` },
         { label: 'コミュニティ', href: `/${l}/community` },
+        { label: 'Shumoku について', href: `/${l}/about` },
       ],
-      recent: '最近の活動',
     },
     start: {
       title: '試用と導入',
+      commands: {
+        cli: 'YAML から図を生成する（インストール不要）',
+        server: 'Server を起動する',
+        copy: 'コピー',
+        copied: 'コピーしました',
+      },
       items: [
         {
-          title: '運用画面を見る。',
+          title: '運用画面を見る',
           body: 'ライブデモで、トラフィックが表示された構成図を閲覧できます。',
           action: { label: 'ライブデモ', href: liveDemoUrl },
         },
         {
-          title: '自分で図をつくる。',
+          title: '自分で図をつくる',
           body: 'Playground で YAML を編集し、生成した図を確認できます。',
           action: { label: 'Playground', href: `/${l}/playground` },
         },
         {
-          title: '自社で使う。',
+          title: '自社で使う',
           body: '公開 Docker イメージで Server を起動し、構成図を用意します。監視値も表示する場合は監視ツールを接続します。',
           action: { label: '導入ガイド', href: docsUrl(l, 'server') },
         },
       ],
-      note: '導入や既存環境との連携を進める際は、有償支援も相談できます。',
+      note: '導入や既存環境との連携を自分たちだけで進めるのが難しいときは、私たちが有償でお手伝いします。',
       support: { label: '導入相談', href: `/${l}/support` },
+    },
+    faq: {
+      title: 'よくある質問',
+      items: [
+        {
+          q: 'NetBox や監視ツールの代わりになりますか？',
+          a: 'なりません。Shumoku は構成情報や監視値を自分では集めません。YAML、NetBox、SNMP・LLDP による探索から構成を取り込み、Zabbix や Prometheus などが集めた監視値を図に重ねます。',
+        },
+        {
+          q: '利用に契約や費用は必要ですか？',
+          a: 'ソースコードは AGPL-3.0 で公開しており、利用に契約は必要ありません。自社環境での調査や設定、期限のある対応が必要な場合は、有償の支援を依頼できます。',
+        },
+        {
+          q: 'Server はクラウドサービスですか？',
+          a: 'Server は自分たちの環境に導入して運用するアプリです。公開 Docker イメージから起動します。',
+        },
+        {
+          q: 'Server を入れずに使えますか？',
+          a: 'CLI とライブラリで、YAML から SVG・PNG・HTML の図を生成できます。ドキュメント用の図や CI での生成に向いています。',
+        },
+      ],
+    },
+    activity: {
+      title: '最近の動き',
+      kinds: { release: 'リリース', article: 'ブログ', event: 'イベント' },
+      upcoming: '予定',
     },
   },
   features: {
@@ -236,7 +280,7 @@ const en = (l: Locale): ReturnType<typeof ja> => ({
         'Shumoku is open-source software that generates network diagrams from device and port connection data.',
     },
     hero: {
-      title: 'Your network needs a map, too.',
+      title: ['Your network', 'needs a map, too.'],
       body: [
         'Shumoku is open-source software that generates network diagrams from device and port connection data.',
         'Shumoku Server, the operations app you run in your own environment, overlays traffic and alerts on those diagrams. Spot a device or link that needs attention, and see what connects around it on the same diagram.',
@@ -247,32 +291,31 @@ const en = (l: Locale): ReturnType<typeof ja> => ({
       detailAlt:
         'Hovering a link shows the bandwidth, traffic, utilization and status between SW-J5-01 and SW-J5-EPS.',
       caption: 'Shumoku Server as used by the JANOG57 NOC',
-    },
-    why: {
-      title: 'WiFi doesn’t fall from the sky.',
-      body: [
-        'Behind it is a structure on the ground: cables, switches and routers that someone designed, installed and maintains.',
-        'A structure you cannot see is hard to understand, and hard to rely on when it matters. So it should be visible. Shumoku gives an outline to the connections that already exist and turns them into a map people can read.',
-      ],
-      action: { label: 'The name and the ideas behind it', href: `/${l}/about` },
+      released: (date: string, name: string) =>
+        `${name} was released on ${new Date(`${date}T00:00:00Z`).toLocaleDateString('en', { month: 'long', day: 'numeric', timeZone: 'UTC' })}.`,
+      notes: 'Release notes',
     },
     scenes: {
       title: 'Where it helps in operations',
+      problem:
+        'Hand-drawn diagrams fall behind every recabling and device change until they no longer match the network. Shumoku regenerates the diagram from connection data, so it keeps up with the change.',
       items: [
         {
-          title: 'Update the diagram after recabling.',
+          title: 'Update the diagram after recabling',
           body: 'Correct the connection data and regenerate the diagram to see the new connections.',
         },
         {
-          title: 'Trace a busy link to its ends.',
+          title: 'Trace a busy link to its ends',
           body: 'Find high utilization on the diagram, then follow the line to the devices and ports at both ends.',
         },
         {
-          title: 'Show the team the link you are investigating.',
+          title: 'Show the team the link you are investigating',
           body: 'Open the same diagram from a view-only link and hand over by pointing at the device or port.',
         },
       ],
       slot: 'The diagram regenerated before and after recabling',
+      before: 'Before (Ethernet1)',
+      after: 'After (Ethernet2)',
       loadAlt: 'Hovering a link to check the devices at both ends and its utilization',
       shareAlt: 'The Share Link dialog that creates a view-only link',
       action: { label: 'See the features', href: `/${l}/features` },
@@ -295,6 +338,16 @@ const en = (l: Locale): ReturnType<typeof ja> => ({
       diagramAlt: (port: string) => `A diagram linking xe-0/0/0 on edge-01 to ${port} on core-01`,
       action: { label: 'Make a diagram in the Playground', href: `/${l}/playground` },
     },
+    gallery: {
+      title: 'Generated diagrams',
+      body: 'Diagrams generated from example YAML by the released packages: per-site groups, device status and grouping by subnet.',
+      items: {
+        'full-featured': 'Several sites, redundant pairs and a virtualization cluster',
+        'device-status': 'Device status: active, failed, planned and more',
+        'prefix-subgraph': 'Grouping by subnet',
+      },
+      action: { label: 'Make a diagram in the Playground', href: `/${l}/playground` },
+    },
     integrations: {
       title: 'Works with what you already run',
       body: [
@@ -314,30 +367,62 @@ const en = (l: Locale): ReturnType<typeof ja> => ({
         { label: 'License', href: `${repo}/blob/main/LICENSE` },
         { label: 'Blog', href: `/${l}/blog` },
         { label: 'Community', href: `/${l}/community` },
+        { label: 'About Shumoku', href: `/${l}/about` },
       ],
-      recent: 'Recent activity',
     },
     start: {
       title: 'Try it and deploy it',
+      commands: {
+        cli: 'Generate a diagram from YAML (no install)',
+        server: 'Start Server',
+        copy: 'Copy',
+        copied: 'Copied',
+      },
       items: [
         {
-          title: 'See it in operation.',
+          title: 'See it in operation',
           body: 'Browse a topology with live traffic in the live demo.',
           action: { label: 'Live demo', href: liveDemoUrl },
         },
         {
-          title: 'Make your own diagram.',
+          title: 'Make your own diagram',
           body: 'Edit YAML in the Playground and check the generated diagram.',
           action: { label: 'Playground', href: `/${l}/playground` },
         },
         {
-          title: 'Run it for your team.',
+          title: 'Run it for your team',
           body: 'Start Server from the public Docker image and prepare a topology. Connect a monitoring tool to show monitoring values as well.',
           action: { label: 'Deployment guide', href: docsUrl(l, 'server') },
         },
       ],
-      note: 'For deployment or integration with your existing environment, paid help is also available.',
+      note: 'If deploying or connecting it to your environment is more than your team can take on, we can help as paid work.',
       support: { label: 'Talk to us', href: `/${l}/support` },
+    },
+    faq: {
+      title: 'Questions',
+      items: [
+        {
+          q: 'Does it replace NetBox or my monitoring tool?',
+          a: 'No. Shumoku does not collect configuration or monitoring data itself. It imports topology from YAML, NetBox or SNMP/LLDP discovery, and overlays the values that tools such as Zabbix and Prometheus collect.',
+        },
+        {
+          q: 'Do I need a contract or a paid plan?',
+          a: 'The source code is published under AGPL-3.0 and using it requires no contract. Paid help is available when you need work in your own environment, configuration or deadline-bound changes.',
+        },
+        {
+          q: 'Is Server a cloud service?',
+          a: 'Server is an app you deploy and run in your own environment, started from the public Docker image.',
+        },
+        {
+          q: 'Can I use it without Server?',
+          a: 'The CLI and library generate SVG, PNG and HTML diagrams from YAML, which suits documentation and generating diagrams in CI.',
+        },
+      ],
+    },
+    activity: {
+      title: 'Recent activity',
+      kinds: { release: 'Release', article: 'Blog', event: 'Event' },
+      upcoming: 'Upcoming',
     },
   },
   features: {

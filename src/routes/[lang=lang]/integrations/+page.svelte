@@ -16,7 +16,7 @@
 <main id="main">
   <PageHeading title={t.title} description={t.description} />
 
-  <Section id="inputs" title={t.inputs.title} layout="stack" surface>
+  <Section id="inputs" title={t.inputs.title} layout="stack">
     <p>{t.inputs.body}</p>
     {#snippet media()}
       <div class="pair">
@@ -49,7 +49,7 @@
     {/snippet}
   </Section>
 
-  <Section id="mapping" title={t.mapping.title} actions={[t.mapping.action]} surface>
+  <Section id="mapping" title={t.mapping.title} actions={[t.mapping.action]}>
     {#each t.mapping.body as paragraph (paragraph)}
       <p>{paragraph}</p>
     {/each}

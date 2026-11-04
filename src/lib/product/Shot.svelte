@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Picture } from 'vite-imagetools'
 
-  /** A real product screenshot in the home nested frame (16px outer, 10px inset, 6px inner). */
+  /** A real product screenshot. A thin outline only: the screen is the evidence, not the frame. */
   let {
     src,
     alt,
@@ -9,6 +9,7 @@
     sizes = '(max-width: 850px) calc(100vw - 2rem), 660px',
     loading = 'lazy',
     fetchpriority,
+    fill = false,
   }: {
     src: Picture
     alt: string
@@ -16,10 +17,12 @@
     sizes?: string
     loading?: 'lazy' | 'eager'
     fetchpriority?: 'high'
+    /** Fill the parent's box (cropping from the top) instead of keeping the image's own ratio. */
+    fill?: boolean
   } = $props()
 </script>
 
-<figure>
+<figure class:fill>
   <div class="frame">
     <enhanced:img {src} {alt} {sizes} {loading} {fetchpriority} decoding="async" />
   </div>
@@ -34,16 +37,27 @@
     min-width: 0;
   }
   .frame {
-    padding: 10px;
-    background: var(--ui-workspace-shell);
-    border-radius: 16px;
+    border: 1px solid var(--site-line);
+    border-radius: 8px;
+    overflow: hidden;
   }
   /* <enhanced:img> compiles to <picture><img>, which svelte-check cannot see. */
   .frame :global(img) {
     display: block;
     width: 100%;
     height: auto;
-    border-radius: 6px;
+  }
+  .fill .frame {
+    box-sizing: border-box;
+    height: 100%;
+  }
+  .fill .frame :global(picture),
+  .fill .frame :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
   }
   figcaption {
     margin-top: var(--ui-space-3);

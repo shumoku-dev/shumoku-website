@@ -37,9 +37,9 @@ commercial infrastructure product. Do not bury the commercial route in the foote
 or imply that community participation is only for individuals. Keep both paths visible.
 This is a positioning decision, not a new pricing, licensing or SLA program.
 
-The Home sequence follows the site copy plan: hero → scenes in operations → adoption
-(JANOG57) → treating the network as data → existing integrations → open source → try and
-deploy. Details move to Features and Integrations; Home links to each. How the sections are
+The Home sequence is hero (real JANOG57 screen and the latest release) → treating the network
+as data → generated diagrams → scenes in operations → adoption → existing integrations → try
+and deploy (real commands) → questions → open source with a dated activity log. Details move to Features and Integrations; Home links to each. How the sections are
 expressed is recorded in [expression.md](expression.md). The closing section connects
 open-source deployment with optional hands-on commercial help.
 Community links to commercial support for private/environment-specific work;
@@ -89,6 +89,19 @@ and the community registration page. Keep the event date distinct from the artic
 publication date. Temporary header announcements are promotional links, not archives.
 
 ## Research and rationale
+
+Home research, 2026-11-04 (about 40 sites; structure from text, visuals from screenshots):
+network-visibility products (NetBrain, IP Fabric, Forward Networks, Auvik, Kentik, Batfish,
+containerlab, SuzieQ, Netdisco, Mackerel), diagram tools (D2, Structurizr, Ilograph, mingrammer
+Diagrams, Kroki, Excalidraw, tldraw, Eraser, Penrose, Mermaid), open-source sites admired for
+their voice (Ghostty, Zed, htmx, SQLite, Caddy, Tauri, Bun, Tailscale, Blender) and older
+network-operations sites (MRTG, Smokeping, OpenBSD, Nmap, Wireshark, JANOG, Network Weathermap).
+Findings that shaped Home: no network-visibility competitor shows a topology in its hero; the
+strongest diagram-tool demo is a small source with its output below it; open-source credibility
+comes from verifiable links rather than logo walls; dated releases and news make a project read
+as alive; older operations sites put the tool's real output directly under one sentence. See
+[expression.md](expression.md).
+
 
 These are qualitative precedents, not a claim that every OSS site needs the same pages.
 The inventory includes footer and related official sites, not only header navigation.
