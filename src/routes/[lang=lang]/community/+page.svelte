@@ -20,17 +20,17 @@
 
 <PageMeta title={t.title} description={t.description} image={photoUrl('group')} />
 <main id="main">
-  <div class="site-container montage">
+  <div class="site-container layout-grid montage">
     <!-- Meetup #1 photos with the page's text set between the rows, on the site grid. -->
     <CommunityMontage locale={data.lang}>
       {#snippet introduction()}
-        <section class="interlude layout-grid" aria-labelledby="community-title">
+        <section class="layout-sub" aria-labelledby="community-title">
           <h1 id="community-title" class="span-label">{t.title}</h1>
           <div class="story span-story"><p class="lead">{t.description}</p></div>
         </section>
       {/snippet}
       {#snippet events()}
-        <section class="interlude layout-grid" aria-labelledby="community-talk">
+        <section class="layout-sub" aria-labelledby="community-talk">
           <h2 id="community-talk" class="span-label">{t.talk.title}</h2>
           <div class="story span-story">
             <p>{t.talk.body}</p>
@@ -39,7 +39,7 @@
         </section>
       {/snippet}
       {#snippet discussion()}
-        <section class="interlude layout-grid" aria-labelledby="community-meetup">
+        <section class="layout-sub" aria-labelledby="community-meetup">
           <h2 id="community-meetup" class="span-label">{t.meetup.title}</h2>
           <div class="story span-story">
             <p>{t.meetup.body}</p>

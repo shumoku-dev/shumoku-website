@@ -19,7 +19,7 @@
   }
 </script>
 
-<figure>
+<figure class="command">
   <figcaption>
     <span>{label}</span>
     <button type="button" onclick={copyCommand}>{copy}</button>
@@ -30,11 +30,12 @@
 
 <style>
   figure {
+    container-type: inline-size;
     margin: 0;
     min-width: 0;
     background: var(--brand-neutral-900);
     color: var(--brand-neutral-50);
-    border-radius: 8px;
+    border-radius: var(--layout-media-radius);
     overflow: hidden;
   }
   figcaption {
@@ -73,8 +74,8 @@
     font-size: 0.8125rem;
     line-height: 1.8;
   }
-  /* On phones, wrap long commands instead of hiding their ends; copying still uses the original. */
-  @media (max-width: 650px) {
+  /* In a narrow panel, wrap long commands instead of hiding their ends; copying uses the original. */
+  @container (max-width: 32rem) {
     pre {
       white-space: pre-wrap;
       overflow-wrap: anywhere;

@@ -1,17 +1,20 @@
 <script lang="ts">
-  import { type ExamplePort, examplePorts, exampleYaml } from './example'
+  import type { DiagramSize } from './diagrams'
+  import { type ExamplePort, exampleDiagramUrl, examplePorts, exampleYaml } from './example'
+  import Frame from './Frame.svelte'
 
   /**
    * YAML beside the diagram the released packages generated from it. Switching the port is the
    * page's one moment of motion: the definition and the diagram change together.
    */
   let {
-    diagrams,
+    size,
     legend,
     generated,
     diagramAlt,
   }: {
-    diagrams: Record<ExamplePort, string>
+    /** Both ports draw the same layout, so one size holds for either diagram. */
+    size: DiagramSize
     legend: string
     generated: string
     diagramAlt: (port: string) => string
@@ -23,7 +26,14 @@
     line.includes('node: core-01, port: Ethernet') && line.includes('to:')
 </script>
 
-<div class="demo">
+<svelte:head>
+  <!-- The other diagram is ready before the first switch, so the swap never shows an empty frame. -->
+  {#each examplePorts as candidate (candidate)}
+    <link rel="preload" as="image" href={exampleDiagramUrl(candidate)}>
+  {/each}
+</svelte:head>
+
+<div class="demo layout-sub">
   <fieldset>
     <legend>{legend}</legend>
     {#each examplePorts as candidate (candidate)}
@@ -33,7 +43,7 @@
       </label>
     {/each}
   </fieldset>
-  <div class="panes">
+  <div class="panes layout-sub">
     <div class="code">
       <pre
       ><code>{#each lines as line, index (index)}<span class="line" class:changed={changed(line)}>{line}</span>{/each}</code></pre>
@@ -43,22 +53,26 @@
         <span class="add">+ to: {'{'} node: core-01, port: {examplePorts[1]} {'}'}</span>
       </p>
     </div>
-    <figure class="diagram" data-port={port}>
-      {#key port}
-        <div class="svg" role="img" aria-label={diagramAlt(port)}>
-          <!-- Build-time output of @shumoku/renderer-svg for the YAML on the left. -->
-          {@html diagrams[port]}
-        </div>
-      {/key}
-      <figcaption>{generated}</figcaption>
-    </figure>
+    <div class="diagram">
+      <!-- Build-time output of @shumoku/renderer-svg for the YAML on the left. -->
+      <Frame
+        variant="diagram"
+        src={exampleDiagramUrl(port)}
+        alt={diagramAlt(port)}
+        caption={generated}
+        width={size.width}
+        height={size.height}
+        maxHeight="30rem"
+        loading="eager"
+        swap
+      />
+    </div>
   </div>
 </div>
 
 <style>
   .demo {
-    display: grid;
-    gap: var(--ui-space-4);
+    row-gap: var(--ui-space-4);
   }
   fieldset {
     display: flex;
@@ -108,17 +122,15 @@
     outline-offset: 3px;
   }
   .panes {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: var(--layout-gutter);
+    row-gap: var(--layout-gutter);
   }
   .code {
-    min-width: 0;
+    grid-column: span 6;
     display: grid;
     align-content: space-between;
     background: var(--brand-neutral-900);
     color: var(--brand-neutral-50);
-    border-radius: 8px;
+    border-radius: var(--layout-media-radius);
     overflow: hidden;
   }
   pre {
@@ -156,45 +168,17 @@
     color: var(--brand-green-300);
   }
   .diagram {
-    margin: 0;
-    min-width: 0;
-    display: grid;
-    grid-template-rows: minmax(0, 1fr) auto;
-    background: #fff;
-    border: 1px solid var(--site-line);
-    border-radius: 8px;
-    overflow: hidden;
+    grid-column: span 6;
   }
-  .svg {
-    display: grid;
-    place-items: center;
-    padding: var(--ui-space-4);
-  }
-  .svg :global(svg) {
-    width: 100%;
-    max-height: 30rem;
-    animation: arrive 0.32s ease-out;
-  }
-  /* Point at what the edit changed: the port label on core-01. */
-  .diagram[data-port="Ethernet1"] :global([data-port="core-01:Ethernet1"] .port-label-bg),
-  .diagram[data-port="Ethernet2"] :global([data-port="core-01:Ethernet2"] .port-label-bg) {
-    fill: var(--brand-green-700);
-  }
-  figcaption {
-    padding: var(--ui-space-2) var(--ui-space-4);
-    border-top: 1px solid var(--brand-neutral-100);
-    font-size: 0.75rem;
-    color: var(--brand-neutral-600);
-    background: #fff;
-  }
-  @keyframes arrive {
-    from {
-      opacity: 0.35;
-    }
-  }
-  @media (max-width: 650px) {
+  /* Below the page breakpoint: side by side while there is room for both. */
+  @container (min-width: 37rem) {
     .panes {
-      grid-template-columns: minmax(0, 1fr);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+    .code,
+    .diagram {
+      grid-column: auto;
     }
   }
 </style>

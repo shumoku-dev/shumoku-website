@@ -4,11 +4,13 @@
 
   /** A plain dated log of releases, articles and events, newest first. */
   let {
+    title,
     items,
     kinds,
     upcoming,
     today,
   }: {
+    title: string
     items: readonly ActivityItem[]
     kinds: Record<ActivityKind, string>
     upcoming: string
@@ -16,29 +18,40 @@
   } = $props()
 </script>
 
-<ol>
-  {#each items as item (item.href)}
-    <li>
-      <p class="when">
-        <time datetime={item.date}>{formatDate(item.date)}</time>
-        <span>{item.date > today ? upcoming : kinds[item.kind]}</span>
-      </p>
-      <a href={item.href}>{item.title}</a>
-    </li>
-  {/each}
-</ol>
+<div class="layout-sub log">
+  <h3>{title}</h3>
+  <ol class="layout-sub">
+    {#each items as item (item.href)}
+      <li class="layout-sub">
+        <p class="when">
+          <time datetime={item.date}>{formatDate(item.date)}</time>
+          <span>{item.date > today ? upcoming : kinds[item.kind]}</span>
+        </p>
+        <a href={item.href}>{item.title}</a>
+      </li>
+    {/each}
+  </ol>
+</div>
 
 <style>
+  .log {
+    row-gap: var(--layout-flow);
+  }
+  h3 {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--site-muted);
+  }
   ol {
+    row-gap: 0;
     margin: 0;
     padding: 0;
     list-style: none;
     border-top: 1px solid var(--site-line);
   }
   li {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    column-gap: var(--layout-gutter);
+    row-gap: 0;
     align-items: baseline;
     padding-block: var(--ui-space-3);
     border-bottom: 1px solid var(--site-line);
@@ -67,9 +80,11 @@
   a:hover {
     text-decoration-color: currentColor;
   }
-  @media (max-width: 650px) {
+  /* Below the page breakpoint: side by side while there is room for both. */
+  @container (min-width: 37rem) {
     li {
-      grid-template-columns: minmax(0, 1fr);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
     }
     .when,
     a {

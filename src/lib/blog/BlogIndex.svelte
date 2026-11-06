@@ -1,5 +1,6 @@
 <script lang="ts">
   import PageMeta from '$lib/PageMeta.svelte'
+  import Frame from '$lib/product/Frame.svelte'
   import type { Locale } from '$lib/site'
   import { authors } from './authors'
   import { type Category, categories } from './categories'
@@ -45,19 +46,18 @@
     {/each}
   </nav>
 
-  <ol class="posts span-wide">
+  <ol class="posts layout-sub span-wide">
     {#each posts as post}
       {@const href = `/${lang}/blog/${post.slug}`}
-      <li>
+      <li class="layout-sub">
         <!-- Media object on wide screens, stacked card on phones. The title link covers the row. -->
-        <article lang={post.lang} class:has-image={post.image}>
+        <article lang={post.lang} class="layout-sub">
           {#if post.image}
             <div class="thumbnail">
-              <enhanced:img
+              <Frame
                 src={articleImage(post.slug, post.image)}
-                alt=""
                 sizes="(max-width: 640px) 100vw, 16rem"
-                loading="lazy"
+                bare
               />
             </div>
           {/if}
@@ -127,42 +127,31 @@
     color: var(--site-fg);
     font-weight: 600;
   }
+  .posts {
+    row-gap: 0;
+  }
+  .posts > li {
+    row-gap: 0;
+  }
   .posts > li + li {
     border-block-start: 1px solid var(--site-line);
   }
   article {
     position: relative;
-    display: grid;
-    gap: var(--ui-space-6);
+    row-gap: var(--ui-space-6);
     padding-block: var(--ui-space-6);
   }
-  /* Three columns of thumbnail, six of text. Covers are mostly photos, so 3:2 keeps more of them. */
-  article.has-image {
-    grid-template-columns: repeat(9, minmax(0, 1fr));
-    column-gap: var(--layout-gutter);
-  }
-  .thumbnail {
-    grid-column: span 3;
-  }
-  article.has-image .text {
-    grid-column: span 6;
-  }
-  .thumbnail :global(picture) {
-    display: contents;
-  }
-  .thumbnail :global(img) {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 3 / 2;
-    object-fit: cover;
-    border-radius: var(--ui-panel-radius);
-  }
+  /* Three columns of thumbnail, six of text. A post without an image reads across all nine. */
   .text {
     display: grid;
     align-content: start;
     gap: var(--ui-space-2);
-    min-width: 0;
+  }
+  .thumbnail {
+    grid-column: span 3;
+  }
+  .thumbnail + .text {
+    grid-column: span 6;
   }
   .meta,
   .byline {
@@ -231,19 +220,20 @@
     padding-block: var(--ui-space-8);
     color: var(--site-muted);
   }
-  /* Phones: a side-by-side row leaves too little room for either, so stack a card with the
-     event photo full width on top. */
-  @media (max-width: 640px) {
-    article {
-      gap: var(--ui-space-3);
-      padding-block: var(--ui-space-6);
-    }
-    article.has-image {
-      grid-template-columns: minmax(0, 1fr);
+  /* Below the page breakpoint: a row while it fits, then a stacked card with the photo on top. */
+  @container (min-width: 37rem) {
+    article:has(.thumbnail) {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
     }
     .thumbnail,
-    article.has-image .text {
+    .thumbnail + .text {
       grid-column: auto;
+    }
+  }
+  @container (width < 37rem) {
+    article {
+      row-gap: var(--ui-space-3);
     }
     .thumbnail {
       margin-block-end: var(--ui-space-1);

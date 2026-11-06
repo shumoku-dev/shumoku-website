@@ -7,11 +7,11 @@
   import { productCopy } from '$lib/content/product'
   import PageHeading from '$lib/layout/PageHeading.svelte'
   import PageMeta from '$lib/PageMeta.svelte'
+  import Column from '$lib/product/Column.svelte'
   import Columns from '$lib/product/Columns.svelte'
   import CommandPanel from '$lib/product/CommandPanel.svelte'
-  import ImageSlot from '$lib/product/ImageSlot.svelte'
+  import Frame from '$lib/product/Frame.svelte'
   import Section from '$lib/product/Section.svelte'
-  import Shot from '$lib/product/Shot.svelte'
   import type { PageData } from './$types'
 
   let { data }: { data: PageData } = $props()
@@ -32,7 +32,7 @@ shumoku render network.yaml -f png -o diagram.png`
       <p>{paragraph}</p>
     {/each}
     {#snippet media()}
-      <Shot src={icon} alt={s.generate.imageAlt} fill />
+      <Frame src={icon} alt={s.generate.imageAlt} />
     {/snippet}
   </Section>
 
@@ -42,24 +42,21 @@ shumoku render network.yaml -f png -o diagram.png`
     {/each}
     {#snippet media()}
       <Columns>
-        <div>
-          <Shot src={weathermap} alt={s.monitor.weathermapAlt} sizes={third} fill />
-          <h3>{s.monitor.weathermapTitle}</h3>
-        </div>
-        <div>
-          <Shot src={alert} alt={s.monitor.alertAlt} sizes={third} fill />
-          <h3>{s.monitor.alertTitle}</h3>
-        </div>
-        <div>
-          <Shot
-            src={dashboard}
-            alt={s.monitor.dashboardAlt}
-            sizes={third}
-            fill
-            position="top left"
-          />
-          <h3>{s.monitor.dashboardTitle}</h3>
-        </div>
+        <Column title={s.monitor.weathermapTitle}>
+          {#snippet media()}
+            <Frame src={weathermap} alt={s.monitor.weathermapAlt} sizes={third} />
+          {/snippet}
+        </Column>
+        <Column title={s.monitor.alertTitle}>
+          {#snippet media()}
+            <Frame src={alert} alt={s.monitor.alertAlt} sizes={third} />
+          {/snippet}
+        </Column>
+        <Column title={s.monitor.dashboardTitle}>
+          {#snippet media()}
+            <Frame src={dashboard} alt={s.monitor.dashboardAlt} sizes={third} position="top left" />
+          {/snippet}
+        </Column>
       </Columns>
     {/snippet}
   </Section>
@@ -70,7 +67,7 @@ shumoku render network.yaml -f png -o diagram.png`
     {/each}
     <p class="caution">{s.share.caution}</p>
     {#snippet media()}
-      <Shot src={share} alt={s.share.imageAlt} fill />
+      <Frame src={share} alt={s.share.imageAlt} />
     {/snippet}
   </Section>
 
@@ -94,7 +91,7 @@ shumoku render network.yaml -f png -o diagram.png`
       <p>{paragraph}</p>
     {/each}
     {#snippet media()}
-      <ImageSlot label={s.editor.slot} />
+      <Frame label={s.editor.slot} />
     {/snippet}
   </Section>
 </main>

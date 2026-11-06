@@ -2,7 +2,8 @@ import { announcement } from '$lib/announcement'
 import { posts } from '$lib/blog/posts.server'
 import type { ActivityItem } from '$lib/content/activity'
 import { releaseItems } from '$lib/content/activity'
-import { renderExample, renderGallery } from '$lib/product/example.server'
+import { diagramNames, diagramSizes } from '$lib/product/diagrams.server'
+import { exampleDiagramName, examplePorts } from '$lib/product/example'
 import type { PageServerLoad } from './$types'
 
 export const prerender = true
@@ -28,9 +29,14 @@ export const load: PageServerLoad = async ({ params }) => {
   const activity = [event, ...releaseItems(lang), ...articles]
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 7)
+  const example = exampleDiagramName(examplePorts[0])
+  const galleryNames = diagramNames().filter((name) => !name.startsWith('example-'))
+  const size = (await diagramSizes([example]))[example]
+  if (!size) throw new Error('The example diagram has no size')
   return {
-    diagrams: await renderExample(),
-    gallery: await renderGallery(),
+    // Only sizes: the diagrams themselves are files, so they stay out of the page and its data.
+    exampleSize: size,
+    gallerySizes: await diagramSizes(galleryNames),
     activity,
     // Prerendered at build time: an event after this date is shown as upcoming.
     today: new Date().toISOString().slice(0, 10),

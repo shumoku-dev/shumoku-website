@@ -1,6 +1,11 @@
+import { diagramUrl } from './diagrams'
+
 /** The Home "treat your network as data" example: one link moves between two ports. */
 export const examplePorts = ['Ethernet1', 'Ethernet2'] as const
 export type ExamplePort = (typeof examplePorts)[number]
+
+export const exampleDiagramName = (port: ExamplePort) => `example-${port}`
+export const exampleDiagramUrl = (port: ExamplePort) => diagramUrl(exampleDiagramName(port))
 
 export const exampleYaml = (port: ExamplePort) => `name: "Site A"
 subgraphs:

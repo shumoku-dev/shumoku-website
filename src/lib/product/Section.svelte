@@ -51,11 +51,11 @@
         <div class="body">{@render children()}</div>
       {/if}
       {#if actions.length && !stacked}
-        <Actions {actions} plain={plainActions} primary={primaryAction} />
+        <div class="next"><Actions {actions} plain={plainActions} primary={primaryAction} /></div>
       {/if}
     </div>
     {#if media}
-      <div class="media" class:span-media={!stacked}>{@render media()}</div>
+      <div class="layout-sub" class:span-media={!stacked}>{@render media()}</div>
     {/if}
     {#if actions.length && stacked}
       <div><Actions {actions} plain={plainActions} primary={primaryAction} /></div>
@@ -98,7 +98,7 @@
     letter-spacing: 0;
     vertical-align: 0.3em;
   }
-  .text > :global(.actions) {
+  .next {
     margin-top: var(--layout-flow);
   }
   .body {
@@ -106,9 +106,6 @@
     gap: var(--layout-flow);
     color: var(--site-muted);
     line-height: 1.85;
-  }
-  .body :global(p) {
-    margin: 0;
     text-wrap: pretty;
   }
 </style>

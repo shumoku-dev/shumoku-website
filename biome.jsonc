@@ -45,6 +45,11 @@
   },
   "overrides": [
     {
+      // Displayed as a grid above the page breakpoint, which needs explicit table roles.
+      "includes": ["src/lib/product/DataTable.svelte"],
+      "linter": { "rules": { "a11y": { "noRedundantRoles": "off" } } }
+    },
+    {
       "includes": ["**/*.svelte"],
       "linter": {
         "rules": {

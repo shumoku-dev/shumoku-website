@@ -18,7 +18,8 @@ bun run check
 ```
 
 `bun run check` runs formatting/lint checks, Svelte type checking, tests, unused-code detection,
-and the production build.
+the production build, and a layout check of the built pages in headless Chrome (set `CHROME_BIN` if
+Chrome is not found).
 
 ## Repository map
 

@@ -1,63 +1,52 @@
 <script lang="ts">
+  import type { DiagramSize } from './diagrams'
+  import { diagramUrl } from './diagrams'
+  import Frame from './Frame.svelte'
+
   /** Real diagrams rendered at build time from example YAML. The first one gets the full width. */
-  let { diagrams, items }: { diagrams: Record<string, string>; items: Record<string, string> } =
+  let { sizes, items }: { sizes: Record<string, DiagramSize>; items: Record<string, string> } =
     $props()
-  const entries = $derived(Object.entries(items).filter(([key]) => diagrams[key]))
+  const entries = $derived(Object.entries(items).filter(([key]) => sizes[key]))
 </script>
 
-<div class="gallery">
+<div class="gallery layout-sub">
   {#each entries as [key, caption], index (key)}
-    <figure class:wide={index === 0}>
-      <div class="svg" role="img" aria-label={caption}>
-        <!-- Build-time output of @shumoku/renderer-svg; see src/lib/product/gallery. -->
-        {@html diagrams[key]}
-      </div>
-      <figcaption>{caption}</figcaption>
-    </figure>
+    <div class="item" class:wide={index === 0}>
+      <!-- Build-time output of @shumoku/renderer-svg; see src/lib/product/gallery. -->
+      <Frame
+        variant="diagram"
+        src={diagramUrl(key)}
+        alt={caption}
+        {caption}
+        width={sizes[key]?.width}
+        height={sizes[key]?.height}
+        maxHeight={index === 0 ? '34rem' : '26rem'}
+      />
+    </div>
   {/each}
 </div>
 
 <style>
   .gallery {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--layout-gutter);
+    row-gap: var(--layout-gutter);
   }
-  figure {
-    margin: 0;
-    min-width: 0;
-    display: grid;
-    grid-template-rows: minmax(0, 1fr) auto;
-    border: 1px solid var(--site-line);
-    border-radius: 8px;
-    overflow: hidden;
-    background: #fff;
+  .item {
+    grid-column: span 6;
   }
   .wide {
     grid-column: 1 / -1;
   }
-  .svg {
-    display: grid;
-    place-items: center;
-    padding: var(--ui-space-4);
-  }
-  .svg :global(svg) {
-    width: 100%;
-    height: auto;
-    max-height: 26rem;
-  }
-  .wide .svg :global(svg) {
-    max-height: 34rem;
-  }
-  figcaption {
-    padding: var(--ui-space-2) var(--ui-space-4);
-    border-top: 1px solid var(--brand-neutral-100);
-    font-size: 0.8125rem;
-    color: var(--brand-neutral-600);
-  }
-  @media (max-width: 650px) {
+  /* Below the page breakpoint: two side by side while there is room for both. */
+  @container (min-width: 37rem) {
     .gallery {
-      grid-template-columns: minmax(0, 1fr);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+    .item {
+      grid-column: auto;
+    }
+    .wide {
+      grid-column: 1 / -1;
     }
   }
 </style>
