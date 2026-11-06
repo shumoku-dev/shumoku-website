@@ -172,17 +172,18 @@
     border: 1px solid var(--site-line);
     border-radius: 8px;
   }
+  /* The close-up takes the last four columns and hangs below the screenshot. */
   .detail {
     position: absolute;
-    right: clamp(1rem, 3vw, 2.5rem);
-    bottom: clamp(-2.5rem, -3vw, -1rem);
-    width: min(38%, 26rem);
+    right: 0;
+    bottom: calc(var(--layout-block) * -1);
+    width: calc(4 * var(--layout-col) + 3 * var(--layout-gutter));
     border-radius: 8px;
     box-shadow: 0 0.75rem 2rem color-mix(in srgb, var(--site-fg) 18%, transparent);
   }
   figcaption {
     margin-top: var(--ui-space-3);
-    max-width: 50%;
+    max-width: calc(8 * var(--layout-col) + 7 * var(--layout-gutter));
     font-size: 0.8125rem;
     color: var(--site-muted);
   }

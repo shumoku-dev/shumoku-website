@@ -53,7 +53,7 @@
       "conversations diagrams toast"
       "discussion discussion discussion"
       "sign streaming farewell";
-    gap: var(--ui-space-2);
+    gap: var(--ui-space-3) var(--layout-gutter);
     border-radius: var(--ui-panel-radius);
   }
   img {

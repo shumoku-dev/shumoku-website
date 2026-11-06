@@ -185,6 +185,9 @@ const ja = (l: Locale) => ({
           '構成図はブラウザーで拡大・移動して閲覧できます。リンクの使用率は色で表されます。この表示がウェザーマップです。使用率が高い線を見つけたら、両端の機器名とポート名を確認し、どの接続かを特定できます。アラートは対象の機器に表示されるため、接続先も同じ図でたどれます。',
           '複数の構成図とメトリクス表示を組み合わせたダッシュボードも作れます。拠点ごとの図や、チームが継続して見る値を一つの画面に並べられます。',
         ],
+        weathermapTitle: 'ウェザーマップ',
+        alertTitle: 'アラート',
+        dashboardTitle: 'ダッシュボード',
         weathermapAlt: '接続線にカーソルを合わせ、通信量と使用率を表示した画面',
         alertAlt: '構成図上の機器にアラートが表示された画面',
         dashboardAlt: '複数の構成図とメトリクスを並べたダッシュボード',
@@ -202,6 +205,9 @@ const ja = (l: Locale) => ({
       },
       cli: {
         title: 'CLI とライブラリでの図の生成',
+        commandLabel: 'YAML から図を生成する',
+        copy: 'コピー',
+        copied: 'コピーしました',
         body: [
           'ドキュメント用の図を生成したり、自作ツールに構成図を組み込んだりする場合は、CLI とライブラリを利用できます。Server の導入なしで、共通の構成モデルと描画機能を使えます。',
           'CLI は構成定義の YAML から SVG・PNG・HTML を生成します。HTML では図を拡大・移動して閲覧できます。生成コマンドを CI に組み込めば、構成定義の変更に合わせてドキュメント用の図を更新できます。',
@@ -447,6 +453,9 @@ const en = (l: Locale): ReturnType<typeof ja> => ({
           'Zoom and pan diagrams in the browser. Link utilization is shown by color: this view is the weathermap. When you find a busy line, read the device and port names at both ends to identify the link. Alerts appear on the affected device, so you can follow its connections on the same diagram.',
           'You can also build dashboards that combine several diagrams and metric panels, placing per-site diagrams and the values your team watches on one screen.',
         ],
+        weathermapTitle: 'Weathermap',
+        alertTitle: 'Alerts',
+        dashboardTitle: 'Dashboard',
         weathermapAlt: 'Hovering a link to show its traffic and utilization',
         alertAlt: 'An alert shown on a device in the diagram',
         dashboardAlt: 'A dashboard with several diagrams and metrics',
@@ -464,6 +473,9 @@ const en = (l: Locale): ReturnType<typeof ja> => ({
       },
       cli: {
         title: 'Generate diagrams with the CLI and library',
+        commandLabel: 'Generate a diagram from YAML',
+        copy: 'Copy',
+        copied: 'Copied',
         body: [
           'To generate diagrams for documentation or embed them in your own tools, use the CLI and library. They share the same configuration model and renderer without deploying Server.',
           'The CLI generates SVG, PNG and HTML from YAML definitions. In HTML you can zoom and pan the diagram. Add the command to CI to keep documentation diagrams in step with changes to the definition.',

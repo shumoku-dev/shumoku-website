@@ -7,6 +7,8 @@
   import { productCopy } from '$lib/content/product'
   import PageHeading from '$lib/layout/PageHeading.svelte'
   import PageMeta from '$lib/PageMeta.svelte'
+  import Columns from '$lib/product/Columns.svelte'
+  import CommandPanel from '$lib/product/CommandPanel.svelte'
   import ImageSlot from '$lib/product/ImageSlot.svelte'
   import Section from '$lib/product/Section.svelte'
   import Shot from '$lib/product/Shot.svelte'
@@ -15,7 +17,10 @@
   let { data }: { data: PageData } = $props()
   const t = $derived(productCopy(data.lang).features)
   const s = $derived(t.sections)
-  const half = '(max-width: 850px) calc(100vw - 2rem), 330px'
+  const third = '(max-width: 850px) calc(100vw - 2rem), 341px'
+  const cliExamples = `shumoku render network.yaml -o diagram.svg
+shumoku render network.yaml -f html -o diagram.html
+shumoku render network.yaml -f png -o diagram.png`
 </script>
 
 <PageMeta title={t.title} description={t.description} />
@@ -27,7 +32,7 @@
       <p>{paragraph}</p>
     {/each}
     {#snippet media()}
-      <Shot src={icon} alt={s.generate.imageAlt} />
+      <Shot src={icon} alt={s.generate.imageAlt} fill />
     {/snippet}
   </Section>
 
@@ -36,13 +41,26 @@
       <p>{paragraph}</p>
     {/each}
     {#snippet media()}
-      <div class="evidence">
-        <div class="ratio">
-          <Shot src={weathermap} alt={s.monitor.weathermapAlt} sizes={half} fill />
+      <Columns>
+        <div>
+          <Shot src={weathermap} alt={s.monitor.weathermapAlt} sizes={third} fill />
+          <h3>{s.monitor.weathermapTitle}</h3>
         </div>
-        <div class="ratio"><Shot src={alert} alt={s.monitor.alertAlt} sizes={half} fill /></div>
-        <div class="wide"><Shot src={dashboard} alt={s.monitor.dashboardAlt} /></div>
-      </div>
+        <div>
+          <Shot src={alert} alt={s.monitor.alertAlt} sizes={third} fill />
+          <h3>{s.monitor.alertTitle}</h3>
+        </div>
+        <div>
+          <Shot
+            src={dashboard}
+            alt={s.monitor.dashboardAlt}
+            sizes={third}
+            fill
+            position="top left"
+          />
+          <h3>{s.monitor.dashboardTitle}</h3>
+        </div>
+      </Columns>
     {/snippet}
   </Section>
 
@@ -52,7 +70,7 @@
     {/each}
     <p class="caution">{s.share.caution}</p>
     {#snippet media()}
-      <Shot src={share} alt={s.share.imageAlt} />
+      <Shot src={share} alt={s.share.imageAlt} fill />
     {/snippet}
   </Section>
 
@@ -62,11 +80,12 @@
     {/each}
     {#snippet media()}
       <!-- Examples from `shumoku render --help` in the released @shumoku/cli (unchanged in 0.3.0). -->
-      <pre
-        class="command"
-      ><code><span class="prompt">$</span> shumoku render network.yaml -o diagram.svg
-<span class="prompt">$</span> shumoku render network.yaml -f html -o diagram.html
-<span class="prompt">$</span> shumoku render network.yaml -f png -o diagram.png</code></pre>
+      <CommandPanel
+        label={s.cli.commandLabel}
+        command={cliExamples}
+        copy={s.cli.copy}
+        copied={s.cli.copied}
+      />
     {/snippet}
   </Section>
 
@@ -81,45 +100,8 @@
 </main>
 
 <style>
-  .evidence {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--layout-gutter);
-    align-items: start;
-  }
-  /* The pair shares one ratio so their bottoms line up. */
-  .ratio {
-    aspect-ratio: var(--layout-media-ratio);
-    min-width: 0;
-    min-height: 0;
-    overflow: hidden;
-  }
-  .wide {
-    grid-column: 1 / -1;
-  }
   .caution {
-    padding-inline-start: var(--ui-space-4);
-    border-inline-start: 3px solid var(--site-control-line);
     color: var(--site-fg);
-  }
-  .command {
-    margin: 0;
-    padding: var(--ui-space-6);
-    overflow-x: auto;
-    background: var(--brand-neutral-900);
-    color: var(--brand-neutral-50);
-    border: 10px solid var(--ui-workspace-shell);
-    border-radius: 16px;
-    font-size: 0.875rem;
-    line-height: 2;
-  }
-  .prompt {
-    color: var(--brand-green-300);
-    user-select: none;
-  }
-  @media (max-width: 650px) {
-    .evidence {
-      grid-template-columns: minmax(0, 1fr);
-    }
+    font-weight: 500;
   }
 </style>

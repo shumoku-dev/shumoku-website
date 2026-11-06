@@ -15,6 +15,7 @@
     layout = 'split',
     large = false,
     plainActions = false,
+    primaryAction = false,
     badge,
     actions = [],
     children,
@@ -26,6 +27,8 @@
     large?: boolean
     /** Show every action as a text link, for a set of equal destinations. */
     plainActions?: boolean
+    /** The section's first action is the page's main action, drawn as the filled button. */
+    primaryAction?: boolean
     badge?: string
     actions?: readonly Action[]
     children?: Snippet
@@ -48,14 +51,14 @@
         <div class="body">{@render children()}</div>
       {/if}
       {#if actions.length && !stacked}
-        <Actions {actions} plain={plainActions} />
+        <Actions {actions} plain={plainActions} primary={primaryAction} />
       {/if}
     </div>
     {#if media}
       <div class="media" class:span-media={!stacked}>{@render media()}</div>
     {/if}
     {#if actions.length && stacked}
-      <div><Actions {actions} plain={plainActions} /></div>
+      <div><Actions {actions} plain={plainActions} primary={primaryAction} /></div>
     {/if}
   </div>
 </section>

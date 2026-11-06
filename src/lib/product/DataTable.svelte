@@ -39,6 +39,15 @@
     font-size: 0.9375rem;
     line-height: 1.6;
   }
+  /* The second column starts on a grid line, so tables on the same page line up. */
+  @media (min-width: 851px) {
+    table {
+      table-layout: fixed;
+    }
+    thead th:first-child {
+      width: calc(2 * var(--layout-col) + 2 * var(--layout-gutter));
+    }
+  }
   th,
   td {
     padding: var(--ui-space-3) var(--ui-space-4) var(--ui-space-3) 0;

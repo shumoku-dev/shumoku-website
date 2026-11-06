@@ -13,6 +13,8 @@
    * sections. Multi-column content uses --layout-gutter so its column edges fall on the 12-column grid.
    */
   --layout-gutter: var(--ui-space-12);
+  /* One column of the 12-column grid, for parts that must land on a grid line inside their own box. */
+  --layout-col: calc((min(var(--site-width), 100vw - 3rem) - 11 * var(--layout-gutter)) / 12);
   --layout-section: clamp(3rem, 7vw, 5.5rem);
   --layout-block: var(--ui-space-8);
   --layout-flow: var(--ui-space-4);
@@ -25,7 +27,7 @@ body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background:
 .site-container { width: min(var(--site-width), calc(100% - 3rem)); margin-inline: auto; }
 .site-section { padding-block: 4rem; }
 /* 12 columns inside .site-container; children place themselves with grid-column. */
-.layout-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--layout-gutter); row-gap: var(--layout-block); align-items: start; }
+.layout-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--layout-gutter); row-gap: var(--layout-block); align-items: start; align-content: start; }
 .layout-grid > * { grid-column: 1 / -1; min-width: 0; }
 /* Eleven gutters do not fit a phone; below the split breakpoint the grid is one column. */
 @media (max-width: 850px) { .layout-grid { grid-template-columns: minmax(0, 1fr); } }
@@ -34,6 +36,8 @@ body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background:
   .layout-grid > .span-media { grid-column: 7 / -1; }
   .layout-grid > .span-reading { grid-column: 1 / 8; }
   .layout-grid > .span-wide { grid-column: 1 / 10; }
+  .layout-grid > .span-label { grid-column: 1 / 5; }
+  .layout-grid > .span-story { grid-column: 5 / 12; }
 }
 .site-section + .site-section { border-top: 1px solid var(--site-line); }
 .site-section-title { font-size: clamp(1.5rem, 2.8vw, 2rem); line-height: 1.35; letter-spacing: -.025em; font-weight: 600; }

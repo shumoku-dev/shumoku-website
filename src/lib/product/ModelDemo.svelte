@@ -110,9 +110,7 @@
   .panes {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    border: 1px solid var(--site-line);
-    border-radius: 8px;
-    overflow: hidden;
+    gap: var(--layout-gutter);
   }
   .code {
     min-width: 0;
@@ -120,6 +118,8 @@
     align-content: space-between;
     background: var(--brand-neutral-900);
     color: var(--brand-neutral-50);
+    border-radius: 8px;
+    overflow: hidden;
   }
   pre {
     margin: 0;
@@ -161,6 +161,9 @@
     display: grid;
     grid-template-rows: minmax(0, 1fr) auto;
     background: #fff;
+    border: 1px solid var(--site-line);
+    border-radius: 8px;
+    overflow: hidden;
   }
   .svg {
     display: grid;

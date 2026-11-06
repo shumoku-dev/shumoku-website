@@ -28,13 +28,13 @@
 </script>
 
 <PageMeta {title} {description} />
-<main id="main" class="site-container blog">
-  <header>
+<main id="main" class="site-container layout-grid blog">
+  <header class="span-wide">
     <h1>{title}</h1>
     <p>{description}</p>
   </header>
 
-  <nav class="categories" aria-label={ja ? 'カテゴリ' : 'Categories'}>
+  <nav class="categories span-wide" aria-label={ja ? 'カテゴリ' : 'Categories'}>
     <a href={`/${lang}/blog`} aria-current={current ? undefined : 'page'}
       >{ja ? 'すべて' : 'All'}</a
     >
@@ -45,7 +45,7 @@
     {/each}
   </nav>
 
-  <ol class="posts">
+  <ol class="posts span-wide">
     {#each posts as post}
       {@const href = `/${lang}/blog/${post.slug}`}
       <li>
@@ -88,8 +88,7 @@
 
 <style>
   .blog {
-    max-width: 48rem;
-    padding-block: var(--ui-space-12);
+    padding-block: var(--layout-section);
   }
   header {
     display: grid;
@@ -98,8 +97,10 @@
   h1 {
     font-size: clamp(2rem, 4vw, 2.5rem);
     font-weight: 600;
-    letter-spacing: -0.02em;
     line-height: 1.2;
+  }
+  h1:not(:lang(ja)) {
+    letter-spacing: -0.02em;
   }
   header p {
     color: var(--site-muted);
@@ -109,7 +110,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--ui-space-1) var(--ui-space-6);
-    margin-block-start: var(--ui-space-8);
     border-block-end: 1px solid var(--site-line);
     font-size: 0.875rem;
   }
@@ -136,9 +136,16 @@
     gap: var(--ui-space-6);
     padding-block: var(--ui-space-6);
   }
-  /* Thumbnail : text = 1 : 2. Covers are mostly photos, so 3:2 keeps more of them than 16:9. */
+  /* Three columns of thumbnail, six of text. Covers are mostly photos, so 3:2 keeps more of them. */
   article.has-image {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    column-gap: var(--layout-gutter);
+  }
+  .thumbnail {
+    grid-column: span 3;
+  }
+  article.has-image .text {
+    grid-column: span 6;
   }
   .thumbnail :global(picture) {
     display: contents;
@@ -233,6 +240,10 @@
     }
     article.has-image {
       grid-template-columns: minmax(0, 1fr);
+    }
+    .thumbnail,
+    article.has-image .text {
+      grid-column: auto;
     }
     .thumbnail {
       margin-block-end: var(--ui-space-1);

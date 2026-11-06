@@ -98,7 +98,13 @@ docker run -d -p 8080:8080 -v shumoku-data:/data \\
     <p>{t.adoption.body}</p>
     <Adopters label={t.adoption.adoptersLabel} />
     {#snippet media()}
-      <Shot src={dashboard} alt={t.adoption.imageAlt} caption={t.adoption.caption} />
+      <Shot
+        src={dashboard}
+        alt={t.adoption.imageAlt}
+        caption={t.adoption.caption}
+        fill
+        position="top left"
+      />
     {/snippet}
   </Section>
 

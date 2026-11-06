@@ -3,13 +3,22 @@
   import LinkButton from '$lib/ui/LinkButton.svelte'
 
   /** The first action is the section's next step; the rest are quieter text links. */
-  let { actions, plain = false }: { actions: readonly Action[]; plain?: boolean } = $props()
+  let {
+    actions,
+    plain = false,
+    primary = false,
+  }: { actions: readonly Action[]; plain?: boolean; primary?: boolean } = $props()
 </script>
 
 <div class="actions">
   {#each actions as action, index (action.href)}
     {#if index === 0 && !plain}
-      <LinkButton href={action.href} class="outline">{action.label}</LinkButton>
+      <LinkButton
+        href={action.href}
+        variant={primary ? 'primary' : 'secondary'}
+        class={primary ? undefined : 'outline'}
+        >{action.label}</LinkButton
+      >
     {:else}
       <a href={action.href}>{action.label}</a>
     {/if}

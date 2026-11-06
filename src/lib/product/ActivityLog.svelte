@@ -19,8 +19,10 @@
 <ol>
   {#each items as item (item.href)}
     <li>
-      <time datetime={item.date}>{formatDate(item.date)}</time>
-      <span class="kind">{item.date > today ? upcoming : kinds[item.kind]}</span>
+      <p class="when">
+        <time datetime={item.date}>{formatDate(item.date)}</time>
+        <span>{item.date > today ? upcoming : kinds[item.kind]}</span>
+      </p>
       <a href={item.href}>{item.title}</a>
     </li>
   {/each}
@@ -35,19 +37,27 @@
   }
   li {
     display: grid;
-    grid-template-columns: 6.5rem 5rem minmax(0, 1fr);
-    gap: var(--ui-space-3);
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    column-gap: var(--layout-gutter);
     align-items: baseline;
     padding-block: var(--ui-space-3);
     border-bottom: 1px solid var(--site-line);
   }
+  .when {
+    grid-column: span 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--ui-space-2);
+    margin: 0;
+  }
   time,
-  .kind {
+  .when span {
     font-size: 0.875rem;
     font-variant-numeric: tabular-nums;
     color: var(--site-muted);
   }
   a {
+    grid-column: span 4;
     color: var(--site-fg);
     line-height: 1.6;
     text-decoration: underline;
@@ -59,10 +69,11 @@
   }
   @media (max-width: 650px) {
     li {
-      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr);
     }
+    .when,
     a {
-      grid-column: 1 / -1;
+      grid-column: auto;
     }
   }
 </style>

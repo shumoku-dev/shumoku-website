@@ -19,16 +19,19 @@
   <Section id="inputs" title={t.inputs.title} layout="stack">
     <p>{t.inputs.body}</p>
     {#snippet media()}
-      <div class="pair">
-        <div class="notes">
+      <div class="layout-grid inner">
+        <div class="notes span-reading">
           <DataTable head={t.inputs.head} rows={t.inputs.rows} />
           <p class="note">{t.inputs.note}</p>
         </div>
-        <Shot
-          src={netbox}
-          alt={t.inputs.imageAlt}
-          sizes="(max-width: 850px) calc(100vw - 2rem), 440px"
-        />
+        <div class="span-aside-inner">
+          <Shot
+            src={netbox}
+            alt={t.inputs.imageAlt}
+            sizes="(max-width: 850px) calc(100vw - 2rem), 441px"
+            fill
+          />
+        </div>
       </div>
     {/snippet}
   </Section>
@@ -41,10 +44,12 @@
   >
     <p>{t.monitoring.body}</p>
     {#snippet media()}
-      <div class="notes">
-        <DataTable head={t.monitoring.head} rows={t.monitoring.rows} />
-        <p class="note">{t.monitoring.settings}</p>
-        <p class="note">{t.monitoring.plugin}</p>
+      <div class="layout-grid inner">
+        <div class="notes span-reading">
+          <DataTable head={t.monitoring.head} rows={t.monitoring.rows} />
+          <p class="note">{t.monitoring.settings}</p>
+          <p class="note">{t.monitoring.plugin}</p>
+        </div>
       </div>
     {/snippet}
   </Section>
@@ -57,25 +62,21 @@
 </main>
 
 <style>
-  .pair {
-    display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    gap: var(--ui-space-12);
-    align-items: start;
+  .inner {
+    width: 100%;
   }
   .notes {
     display: grid;
-    gap: var(--ui-space-4);
-    max-width: 52rem;
+    gap: var(--layout-flow);
+  }
+  @media (min-width: 851px) {
+    .span-aside-inner {
+      grid-column: 8 / -1;
+    }
   }
   .note {
     margin: 0;
     color: var(--site-muted);
     line-height: 1.85;
-  }
-  @media (max-width: 850px) {
-    .pair {
-      grid-template-columns: minmax(0, 1fr);
-    }
   }
 </style>

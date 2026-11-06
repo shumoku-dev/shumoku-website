@@ -10,6 +10,7 @@
     loading = 'lazy',
     fetchpriority,
     fill = false,
+    position = 'top center',
   }: {
     src: Picture
     alt: string
@@ -17,12 +18,14 @@
     sizes?: string
     loading?: 'lazy' | 'eager'
     fetchpriority?: 'high'
-    /** Fill the parent's box (cropping from the top) instead of keeping the image's own ratio. */
+    /** Crop to the site's media ratio (from the top), so neighbouring media share a height. */
     fill?: boolean
+    /** Which part of the image stays visible when `fill` crops it. */
+    position?: string
   } = $props()
 </script>
 
-<figure class:fill>
+<figure class:fill style:--shot-position={position}>
   <div class="frame">
     <enhanced:img {src} {alt} {sizes} {loading} {fetchpriority} decoding="async" />
   </div>
@@ -49,7 +52,7 @@
   }
   .fill .frame {
     box-sizing: border-box;
-    height: 100%;
+    aspect-ratio: var(--layout-media-ratio);
   }
   .fill .frame :global(picture),
   .fill .frame :global(img) {
@@ -57,7 +60,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: top center;
+    object-position: var(--shot-position);
   }
   figcaption {
     margin-top: var(--ui-space-3);
