@@ -1,143 +1,114 @@
 <script lang="ts">
-  import { communityUrl } from '$lib/announcement'
   import CommunityMontage from '$lib/community/CommunityMontage.svelte'
   import { photoUrl } from '$lib/community/photos'
-  import ContentBand from '$lib/layout/ContentBand.svelte'
+  import { pagesCopy } from '$lib/content/pages'
   import PageMeta from '$lib/PageMeta.svelte'
+  import Section from '$lib/product/Section.svelte'
   import type { PageData } from './$types'
 
   let { data }: { data: PageData } = $props()
-  const ja = $derived(data.lang === 'ja')
-  const title = $derived(ja ? 'コミュニティ' : 'Community')
-  const description = $derived(
-    ja
-      ? '使う人も、つくる人も。質問、実例、アイデアを持ち寄り、Shumokuを一緒に育てる場所。'
-      : 'For users and contributors alike. Share questions, examples and ideas to help shape Shumoku.',
-  )
-  const repo = 'https://github.com/konoe-akitoshi/shumoku'
+  const t = $derived(pagesCopy(data.lang).community)
 </script>
-<PageMeta {title} {description} image={photoUrl('group')} />
+
+{#snippet links(items: readonly { label: string; href: string }[])}
+  <p class="links">
+    {#each items as item (item.href)}
+      <a href={item.href}>{item.label}</a>
+    {/each}
+  </p>
+{/snippet}
+
+<PageMeta title={t.title} description={t.description} image={photoUrl('group')} />
 <main id="main">
-  <div class="site-container community-montage">
+  <div class="site-container layout-grid montage">
+    <!-- Meetup #1 photos with the page's text set between the rows, on the site grid. -->
     <CommunityMontage locale={data.lang}>
       {#snippet introduction()}
-        <section class="community-interlude" aria-labelledby="community-title">
-          <h1 id="community-title">{title}</h1>
-          <div class="community-story">
-            <h2>{ja ? '使う人と、つくる人が出会う場所。' : 'Where users and builders meet.'}</h2>
-            <p>{description}</p>
-            <p>
-              {ja ? '最初のMeetupでは、Shumokuやネットワーク図の話題を持ち寄りました。登壇だけでなく、同じテーブルでPCを開いたり、会話を交わしたり。写真から、その雰囲気をのぞいてみてください。' : 'Our first meetup brought people together around Shumoku and network diagrams. Beyond the talks, there were open laptops and conversations around the same table. Take a look at the day in pictures.'}
-            </p>
-          </div>
+        <section class="layout-sub" aria-labelledby="community-title">
+          <h1 id="community-title" class="span-label">{t.title}</h1>
+          <div class="story span-story"><p class="lead">{t.description}</p></div>
         </section>
       {/snippet}
       {#snippet events()}
-        <section class="community-interlude" aria-labelledby="community-events">
-          <h2 id="community-events">{ja ? 'イベントで会う' : 'Meet the community'}</h2>
-          <div class="community-story">
-            <p>
-              {ja ? 'まずは開催記で雰囲気を知るところから。次のイベントの日程や参加方法はconnpassで確認できます。' : 'Start with the report to get a feel for the meetup. Find dates and registration details for upcoming events on connpass.'}
-            </p>
-            <div class="community-links">
-              <a href={communityUrl}>{ja ? '開催予定・参加申込' : 'Events and registration'}</a>
-              <a href={`/${data.lang}/blog/meetup-1`}
-                >{ja ? 'Meetup #1の開催記' : 'Meetup #1 report'}</a
-              >
-            </div>
+        <section class="layout-sub" aria-labelledby="community-talk">
+          <h2 id="community-talk" class="span-label">{t.talk.title}</h2>
+          <div class="story span-story">
+            <p>{t.talk.body}</p>
+            {@render links(t.talk.links)}
           </div>
         </section>
       {/snippet}
       {#snippet discussion()}
-        <section class="community-interlude" aria-labelledby="community-talk">
-          <h2 id="community-talk">{ja ? '質問する・話す' : 'Ask and share'}</h2>
-          <div class="community-story">
-            <p>
-              {ja ? '使い方の質問やアイデアの交換はGitHub Discussions・Discordへ。コミュニティの回答はベストエフォートです。内部ホスト名や顧客情報などは、公開前に匿名化してください。' : 'Ask usage questions and exchange ideas on GitHub Discussions or Discord. Community help is best effort. Anonymize internal hostnames and customer information before sharing.'}
-            </p>
-            <div class="community-links">
-              <a href={`${repo}/discussions`}>GitHub Discussions</a
-              ><a href="https://discord.gg/dyYbEsDZYr">Discord</a>
-            </div>
+        <section class="layout-sub" aria-labelledby="community-meetup">
+          <h2 id="community-meetup" class="span-label">{t.meetup.title}</h2>
+          <div class="story span-story">
+            <p>{t.meetup.body}</p>
+            {@render links(t.meetup.links)}
           </div>
         </section>
       {/snippet}
     </CommunityMontage>
   </div>
-  <ContentBand id="community-contribute" title={ja ? '開発に参加する' : 'Contribute'}>
-    <p>
-      {ja ? 'バグ報告、機能の提案、ドキュメントの改善も大切な貢献です。大きな変更は、実装前にIssueやDiscussionで相談してください。' : 'Bug reports, feature ideas and documentation improvements all count. Discuss substantial changes before implementing them.'}
+
+  <Section id="contribute" title={t.contribute.title} actions={t.contribute.links} plainActions>
+    {#each t.contribute.body as paragraph (paragraph)}
+      <p>{paragraph}</p>
+    {/each}
+    <p class="security">
+      {t.contribute.security}
+      <a href={t.contribute.securityLink.href}>{t.contribute.securityLink.label}</a>
     </p>
-    <div class="band-links">
-      <a href={`${repo}/issues`}>GitHub Issues</a
-      ><a href={`${repo}/blob/main/CONTRIBUTING.md`}>{ja ? '貢献ガイド' : 'Contribution guide'}</a
-      ><a href={`${repo}/blob/main/CODE_OF_CONDUCT.md`}>{ja ? '行動規範' : 'Code of conduct'}</a
-      ><a href={`${repo}/blob/main/GOVERNANCE.md`}>{ja ? '運営方針' : 'Governance'}</a>
-    </div>
-    <p>
-      {ja ? '脆弱性は公開Issueに投稿せず、非公開の報告窓口をご利用ください。' : 'Do not report vulnerabilities in public issues. Use the private reporting channels.'}
-      <a href={`${repo}/blob/main/SECURITY.md`}
-        >{ja ? 'セキュリティポリシー' : 'Security policy'}</a
-      >
-    </p>
-  </ContentBand>
-  <ContentBand id="community-business" title={ja ? '個別の環境を相談する' : 'Need hands-on help?'}>
-    <p>
-      {ja ? '企業の方もコミュニティに参加できます。非公開の構成を扱う調査や導入・連携開発など、個別の作業が必要な場合は商用サポートへ。' : 'Organizations are welcome in the community too. For private investigations, deployment or integration work in your environment, explore commercial support.'}
-    </p>
-    <div class="band-links">
-      <a href={`/${data.lang}/support`}
-        >{ja ? '導入・商用サポートを相談する' : 'Explore commercial support'}</a
-      ><a href={`/${data.lang}/about`}>{ja ? 'Shumokuについて' : 'About Shumoku'}</a>
-    </div>
-  </ContentBand>
+  </Section>
+
+  <Section id="business" title={t.business.title} actions={t.business.links}>
+    <p>{t.business.body}</p>
+  </Section>
 </main>
 
 <style>
-  .community-montage {
-    padding-block-start: var(--ui-space-8);
-  }
-  .community-interlude {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--ui-space-2);
-    align-items: start;
-  }
-  .community-story {
-    grid-column: 2 / -1;
-    display: grid;
-    gap: var(--ui-space-4);
+  .montage {
+    padding-block: var(--layout-block) var(--layout-section);
   }
   h1 {
-    font-size: clamp(1.75rem, 3vw, 2.5rem);
-    line-height: 1.4;
-    font-weight: 600;
-  }
-  .community-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--ui-space-4);
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.25;
   }
   h2 {
-    font-size: 1.5rem;
-    line-height: 2rem;
-    font-weight: 500;
-    text-wrap: balance;
+    margin: 0;
+    font-size: clamp(1.5rem, 2.8vw, 2rem);
+    font-weight: 600;
+    line-height: 1.35;
   }
-  p {
-    line-height: 1.8;
+  .story {
+    display: grid;
+    gap: var(--layout-flow);
+    color: var(--site-muted);
+    line-height: 1.85;
   }
-  a {
+  .story p {
+    margin: 0;
+    text-wrap: pretty;
+  }
+  .lead {
+    color: var(--site-fg);
+    font-size: 1.125rem;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ui-space-2) var(--layout-block);
+  }
+  .links a,
+  .security a {
+    color: var(--site-fg);
     text-decoration: underline;
-    text-underline-offset: 0.2em;
+    text-decoration-color: var(--site-control-line);
+    text-underline-offset: 0.25em;
   }
-  @media (max-width: 650px) {
-    .community-story {
-      grid-column: auto;
-    }
-    .community-interlude {
-      grid-template-columns: 1fr;
-      gap: var(--ui-space-4);
-    }
+  .links a:hover,
+  .security a:hover {
+    color: var(--site-accent);
   }
 </style>

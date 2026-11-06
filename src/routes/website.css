@@ -8,34 +8,58 @@
   --site-control-size: var(--ui-control-height);
   --site-space: var(--ui-space-2);
   /*
-   * Layout tokens for the marketing pages (Home, Features, Integrations). Components take their
-   * widths, gutters and spacing from here instead of setting their own, so edges line up across
-   * sections. Multi-column content uses --layout-gutter so its column edges fall on the 12-column grid.
+   * Layout tokens for the marketing pages. Parts take their spacing from here instead of setting
+   * their own, so edges line up across sections.
    */
+  /* Page margin: fluid, so the page edge needs no breakpoint of its own. */
+  --layout-inset: clamp(1rem, 3.7vw, 1.5rem);
   --layout-gutter: var(--ui-space-12);
   --layout-section: clamp(3rem, 7vw, 5.5rem);
   --layout-block: var(--ui-space-8);
   --layout-flow: var(--ui-space-4);
+  /* The one ratio and the one radius of framed media. Only Frame.svelte and dark panels use them. */
   --layout-media-ratio: 3 / 2;
+  --layout-media-radius: 8px;
 }
-@media (max-width: 850px) { :root { --layout-gutter: var(--ui-space-8); } }
 body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: var(--site-bg); color: var(--site-fg); }
 .site-shell { display: flex; flex-direction: column; min-height: 100svh; }
 .site-shell > main { flex: 1; }
-.site-container { width: min(var(--site-width), calc(100% - 3rem)); margin-inline: auto; }
-.site-section { padding-block: 4rem; }
-/* 12 columns inside .site-container; children place themselves with grid-column. */
-.layout-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--layout-gutter); row-gap: var(--layout-block); align-items: start; }
-.layout-grid > * { grid-column: 1 / -1; min-width: 0; }
-/* Eleven gutters do not fit a phone; below the split breakpoint the grid is one column. */
-@media (max-width: 850px) { .layout-grid { grid-template-columns: minmax(0, 1fr); } }
-@media (min-width: 851px) {
-  .layout-grid > .span-text { grid-column: 1 / 6; }
-  .layout-grid > .span-media { grid-column: 7 / -1; }
-  .layout-grid > .span-reading { grid-column: 1 / 8; }
-  .layout-grid > .span-wide { grid-column: 1 / 10; }
+.site-container { width: min(var(--site-width), 100% - 2 * var(--layout-inset)); margin-inline: auto; }
+/*
+ * The page grid: 12 columns inside .site-container. There is exactly one set of tracks per page.
+ * .layout-sub passes them down with subgrid, through as many levels as a part needs, so a part
+ * places itself with `grid-column: span n` and never restates how many columns its parent has.
+ * Every element between the page grid and a track-using descendant must be .layout-sub.
+ */
+.layout-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--layout-gutter); row-gap: var(--layout-block); align-items: start; align-content: start; }
+.layout-sub { display: grid; grid-template-columns: subgrid; column-gap: var(--layout-gutter); row-gap: var(--layout-block); }
+/* Zero specificity: any rule in a part wins over this default. */
+:where(.layout-grid, .layout-sub) > * { grid-column: 1 / -1; min-width: 0; }
+/*
+ * THE page breakpoint, and the only one in this grid. Above it there are 12 tracks. At or below it
+ * there is one track, and .layout-sub stops being a grid: as a flex column it ignores the placement
+ * a part wrote for the tracks (`span n`, `8 / -1`), so parts stack without a rule of their own.
+ *
+ * Below it, grid elements are also query containers. They could not be above it: a size container is
+ * an independent formatting context, which cannot be a subgrid. A part that wants another arrangement
+ * below the breakpoint writes `@container (…)`: that reads the part's own width, and it is simply
+ * false above the breakpoint, where no such container exists. Its rule sets `display: grid` again.
+ */
+@media (width > 850px) {
+  :is(.layout-grid, .layout-sub) > .span-text { grid-column: 1 / 6; }
+  :is(.layout-grid, .layout-sub) > .span-media { grid-column: 7 / -1; }
+  :is(.layout-grid, .layout-sub) > .span-reading { grid-column: 1 / 8; }
+  :is(.layout-grid, .layout-sub) > .span-wide { grid-column: 1 / 10; }
+  :is(.layout-grid, .layout-sub) > .span-label { grid-column: 1 / 5; }
+  :is(.layout-grid, .layout-sub) > .span-story { grid-column: 5 / 12; }
 }
-.site-section + .site-section { border-top: 1px solid var(--site-line); }
+@media (width <= 850px) {
+  :root { --site-header-height: 4rem; --layout-gutter: var(--ui-space-8); }
+  .layout-grid { grid-template-columns: minmax(0, 1fr); container-type: inline-size; }
+  /* !important: `align-items` a part set for its row would shrink the items of this column. */
+  .layout-sub { display: flex; flex-direction: column; align-items: stretch !important; container-type: inline-size; }
+  .wide-only { display: none; }
+}
 .site-section-title { font-size: clamp(1.5rem, 2.8vw, 2rem); line-height: 1.35; letter-spacing: -.025em; font-weight: 600; }
 .site-section-subtitle { font-size: 1rem; color: var(--site-muted); line-height: 1.8; }
 /* Japanese headings: proportional kana and trimmed punctuation, so titles read as typeset rather than as body text enlarged. */
@@ -44,6 +68,4 @@ body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background:
 .ui-control.outline { background: transparent; color: var(--site-fg); border-color: var(--site-control-line); padding-inline: var(--ui-space-4); }
 .ui-control.outline:hover { border-color: var(--site-accent); color: var(--site-accent); }
 a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--ui-focus); outline-offset: 5px; }
-@media (max-width: 850px) { :root { --site-header-height: 4rem; } }
-@media (max-width: 650px) { .site-container { width: calc(100% - 2rem); } .site-section { padding-block: 2.75rem; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0s !important; animation-duration: 0s !important; } }

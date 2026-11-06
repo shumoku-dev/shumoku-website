@@ -20,6 +20,9 @@ Müller-Brockmannの原著そのものではない。Docsサイトへの適用�
 | FileTabs等の部品 | 内部の列、選択、フォーカス、アイコン配置 | ペインの外側余白 |
 | アセット | 元のviewBox、パス、ストローク | ボタンのクリック領域 |
 
+マーケティングページのグリッド、画像の枠、ブレークポイントはUIキットの外にあり、
+[expression.md の「レイアウトの基準」](expression.md#レイアウトの基準)が正本である（節10）。
+
 ホームの入れ子カードは外側16px、10px inset、内側6pxを基準とする。内側の角丸を
 外側より大きくせず、同心に見えるよう外側Rからinsetを差し引く。これはホームの
 画像・動画カードの契約であり、汎用UI Panelの角丸を一律に拡大するものではない。
@@ -354,6 +357,21 @@ hover/open/pressedは共通の状態色を使う。透明borderは既存寸法�
 前述の「開状態の境界色」はこの判断で通常状態について撤回した。
 focus outline・エラーborder・forced-colors時の境界は識別のために残す。
 Noticeの左罫線とページのセクション区切りは囲い枠とは分け、今回は維持する。
+
+## 10. マーケティングページの基盤との境界
+
+UIキットの部品は、置かれる場所のグリッドを知らない。ページの12列（`.layout-grid`、`.layout-sub`）、
+ページのブレークポイント（850px）、画像の枠（`src/lib/product/Frame.svelte`）は `src/routes/website.css` と
+`src/lib/product` が所有し、UIキットのトークン（`--ui-space-*`、`--ui-control-height` 等）を読むだけで書き換えない。
+上の「ペイン幅」と同じ責務分担で、ホスト側が幅を決め、部品は受け取った幅の中で組む。
+
+- `compact.css`、`Button`、`FileTabs` など UIキットの寸法と、Playground の `@media`/`@container` はこの基盤の変更で
+  触っていない。
+- `--ui-panel-radius` はUIキットのパネルの角丸で、画像の枠の角丸（`--layout-media-radius`）とは別のもの。
+- `scripts/check-layout.ts` はマーケティングページだけを測る。UIキットと Playground の実寸は、節4の手順で
+  確認する。
+- 部品の内側でコンテナークエリを使うときは、グリッドの列を受け取る要素を自分でコンテナーにしない。
+  サイズコンテナーは `subgrid` になれない。
 
 ## 参照文献
 

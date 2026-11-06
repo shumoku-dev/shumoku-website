@@ -11,7 +11,7 @@
   ]
 </script>
 
-<ul aria-label={label}>
+<ul class="adopters" aria-label={label}>
   {#each adopters as adopter (adopter.name)}
     <li>
       <a href={adopter.url} title={adopter.name}>

@@ -105,7 +105,8 @@
         hreflang={alternate}
         lang={alternate}
         aria-label={locale === 'ja' ? 'Switch to English' : '日本語に切り替え'}
-        ><Languages size={20} /><span>{alternate === 'ja' ? '日本語' : 'EN'}</span></LinkButton
+        ><Languages size={20} />
+        <span class="locale-name">{alternate === 'ja' ? '日本語' : 'EN'}</span></LinkButton
       >
       <IconButton
         type="button"
@@ -166,6 +167,7 @@
     gap: var(--ui-space-2);
     margin-left: auto;
     align-items: center;
+    white-space: nowrap;
   }
   .header-controls {
     display: flex;
@@ -177,10 +179,11 @@
   .mobile-nav {
     display: none;
   }
-  .desktop-nav :global(.ui-nav-link) {
-    white-space: nowrap;
-  }
-  /* Seven destinations (with Features and Integrations) need the menu below this width. */
+  /*
+   * The header keeps two viewport queries. The menu breakpoint is its own: it follows from the width
+   * of seven destinations, not from the page grid. The 850px one is the page breakpoint and must match
+   * the wordmark's <source media>, which can only read the viewport.
+   */
   @media (max-width: 1100px) {
     .desktop-nav {
       display: none;
@@ -197,7 +200,7 @@
       width: var(--ui-control-height);
       padding: 0;
     }
-    .header-controls :global(.locale-link span) {
+    .locale-name {
       display: none;
     }
     .header-controls {

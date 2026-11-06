@@ -42,6 +42,7 @@
 
 <style>
   .announcement {
+    container-type: inline-size;
     display: none;
     background: var(--ui-surface);
     font-size: 0.875rem;
@@ -80,7 +81,7 @@
     outline: 2px solid currentColor;
     outline-offset: -3px;
   }
-  @media (max-width: 600px) {
+  @container (max-width: 37.5rem) {
     .venue {
       display: none;
     }
