@@ -1,5 +1,6 @@
 <script lang="ts">
   import PageMeta from '$lib/PageMeta.svelte'
+  import Frame from '$lib/product/Frame.svelte'
   import type { Locale } from '$lib/site'
   import { authors } from './authors'
   import { type Category, categories } from './categories'
@@ -28,13 +29,13 @@
 </script>
 
 <PageMeta {title} {description} />
-<main id="main" class="site-container blog">
-  <header>
+<main id="main" class="site-container layout-grid blog">
+  <header class="span-wide">
     <h1>{title}</h1>
     <p>{description}</p>
   </header>
 
-  <nav class="categories" aria-label={ja ? 'カテゴリ' : 'Categories'}>
+  <nav class="categories span-wide" aria-label={ja ? 'カテゴリ' : 'Categories'}>
     <a href={`/${lang}/blog`} aria-current={current ? undefined : 'page'}
       >{ja ? 'すべて' : 'All'}</a
     >
@@ -45,19 +46,18 @@
     {/each}
   </nav>
 
-  <ol class="posts">
+  <ol class="posts layout-sub span-wide">
     {#each posts as post}
       {@const href = `/${lang}/blog/${post.slug}`}
-      <li>
+      <li class="layout-sub">
         <!-- Media object on wide screens, stacked card on phones. The title link covers the row. -->
-        <article lang={post.lang} class:has-image={post.image}>
+        <article lang={post.lang} class="layout-sub">
           {#if post.image}
             <div class="thumbnail">
-              <enhanced:img
+              <Frame
                 src={articleImage(post.slug, post.image)}
-                alt=""
                 sizes="(max-width: 640px) 100vw, 16rem"
-                loading="lazy"
+                bare
               />
             </div>
           {/if}
@@ -88,8 +88,7 @@
 
 <style>
   .blog {
-    max-width: 48rem;
-    padding-block: var(--ui-space-12);
+    padding-block: var(--layout-section);
   }
   header {
     display: grid;
@@ -98,8 +97,10 @@
   h1 {
     font-size: clamp(2rem, 4vw, 2.5rem);
     font-weight: 600;
-    letter-spacing: -0.02em;
     line-height: 1.2;
+  }
+  h1:not(:lang(ja)) {
+    letter-spacing: -0.02em;
   }
   header p {
     color: var(--site-muted);
@@ -109,7 +110,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--ui-space-1) var(--ui-space-6);
-    margin-block-start: var(--ui-space-8);
     border-block-end: 1px solid var(--site-line);
     font-size: 0.875rem;
   }
@@ -127,35 +127,31 @@
     color: var(--site-fg);
     font-weight: 600;
   }
+  .posts {
+    row-gap: 0;
+  }
+  .posts > li {
+    row-gap: 0;
+  }
   .posts > li + li {
     border-block-start: 1px solid var(--site-line);
   }
   article {
     position: relative;
-    display: grid;
-    gap: var(--ui-space-6);
+    row-gap: var(--ui-space-6);
     padding-block: var(--ui-space-6);
   }
-  /* Thumbnail : text = 1 : 2. Covers are mostly photos, so 3:2 keeps more of them than 16:9. */
-  article.has-image {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-  }
-  .thumbnail :global(picture) {
-    display: contents;
-  }
-  .thumbnail :global(img) {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 3 / 2;
-    object-fit: cover;
-    border-radius: var(--ui-panel-radius);
-  }
+  /* Three columns of thumbnail, six of text. A post without an image reads across all nine. */
   .text {
     display: grid;
     align-content: start;
     gap: var(--ui-space-2);
-    min-width: 0;
+  }
+  .thumbnail {
+    grid-column: span 3;
+  }
+  .thumbnail + .text {
+    grid-column: span 6;
   }
   .meta,
   .byline {
@@ -224,15 +220,20 @@
     padding-block: var(--ui-space-8);
     color: var(--site-muted);
   }
-  /* Phones: a side-by-side row leaves too little room for either, so stack a card with the
-     event photo full width on top. */
-  @media (max-width: 640px) {
-    article {
-      gap: var(--ui-space-3);
-      padding-block: var(--ui-space-6);
+  /* Below the page breakpoint: a row while it fits, then a stacked card with the photo on top. */
+  @container (min-width: 37rem) {
+    article:has(.thumbnail) {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
     }
-    article.has-image {
-      grid-template-columns: minmax(0, 1fr);
+    .thumbnail,
+    .thumbnail + .text {
+      grid-column: auto;
+    }
+  }
+  @container (width < 37rem) {
+    article {
+      row-gap: var(--ui-space-3);
     }
     .thumbnail {
       margin-block-end: var(--ui-space-1);

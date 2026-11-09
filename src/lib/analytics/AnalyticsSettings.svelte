@@ -17,7 +17,7 @@
     }
   }
 </script>
-<Button variant="ghost" onclick={open} disabled={busy}>
+<Button variant="ghost" class="text-button" onclick={open} disabled={busy}>
   {locale === 'ja' ? 'アクセス解析の設定' : 'Analytics preferences'}
 </Button>
 {#if failed}
@@ -26,6 +26,18 @@
   >
 {/if}
 <style>
+  /* Sits among text links in the footer and on Privacy: no inset, so its text lines up with them. */
+  :global(.ui-control.text-button) {
+    padding-inline: 0;
+    color: inherit;
+    font-size: inherit;
+    font-weight: 400;
+    background: transparent;
+    text-underline-offset: 0.25em;
+  }
+  :global(.ui-control.text-button:hover) {
+    text-decoration: underline;
+  }
   span {
     display: block;
     font-size: 0.875rem;

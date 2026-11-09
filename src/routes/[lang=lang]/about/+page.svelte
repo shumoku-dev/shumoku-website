@@ -1,44 +1,101 @@
 <script lang="ts">
   import laptops from '$lib/assets/photos/meetup-1-laptops.webp?enhanced'
-  import OverviewSection from '$lib/home/OverviewSection.svelte'
-  import ProjectBackgroundSection from '$lib/home/ProjectBackgroundSection.svelte'
-  import ContentBand from '$lib/layout/ContentBand.svelte'
+  import { pagesCopy } from '$lib/content/pages'
   import PageHeading from '$lib/layout/PageHeading.svelte'
   import PageMeta from '$lib/PageMeta.svelte'
-  import Photo from '$lib/Photo.svelte'
+  import ConditionList from '$lib/product/ConditionList.svelte'
+  import Frame from '$lib/product/Frame.svelte'
+  import Section from '$lib/product/Section.svelte'
   import type { PageData } from './$types'
 
   let { data }: { data: PageData } = $props()
-  const title = $derived(data.lang === 'ja' ? 'Shumokuについて' : 'About Shumoku')
-  const description = $derived(
-    data.lang === 'ja'
-      ? 'プロジェクトの目的、名前とロゴの由来、設計の考え方。'
-      : 'The project, its name and logo, and the ideas behind its design.',
-  )
+  const t = $derived(pagesCopy(data.lang).about)
 </script>
-<PageMeta {title} {description} />
+
+<PageMeta title={t.title} description={t.description} />
 <main id="main">
-  <PageHeading {title} {description} /><OverviewSection locale={data.lang} />
-  <ProjectBackgroundSection locale={data.lang} />
-  <ContentBand
-    id="about-community"
-    title={data.lang === 'ja' ? 'コミュニティと育てる' : 'Growing with the community'}
-  >
-    <Photo
-      src={laptops}
-      alt={data.lang === 'ja' ? 'テーブルには参加者のノートPCがずらり。' : 'Attendees’ laptops lined up on the table.'}
-      href={`/${data.lang}/blog/meetup-1`}
-    />
-    <p>
-      {data.lang === 'ja' ? '2026年9月8日、最初のShumoku Meetupを開催しました。ネットワーク図の使い方を発表する人、PCを持ち寄る人、会話を楽しむ人。コードだけでなく、使う人どうしが出会う場もつくっています。' : 'We held the first Shumoku Meetup on September 8, 2026. People shared ways to use network diagrams, brought their laptops, and talked with one another. Alongside the code, we are creating a place for the people who use it to meet.'}
+  <PageHeading title={t.title} description={t.description} />
+
+  <Section id="map" title={t.map.title}>
+    {#each t.map.body as paragraph (paragraph)}
+      <p>{paragraph}</p>
+    {/each}
+    {#snippet media()}
+      <ConditionList items={t.map.conditions} />
+    {/snippet}
+  </Section>
+
+  <Section id="name" title={t.name.title}>
+    {#each t.name.body as paragraph (paragraph)}
+      <p>{paragraph}</p>
+    {/each}
+    <p class="pull">
+      {#each t.name.pull as line, index (line)}
+        {#if index}
+          <br>
+        {/if}
+        {line}
+      {/each}
     </p>
-    <div class="band-links">
-      <a href={`/${data.lang}/community`}
-        >{data.lang === 'ja' ? 'コミュニティに参加する' : 'Join the community'}</a
-      >
-      <a href={`/${data.lang}/blog/meetup-1`}
-        >{data.lang === 'ja' ? 'Meetup #1を写真で振り返る' : 'Meetup #1 in pictures'}</a
-      >
-    </div>
-  </ContentBand>
+    {#snippet media()}
+      <Frame label={t.name.slot} />
+    {/snippet}
+  </Section>
+
+  <Section id="logo" title={t.logo.title}>
+    {#each t.logo.body as paragraph (paragraph)}
+      <p>{paragraph}</p>
+    {/each}
+    {#snippet media()}
+      <Frame variant="logo" src="/logo-symbol.svg" alt={t.logo.alt} />
+    {/snippet}
+  </Section>
+
+  <Section
+    id="peace"
+    title={t.peace.title}
+    layout="stack"
+    actions={t.peace.links}
+    plainActions
+    large
+  >
+    <p>{t.peace.lead}</p>
+    {#snippet media()}
+      <ul class="lines">
+        {#each t.peace.lines as line (line)}
+          <li>{line}</li>
+        {/each}
+      </ul>
+    {/snippet}
+  </Section>
+
+  <Section id="about-community" title={t.community.title} actions={t.community.links} plainActions>
+    <p>{t.community.body}</p>
+    {#snippet media()}
+      <Frame src={laptops} alt={t.community.alt} caption={t.community.alt} />
+    {/snippet}
+  </Section>
 </main>
+
+<style>
+  .pull {
+    color: var(--site-fg);
+    font-size: clamp(1.125rem, 1.8vw, 1.3125rem);
+    font-weight: 600;
+    line-height: 1.7;
+  }
+  .lines {
+    display: grid;
+    gap: var(--layout-flow);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: clamp(1.375rem, 3vw, 2.25rem);
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .lines li:lang(ja) {
+    font-feature-settings: "palt";
+    letter-spacing: 0.02em;
+  }
+</style>

@@ -9,8 +9,8 @@
   lang={data.lang}
   title={data.lang === 'ja' ? 'ブログ' : 'Blog'}
   description={data.lang === 'ja'
-    ? 'Shumokuの開発の背景、新機能、イベント開催記や活用の話。'
-    : 'Development stories, new features, event reports and ways people use Shumoku.'}
+    ? 'Shumoku の開発、ネットワーク運用での活用事例、イベントの記録を掲載しています。'
+    : 'Notes on developing Shumoku, how it is used in network operations, and event reports.'}
   posts={data.posts}
   usedCategories={data.usedCategories}
 />

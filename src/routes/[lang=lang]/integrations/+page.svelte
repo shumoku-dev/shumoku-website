@@ -4,8 +4,8 @@
   import PageHeading from '$lib/layout/PageHeading.svelte'
   import PageMeta from '$lib/PageMeta.svelte'
   import DataTable from '$lib/product/DataTable.svelte'
+  import Frame from '$lib/product/Frame.svelte'
   import Section from '$lib/product/Section.svelte'
-  import Shot from '$lib/product/Shot.svelte'
   import type { PageData } from './$types'
 
   let { data }: { data: PageData } = $props()
@@ -19,15 +19,15 @@
   <Section id="inputs" title={t.inputs.title} layout="stack">
     <p>{t.inputs.body}</p>
     {#snippet media()}
-      <div class="pair">
-        <div class="notes">
-          <DataTable head={t.inputs.head} rows={t.inputs.rows} />
-          <p class="note">{t.inputs.note}</p>
-        </div>
-        <Shot
+      <div class="notes layout-sub span-reading">
+        <DataTable head={t.inputs.head} rows={t.inputs.rows} />
+        <p>{t.inputs.note}</p>
+      </div>
+      <div class="aside">
+        <Frame
           src={netbox}
           alt={t.inputs.imageAlt}
-          sizes="(max-width: 850px) calc(100vw - 2rem), 440px"
+          sizes="(max-width: 850px) calc(100vw - 2rem), 441px"
         />
       </div>
     {/snippet}
@@ -41,10 +41,10 @@
   >
     <p>{t.monitoring.body}</p>
     {#snippet media()}
-      <div class="notes">
+      <div class="notes layout-sub span-reading">
         <DataTable head={t.monitoring.head} rows={t.monitoring.rows} />
-        <p class="note">{t.monitoring.settings}</p>
-        <p class="note">{t.monitoring.plugin}</p>
+        <p>{t.monitoring.settings}</p>
+        <p>{t.monitoring.plugin}</p>
       </div>
     {/snippet}
   </Section>
@@ -57,25 +57,15 @@
 </main>
 
 <style>
-  .pair {
-    display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    gap: var(--ui-space-12);
-    align-items: start;
-  }
   .notes {
-    display: grid;
-    gap: var(--ui-space-4);
-    max-width: 52rem;
+    row-gap: var(--layout-flow);
   }
-  .note {
-    margin: 0;
+  /* The screenshot takes what the reading column leaves: column 8 to the end. */
+  .aside {
+    grid-column: 8 / -1;
+  }
+  p {
     color: var(--site-muted);
     line-height: 1.85;
-  }
-  @media (max-width: 850px) {
-    .pair {
-      grid-template-columns: minmax(0, 1fr);
-    }
   }
 </style>

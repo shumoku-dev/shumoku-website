@@ -66,6 +66,7 @@
 </footer>
 <style>
   .site-footer {
+    container-type: inline-size;
     border-top: 1px solid var(--site-line);
     padding: 3rem 0;
     margin-top: auto;
@@ -111,7 +112,7 @@
     text-decoration: underline;
     text-underline-offset: 4px;
   }
-  @media (max-width: 650px) {
+  @container (max-width: 40.625rem) {
     .footer-grid {
       grid-template-columns: 1fr 1fr;
       row-gap: 2.5rem;

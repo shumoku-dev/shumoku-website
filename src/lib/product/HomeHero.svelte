@@ -4,6 +4,7 @@
   import { productCopy } from '$lib/content/product'
   import type { Locale } from '$lib/site'
   import LinkButton from '$lib/ui/LinkButton.svelte'
+  import Frame from './Frame.svelte'
 
   /** The whole map first, then one link up close: overview and detail from the same screen. */
   let { locale }: { locale: Locale } = $props()
@@ -20,8 +21,8 @@
 </script>
 
 <section class="hero" aria-labelledby="hero-title">
-  <div class="site-container">
-    <div class="intro layout-grid">
+  <div class="site-container layout-grid stack">
+    <div class="intro layout-sub">
       <h1 id="hero-title">
         {#each t.title as line, index (line)}
           {#if index}
@@ -48,22 +49,20 @@
         </div>
       </div>
     </div>
-    <figure>
-      <div class="frame">
-        <enhanced:img
+    <figure class="layout-sub">
+      <div class="overview">
+        <Frame
           src={topology}
           alt={t.imageAlt}
+          ratio="natural"
           sizes="(max-width: 1168px) calc(100vw - 3rem), 1100px"
+          loading="eager"
           fetchpriority="high"
         />
-        <div class="detail">
-          <enhanced:img
-            src={weathermap}
-            alt={t.detailAlt}
-            sizes="(max-width: 650px) 60vw, 420px"
-            loading="lazy"
-          />
-        </div>
+      </div>
+      <!-- On narrow screens the close-up repeats a scene just below, so the overview stands alone. -->
+      <div class="detail wide-only">
+        <Frame src={weathermap} alt={t.detailAlt} ratio="natural" sizes="420px" />
       </div>
       <figcaption>{t.caption}</figcaption>
     </figure>
@@ -74,17 +73,16 @@
   .hero {
     padding-block: clamp(2.5rem, 7vw, 5rem) clamp(3rem, 7vw, 5.5rem);
   }
+  .stack {
+    row-gap: calc(var(--layout-block) * 1.5);
+  }
   /* The title takes the first six columns; the lead starts on column 7, the media line of split sections. */
   .intro {
     align-items: end;
   }
-  @media (min-width: 851px) {
-    .intro h1 {
-      grid-column: 1 / 7;
-    }
-    .intro .lead {
-      grid-column: 7 / -1;
-    }
+  h1,
+  .lead {
+    grid-column: span 6;
   }
   /*
    * "Give an outline to a structure that already exists": the second line arrives as an outline
@@ -159,40 +157,25 @@
     margin-top: var(--ui-space-2);
   }
   figure {
-    margin: calc(var(--layout-block) * 1.5) 0 0;
+    row-gap: var(--ui-space-3);
   }
-  .frame {
-    position: relative;
+  .overview {
+    grid-row: 1;
   }
-  /* <enhanced:img> compiles to <picture><img>, which svelte-check cannot see. */
-  .frame :global(img) {
-    display: block;
-    width: 100%;
-    height: auto;
-    border: 1px solid var(--site-line);
-    border-radius: 8px;
-  }
+  /* The close-up takes the last four columns and hangs below the screenshot. */
   .detail {
-    position: absolute;
-    right: clamp(1rem, 3vw, 2.5rem);
-    bottom: clamp(-2.5rem, -3vw, -1rem);
-    width: min(38%, 26rem);
-    border-radius: 8px;
+    grid-column: span 4 / -1;
+    grid-row: 1;
+    align-self: end;
+    position: relative;
+    margin-block-end: calc(var(--layout-block) * -1);
+    border-radius: var(--layout-media-radius);
     box-shadow: 0 0.75rem 2rem color-mix(in srgb, var(--site-fg) 18%, transparent);
   }
   figcaption {
-    margin-top: var(--ui-space-3);
-    max-width: 50%;
+    grid-column: span 8;
+    grid-row: 2;
     font-size: 0.8125rem;
     color: var(--site-muted);
-  }
-  /* On phones the close-up repeats a scene just below, so the overview stands alone. */
-  @media (max-width: 650px) {
-    .detail {
-      display: none;
-    }
-    figcaption {
-      max-width: none;
-    }
   }
 </style>

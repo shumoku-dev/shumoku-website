@@ -17,6 +17,10 @@ describe('site page registry', () => {
     }
   })
 
+  it('keeps build artifacts such as generated diagrams out of the registry', () => {
+    expect(sitePages.filter((entry) => entry.path.startsWith('/diagrams'))).toEqual([])
+  })
+
   it('marks the current section, including pages below it', () => {
     expect(navigationCurrent('/blog', '/blog')).toBe('page')
     expect(navigationCurrent('/blog/meetup-1', '/blog')).toBe('true')

@@ -7,15 +7,20 @@
   import { productCopy } from '$lib/content/product'
   import PageHeading from '$lib/layout/PageHeading.svelte'
   import PageMeta from '$lib/PageMeta.svelte'
-  import ImageSlot from '$lib/product/ImageSlot.svelte'
+  import Column from '$lib/product/Column.svelte'
+  import Columns from '$lib/product/Columns.svelte'
+  import CommandPanel from '$lib/product/CommandPanel.svelte'
+  import Frame from '$lib/product/Frame.svelte'
   import Section from '$lib/product/Section.svelte'
-  import Shot from '$lib/product/Shot.svelte'
   import type { PageData } from './$types'
 
   let { data }: { data: PageData } = $props()
   const t = $derived(productCopy(data.lang).features)
   const s = $derived(t.sections)
-  const half = '(max-width: 850px) calc(100vw - 2rem), 330px'
+  const third = '(max-width: 850px) calc(100vw - 2rem), 341px'
+  const cliExamples = `shumoku render network.yaml -o diagram.svg
+shumoku render network.yaml -f html -o diagram.html
+shumoku render network.yaml -f png -o diagram.png`
 </script>
 
 <PageMeta title={t.title} description={t.description} />
@@ -27,7 +32,7 @@
       <p>{paragraph}</p>
     {/each}
     {#snippet media()}
-      <Shot src={icon} alt={s.generate.imageAlt} />
+      <Frame src={icon} alt={s.generate.imageAlt} />
     {/snippet}
   </Section>
 
@@ -36,13 +41,23 @@
       <p>{paragraph}</p>
     {/each}
     {#snippet media()}
-      <div class="evidence">
-        <div class="ratio">
-          <Shot src={weathermap} alt={s.monitor.weathermapAlt} sizes={half} fill />
-        </div>
-        <div class="ratio"><Shot src={alert} alt={s.monitor.alertAlt} sizes={half} fill /></div>
-        <div class="wide"><Shot src={dashboard} alt={s.monitor.dashboardAlt} /></div>
-      </div>
+      <Columns>
+        <Column title={s.monitor.weathermapTitle}>
+          {#snippet media()}
+            <Frame src={weathermap} alt={s.monitor.weathermapAlt} sizes={third} />
+          {/snippet}
+        </Column>
+        <Column title={s.monitor.alertTitle}>
+          {#snippet media()}
+            <Frame src={alert} alt={s.monitor.alertAlt} sizes={third} />
+          {/snippet}
+        </Column>
+        <Column title={s.monitor.dashboardTitle}>
+          {#snippet media()}
+            <Frame src={dashboard} alt={s.monitor.dashboardAlt} sizes={third} position="top left" />
+          {/snippet}
+        </Column>
+      </Columns>
     {/snippet}
   </Section>
 
@@ -52,7 +67,7 @@
     {/each}
     <p class="caution">{s.share.caution}</p>
     {#snippet media()}
-      <Shot src={share} alt={s.share.imageAlt} />
+      <Frame src={share} alt={s.share.imageAlt} />
     {/snippet}
   </Section>
 
@@ -62,11 +77,12 @@
     {/each}
     {#snippet media()}
       <!-- Examples from `shumoku render --help` in the released @shumoku/cli (unchanged in 0.3.0). -->
-      <pre
-        class="command"
-      ><code><span class="prompt">$</span> shumoku render network.yaml -o diagram.svg
-<span class="prompt">$</span> shumoku render network.yaml -f html -o diagram.html
-<span class="prompt">$</span> shumoku render network.yaml -f png -o diagram.png</code></pre>
+      <CommandPanel
+        label={s.cli.commandLabel}
+        command={cliExamples}
+        copy={s.cli.copy}
+        copied={s.cli.copied}
+      />
     {/snippet}
   </Section>
 
@@ -75,51 +91,14 @@
       <p>{paragraph}</p>
     {/each}
     {#snippet media()}
-      <ImageSlot label={s.editor.slot} />
+      <Frame label={s.editor.slot} />
     {/snippet}
   </Section>
 </main>
 
 <style>
-  .evidence {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--layout-gutter);
-    align-items: start;
-  }
-  /* The pair shares one ratio so their bottoms line up. */
-  .ratio {
-    aspect-ratio: var(--layout-media-ratio);
-    min-width: 0;
-    min-height: 0;
-    overflow: hidden;
-  }
-  .wide {
-    grid-column: 1 / -1;
-  }
   .caution {
-    padding-inline-start: var(--ui-space-4);
-    border-inline-start: 3px solid var(--site-control-line);
     color: var(--site-fg);
-  }
-  .command {
-    margin: 0;
-    padding: var(--ui-space-6);
-    overflow-x: auto;
-    background: var(--brand-neutral-900);
-    color: var(--brand-neutral-50);
-    border: 10px solid var(--ui-workspace-shell);
-    border-radius: 16px;
-    font-size: 0.875rem;
-    line-height: 2;
-  }
-  .prompt {
-    color: var(--brand-green-300);
-    user-select: none;
-  }
-  @media (max-width: 650px) {
-    .evidence {
-      grid-template-columns: minmax(0, 1fr);
-    }
+    font-weight: 500;
   }
 </style>
