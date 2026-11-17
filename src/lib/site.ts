@@ -28,6 +28,12 @@ export const sitePages = [
     navigation: false,
   },
   {
+    path: '/interbee2026',
+    label: { en: 'InterBEE 2026', ja: 'InterBEE 2026' },
+    mode: 'content',
+    navigation: false,
+  },
+  {
     path: '/privacy',
     label: { en: 'Privacy', ja: 'プライバシー' },
     mode: 'content',
