@@ -1,9 +1,7 @@
 <script lang="ts">
   import demoTopology from '$lib/assets/interbee/demo-topology.png?enhanced'
-  import networkMap from '$lib/assets/interbee/network-map.png?enhanced'
   import { interbeeCopy, telhiUrl } from '$lib/content/interbee'
   import PageMeta from '$lib/PageMeta.svelte'
-  import Actions from '$lib/product/Actions.svelte'
   import Frame from '$lib/product/Frame.svelte'
   import RuleList from '$lib/product/RuleList.svelte'
   import Section from '$lib/product/Section.svelte'
@@ -12,15 +10,14 @@
 
   let { data }: { data: PageData } = $props()
   const t = $derived(interbeeCopy(data.lang))
-  const fullWidth = '(max-width: 850px) calc(100vw - 2rem), 1120px'
 </script>
 
 <PageMeta title={t.meta.title} description={t.meta.description} />
 <!--
-  An exhibition page, not a second home page. Broadcast and Media over IP product pages in Japan
-  (Sony Networked Live, Media Links) set their diagrams and equipment on dark ground under a light
-  site header, and the booth demo itself runs on a dark UI, so the page body uses the site's dark
-  tokens whatever the visitor's theme is.
+  An exhibition page, not a second home page: it is where the INTER BEE MoIP flyer and the TelHi
+  booth poster send visitors. Broadcast and Media over IP product pages in Japan (Sony Networked
+  Live, Media Links) set their diagrams and equipment on dark ground under a light site header, so
+  the page body uses the site's dark tokens whatever the visitor's theme is.
 -->
 <main id="main" class="dark exhibition">
   <div class="site-container layout-grid intro">
@@ -34,42 +31,57 @@
     </dl>
     <div class="span-text heading">
       <h1>{t.title}</h1>
-      {#each t.lead as paragraph (paragraph)}
-        <p>{paragraph}</p>
-      {/each}
-      <div class="next"><Actions actions={t.actions} primary /></div>
+      <p>{t.lead}</p>
     </div>
-    <div class="layout-sub span-media">
-      <Frame
-        src={demoTopology}
-        alt={t.demo.alt}
-        caption={t.demo.caption}
-        ratio="natural"
-        loading="eager"
-        fetchpriority="high"
-      />
-    </div>
+    <nav class="layout-sub span-media places" aria-label={t.places.label}>
+      <ul>
+        {#each t.places.items as place (place.id)}
+          <li>
+            <a href={place.href}>
+              <span class="place-where">{place.where}</span>
+              <span class="place-name">{place.name}</span>
+              <span class="place-detail">{place.detail}</span>
+            </a>
+          </li>
+        {/each}
+      </ul>
+    </nav>
   </div>
 
-  <Section id="about" title={t.about.title} layout="stack">
-    <p>{t.about.body}</p>
-    <RuleList items={t.about.features} label={t.about.title} />
+  <Section id="moip" title={t.moip.title} layout="stack" large>
+    {#each t.moip.body as paragraph (paragraph)}
+      <p>{paragraph}</p>
+    {/each}
     {#snippet media()}
-      <Frame
-        src={networkMap}
-        alt={t.map.alt}
-        caption={t.map.caption}
-        ratio="natural"
-        sizes={fullWidth}
-      />
+      <Frame label={t.moip.overviewSlot} caption={t.moip.sites} />
+      <div class="layout-sub detail-row">
+        <div class="detail-shot"><Frame label={t.moip.detailSlot} /></div>
+        <div class="detail-text">
+          <RuleList items={t.moip.points} />
+          <p>{t.moip.integrations}</p>
+          <p class="note">{t.moip.note}</p>
+        </div>
+      </div>
     {/snippet}
   </Section>
 
-  <Section id="ip" title={t.ip.title} large>
-    {#each t.ip.body as paragraph (paragraph)}
+  <Section id="features" title={t.features.title}>
+    {#snippet media()}
+      <RuleList items={t.features.items} label={t.features.title} />
+    {/snippet}
+  </Section>
+
+  <Section id="booth" title={t.booth.title} actions={t.booth.actions}>
+    {#each t.booth.body as paragraph (paragraph)}
       <p>{paragraph}</p>
     {/each}
-    <p class="note">{t.ip.scope}</p>
+    {#snippet media()}
+      <Frame src={demoTopology} alt={t.booth.alt} caption={t.booth.caption} ratio="natural" />
+    {/snippet}
+  </Section>
+
+  <Section id="setup" title={t.setup.title} actions={t.setup.actions} primaryAction large>
+    <p>{t.setup.body}</p>
   </Section>
 
   <Section id="partner" title={t.partner.title} actions={t.partner.actions} large>
@@ -89,10 +101,6 @@
       </a>
       <p class="credit">{t.partner.credit}</p>
     {/snippet}
-  </Section>
-
-  <Section id="start" title={t.start.title} actions={t.start.actions} plainActions>
-    <p>{t.start.body}</p>
   </Section>
 
   <Section id="community" title={t.community.title} actions={t.community.actions} plainActions>
@@ -145,10 +153,9 @@
     gap: var(--layout-flow);
   }
   h1 {
-    margin-bottom: var(--ui-space-2);
-    font-size: clamp(1.875rem, 4vw, 2.75rem);
+    font-size: clamp(2rem, 4.5vw, 3.25rem);
     font-weight: 700;
-    line-height: 1.25;
+    line-height: 1.2;
     text-wrap: balance;
   }
   h1:lang(ja) {
@@ -163,8 +170,45 @@
     line-height: 1.85;
     text-wrap: pretty;
   }
-  .next {
-    margin-top: var(--layout-flow);
+  .places ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--site-line);
+  }
+  .places a {
+    display: grid;
+    gap: var(--ui-space-1);
+    padding-block: var(--layout-flow);
+    border-bottom: 1px solid var(--site-line);
+  }
+  .place-where {
+    color: var(--site-muted);
+    font-size: 0.8125rem;
+  }
+  .place-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+  .places a:hover .place-name {
+    color: var(--site-accent);
+  }
+  .place-detail {
+    color: var(--site-muted);
+    line-height: 1.7;
+  }
+  .detail-shot {
+    grid-column: span 7;
+  }
+  .detail-text {
+    grid-column: span 5;
+    display: grid;
+    gap: var(--layout-flow);
+    align-content: start;
+  }
+  .detail-text p {
+    color: var(--site-muted);
+    line-height: 1.8;
   }
   .note,
   .credit {

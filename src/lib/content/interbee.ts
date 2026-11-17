@@ -4,11 +4,11 @@ import { contactEmail } from './pages'
 import type { Action } from './product'
 
 /**
- * Copy for `/interbee2026`, the page behind the QR code on the InterBEE 2026 booth poster
- * (TelHi Corporation booth). Headline, features and demo wording follow the poster and the MoIP
- * flyer so the printed matter and the page read as one. TelHi is a non-exclusive commercial support
- * partner: never call it the official vendor, the developer or the owner of Shumoku.
- * See docs/operations/event-links.md.
+ * Copy for `/interbee2026`, the page behind the QR codes on the INTER BEE MoIP flyer and the
+ * TelHi booth poster. The flyer promises "会場デモの詳細・使い方 / 導入手順と連携設定もこのページから",
+ * so the MoIP exhibit comes first and the wording follows the flyer (artifact "Shumoku MoIP
+ * フライヤー制作", v4). TelHi is a non-exclusive commercial support partner: never call it the
+ * official vendor, the developer or the owner of Shumoku. See docs/operations/event-links.md.
  */
 
 export const telhiUrl = 'https://www.telhi.co.jp/'
@@ -17,16 +17,33 @@ const repo = 'https://github.com/konoe-akitoshi/shumoku'
 const discord = 'https://discord.gg/dyYbEsDZYr'
 const x = 'https://x.com/shumoku_dev'
 
+type Place = { id: string; name: string; where: string; detail: string; href: string }
+
 export type InterbeeCopy = {
   meta: { title: string; description: string }
   event: { label: string; items: readonly { term: string; detail: string }[] }
   title: string
-  lead: readonly string[]
-  actions: readonly Action[]
-  demo: { alt: string; caption: string }
-  about: { title: string; body: string; features: readonly string[] }
-  map: { alt: string; caption: string }
-  ip: { title: string; body: readonly string[]; scope: string }
+  lead: string
+  places: { label: string; items: readonly Place[] }
+  moip: {
+    title: string
+    body: readonly string[]
+    overviewSlot: string
+    sites: string
+    detailSlot: string
+    points: readonly string[]
+    integrations: string
+    note: string
+  }
+  features: { title: string; items: readonly string[] }
+  booth: {
+    title: string
+    body: readonly string[]
+    alt: string
+    caption: string
+    actions: readonly Action[]
+  }
+  setup: { title: string; body: string; actions: readonly Action[] }
   partner: {
     title: string
     body: readonly string[]
@@ -35,15 +52,14 @@ export type InterbeeCopy = {
     logo: string
     actions: readonly Action[]
   }
-  start: { title: string; body: string; actions: readonly Action[] }
   community: { title: string; body: string; actions: readonly Action[] }
 }
 
 const ja = (l: Locale): InterbeeCopy => ({
   meta: {
-    title: 'InterBEE 2026 | Shumoku',
+    title: 'InterBEE 2026 会場デモ | Shumoku',
     description:
-      'InterBEE 2026 の輝日株式会社ブースで展示している、ネットワーク構成図ソフトウェア Shumoku の紹介。ブースの実演、放送設備の IP 化と構成図、導入・保守の相談先をまとめています。',
+      'INTER BEE MoIP（展示ホール3 ブース3401）で展示しているネットワーク構成図ソフトウェア Shumoku の、会場デモの詳細と導入手順・連携設定。',
   },
   event: {
     label: '展示の概要',
@@ -51,68 +67,89 @@ const ja = (l: Locale): InterbeeCopy => ({
       { term: '展示会', detail: 'Inter BEE 2026' },
       { term: '会期', detail: '2026年11月18日（水）〜20日（金）' },
       { term: '会場', detail: '幕張メッセ' },
-      { term: '出展', detail: '輝日株式会社' },
+      { term: 'INTER BEE MoIP', detail: '展示ホール3　ブース 3401' },
     ],
   },
-  title: 'ケーブルを1本抜くと、地図が変わる。',
-  lead: [
-    'Inter BEE 2026 の輝日株式会社ブースで、ネットワーク構成図ソフトウェア Shumoku を実演しています。',
-    '2台のスイッチをつなぐ Primary を抜くと、通信は Backup へ。その切り替えが数秒で構成図に出ます。会場では、実際にケーブルを抜き差ししてご覧いただけます。',
-  ],
-  actions: [
-    { label: 'ライブデモを開く', href: demoUrl },
-    { label: '導入・保守のご相談', href: '#partner' },
-  ],
-  demo: {
-    alt: 'ブースのデモの構成図。2台のスイッチとコアスイッチ、ホストが、ポート名と VLAN つきでつながっている',
-    caption: 'ブースのデモ画面。スイッチ3台とホストを、ポート名と VLAN つきで描いています。',
+  title: 'IP 化した設備にも、地図を。',
+  lead: '機器から集めた接続情報で構成図を描き、その上に通信量と監視のアラームを重ねて表示します。配線を変えても、集め直せば図が追いつきます。',
+  places: {
+    label: '会場で見られる場所',
+    items: [
+      {
+        id: 'moip',
+        name: 'INTER BEE MoIP',
+        where: '展示ホール3　ブース 3401',
+        detail: '東京・名古屋・大阪・幕張をつなぐ設備全体を、1枚の構成図で表示しています。',
+        href: '#moip',
+      },
+      {
+        id: 'booth',
+        name: '輝日株式会社ブース',
+        where: '輝日株式会社の出展ブース',
+        detail: 'ケーブルを1本抜くと、構成図が変わる様子を実演しています。',
+        href: '#booth',
+      },
+    ],
   },
-  about: {
+  moip: {
+    title: '遠く離れた拠点を、一つのシステムとして見る。',
+    body: [
+      'BEEMO では、拠点の設備を見守る仕事を統合監視・構成管理・PTP 監視などに分け、複数の製品で受け持っています。Shumoku の担当は構成管理です。',
+      '各機器から LLDP / SNMP で集めた接続情報で拠点をまたぐ構成図を描き、Zabbix のアラームと通信量を重ねています。',
+    ],
+    overviewSlot: '全体図：東京・名古屋・大阪・幕張',
+    sites: '左から 幕張（会場）、大阪（堂島）、東京（赤坂）、名古屋。',
+    detailSlot: '拡大：アラームの出ている機器',
+    points: [
+      'ポートごとのつながり。機器とポートごとに、接続先が分かります。',
+      'Zabbix のアラーム。アラームの出た機器が、図の上に表示されます。',
+    ],
+    integrations:
+      'Prometheus・Grafana にも対応しています。自社の環境に合わせた連携も、ご相談ください。',
+    note: 'Shumoku はつながりと状態を図に表すソフトウェアです。映像の品質や時刻同期そのものは測りません。',
+  },
+  features: {
     title: 'Shumoku でできること',
-    body: '機器から集めた接続情報で構成図を描き、その上に通信量と監視のアラームを重ねて表示します。配線を変えても、集め直せば図が追いつきます。オープンソースで公開しています。',
-    features: [
+    items: [
       'ポートまで分かる。機器ごとのポートと、その接続先まで表示します。',
-      '異常の場所が分かる。Zabbix などのアラームを、該当する機器に表示します。',
+      '異常の場所が分かる。監視システムのアラームを、該当する機器に表示します。',
       '通信量が線で分かる。機器のあいだのデータ量を、線の色で表示します。',
     ],
   },
-  map: {
-    alt: '実運用ネットワークの構成図。スイッチとアクセスポイントがポート名と VLAN つきでつながり、通信のあるリンクが緑の線で表示されている',
-    caption:
-      '実際のネットワークを描いた例。ポートごとの接続と VLAN、リンクの通信量を表示しています。',
-  },
-  ip: {
-    title: 'IP 化した設備にも、地図を。',
+  booth: {
+    title: '輝日ブース：ケーブルを1本抜くと、地図が変わる。',
     body: [
-      'SDI の時代は、ケーブルをたどれば信号の経路が分かりました。設備が IP 化すると、経路はスイッチのポートと VLAN の設定の中に入り、配線を見ても分からなくなります。',
-      'Shumoku は、SNMP や LLDP で機器から接続情報を集めて構成図を描きます。手で描いた図と違い、構成を変えても集め直せば実態に追いつきます。',
+      '2台のスイッチをつなぐ Primary を抜くと、通信は Backup へ。その切り替えが数秒で構成図に出ます。',
+      '会場では、実際にケーブルを抜き差ししてご覧いただけます。',
     ],
-    scope:
-      'Shumoku が見せるのはネットワークの構造と状態です。映像信号（ST 2110 など）そのものを解析する製品ではありません。',
+    alt: 'ブースのデモの構成図。2台のスイッチとコアスイッチ、ホストが、ポート名と VLAN つきでつながっている',
+    caption: 'ブースのデモ画面。スイッチ3台とホストを、ポート名と VLAN つきで描いています。',
+    actions: [{ label: 'ライブデモを開く', href: demoUrl }],
+  },
+  setup: {
+    title: '導入手順と連携設定',
+    body: 'Shumoku Server を立ち上げ、機器や監視システムとつなぐ手順はドキュメントにまとめています。Zabbix・Prometheus・Grafana などとの連携は「連携」のページで確認できます。',
+    actions: [
+      { label: 'Server の導入手順', href: docsUrl(l, 'server') },
+      { label: '連携できるデータソース', href: `/${l}/integrations` },
+      { label: 'Playground で試す', href: `/${l}/playground` },
+      { label: 'GitHub', href: repo },
+    ],
   },
   partner: {
     title: '導入・保守のご相談は、輝日株式会社へ',
     body: [
-      '輝日株式会社は、Shumoku の商用サポートパートナーです。法人での導入、既存の監視ツールや台帳との連携、運用・保守、環境に合わせた開発を相談できます。',
+      '輝日株式会社は、Shumoku の商用サポートパートナーです。導入支援、保守、監視との連携、PoC を相談できます。',
       '筑波大学発で、回線や認証基盤から映像配信まで、インフラの現場を持つ会社です。',
     ],
-    credit: '開発　Shumoku Project　／　出展・導入支援　輝日株式会社',
+    credit: '開発　Shumoku プロジェクト　／　出展・導入支援　輝日株式会社',
     independence:
-      'Shumoku は独立したオープンソースプロジェクトです。輝日株式会社は非独占のパートナーで、技術方針とリリースは Shumoku Project が決めます。',
+      'Shumoku は独立したオープンソースプロジェクトです。輝日株式会社は非独占のパートナーで、技術方針とリリースは Shumoku プロジェクトが決めます。',
     logo: '輝日株式会社のサイトを開く',
     actions: [
       { label: '輝日株式会社のサイト', href: telhiUrl },
       { label: `${contactEmail} に相談する`, href: `mailto:${contactEmail}` },
       { label: '相談できること', href: `/${l}/support` },
-    ],
-  },
-  start: {
-    title: '持ち帰って試す',
-    body: 'ブラウザーの Playground で、YAML から構成図を描けます。監視と組み合わせるなら Shumoku Server を導入してください。',
-    actions: [
-      { label: 'Playground', href: `/${l}/playground` },
-      { label: 'Server の導入手順', href: docsUrl(l, 'server') },
-      { label: 'GitHub', href: repo },
     ],
   },
   community: {
@@ -129,9 +166,9 @@ const ja = (l: Locale): InterbeeCopy => ({
 
 const en = (l: Locale): InterbeeCopy => ({
   meta: {
-    title: 'InterBEE 2026 | Shumoku',
+    title: 'InterBEE 2026 demo | Shumoku',
     description:
-      'Shumoku, network diagram software, at the TelHi Corporation booth at InterBEE 2026: the booth demo, diagrams for IP-based facilities, and who to ask about deployment and maintenance.',
+      'Shumoku, network diagram software, at INTER BEE MoIP (Hall 3, booth 3401): what the demo shows, how to deploy it, and how to connect your monitoring.',
   },
   event: {
     label: 'Exhibition',
@@ -139,48 +176,79 @@ const en = (l: Locale): InterbeeCopy => ({
       { term: 'Event', detail: 'Inter BEE 2026' },
       { term: 'Dates', detail: 'Nov 18–20, 2026' },
       { term: 'Venue', detail: 'Makuhari Messe' },
-      { term: 'Exhibitor', detail: 'TelHi Corporation' },
+      { term: 'INTER BEE MoIP', detail: 'Hall 3, booth 3401' },
     ],
   },
-  title: 'Unplug one cable, and the map changes.',
-  lead: [
-    'At the TelHi Corporation booth at InterBEE 2026, we are demonstrating Shumoku, network diagram software.',
-    'Unplug the Primary link between two switches and traffic moves to Backup. The switch-over reaches the diagram within seconds. At the booth you can pull and reconnect the cable yourself.',
-  ],
-  actions: [
-    { label: 'Open the live demo', href: demoUrl },
-    { label: 'Deployment and maintenance', href: '#partner' },
-  ],
-  demo: {
-    alt: 'The booth demo diagram: two switches, a core switch and a host connected with port names and VLANs',
-    caption: 'The booth demo. Three switches and a host, drawn with port names and VLANs.',
+  title: 'A map for IP-based facilities',
+  lead: 'Shumoku draws your network diagram from connection data collected from the devices, then overlays traffic and monitoring alarms on it. When the cabling changes, collect again and the diagram catches up.',
+  places: {
+    label: 'Where to see it',
+    items: [
+      {
+        id: 'moip',
+        name: 'INTER BEE MoIP',
+        where: 'Hall 3, booth 3401',
+        detail: 'The whole facility linking Tokyo, Nagoya, Osaka and Makuhari, on one diagram.',
+        href: '#moip',
+      },
+      {
+        id: 'booth',
+        name: 'TelHi Corporation booth',
+        where: 'TelHi Corporation’s exhibition booth',
+        detail: 'Unplug one cable and watch the diagram change.',
+        href: '#booth',
+      },
+    ],
   },
-  about: {
+  moip: {
+    title: 'Distant sites, seen as one system.',
+    body: [
+      'BEEMO splits the work of watching over the sites’ facilities into integrated monitoring, configuration management, PTP monitoring and more, each handled by different products. Shumoku handles configuration management.',
+      'It draws a diagram across the sites from connection data collected from each device over LLDP / SNMP, with Zabbix alarms and traffic overlaid.',
+    ],
+    overviewSlot: 'Overview: Tokyo, Nagoya, Osaka and Makuhari',
+    sites: 'From the left: Makuhari (the venue), Osaka (Dojima), Tokyo (Akasaka), Nagoya.',
+    detailSlot: 'Close-up: a device with an alarm',
+    points: [
+      'Connections by port. For each device and port, you can see what it connects to.',
+      'Zabbix alarms. Devices with an alarm are marked on the diagram.',
+    ],
+    integrations:
+      'Prometheus and Grafana are supported too. Ask us about integrations for your own environment.',
+    note: 'Shumoku shows connections and state. It does not measure video quality or time synchronization themselves.',
+  },
+  features: {
     title: 'What Shumoku does',
-    body: 'Shumoku draws your network diagram from connection data collected from the devices, then overlays traffic and monitoring alarms on it. When the cabling changes, collect again and the diagram catches up. It is open source.',
-    features: [
+    items: [
       'Down to the port. Each device’s ports and what they connect to.',
-      'Where the problem is. Alarms from Zabbix and others, on the affected device.',
+      'Where the problem is. Alarms from your monitoring, on the affected device.',
       'Traffic on every line. The data between devices, shown by the line’s color.',
     ],
   },
-  map: {
-    alt: 'A diagram of a production network: switches and access points connected with port names and VLANs, with active links drawn as green lines',
-    caption: 'A real network. Each port’s connection, VLANs and link traffic are shown.',
-  },
-  ip: {
-    title: 'A map for IP-based facilities',
+  booth: {
+    title: 'TelHi booth: unplug one cable, and the map changes.',
     body: [
-      'With SDI, following the cable told you where a signal went. Once a facility moves to IP, the path lives in switch ports and VLAN settings, and the cabling no longer tells you.',
-      'Shumoku collects connection data from devices over SNMP and LLDP and draws the diagram. Unlike a hand-drawn one, it catches up with changes when you collect again.',
+      'Unplug the Primary link between two switches and traffic moves to Backup. The switch-over reaches the diagram within seconds.',
+      'At the booth you can pull and reconnect the cable yourself.',
     ],
-    scope:
-      'Shumoku shows the network’s structure and state. It does not analyze video signals such as ST 2110 themselves.',
+    alt: 'The booth demo diagram: two switches, a core switch and a host connected with port names and VLANs',
+    caption: 'The booth demo. Three switches and a host, drawn with port names and VLANs.',
+    actions: [{ label: 'Open the live demo', href: demoUrl }],
+  },
+  setup: {
+    title: 'Deployment and integrations',
+    body: 'The documentation covers starting Shumoku Server and connecting it to your devices and monitoring. See Integrations for Zabbix, Prometheus, Grafana and other sources.',
+    actions: [
+      { label: 'Deploy Server', href: docsUrl(l, 'server') },
+      { label: 'Supported data sources', href: `/${l}/integrations` },
+      { label: 'Try the Playground', href: `/${l}/playground` },
+      { label: 'GitHub', href: repo },
+    ],
   },
   partner: {
     title: 'Deployment and maintenance: TelHi Corporation',
     body: [
-      'TelHi Corporation (輝日株式会社) is a commercial support partner for Shumoku. Talk to them about deploying it in your organization, connecting your monitoring tools and inventory, operations and maintenance, and development for your environment.',
+      'TelHi Corporation (輝日株式会社) is a commercial support partner for Shumoku. Talk to them about deployment, maintenance, integration with your monitoring, and proofs of concept.',
       'Founded out of the University of Tsukuba, TelHi runs infrastructure from connectivity and authentication to video delivery.',
     ],
     credit: 'Developed by the Shumoku Project / Exhibited and supported by TelHi Corporation',
@@ -191,15 +259,6 @@ const en = (l: Locale): InterbeeCopy => ({
       { label: 'TelHi website (Japanese)', href: telhiUrl },
       { label: `Email ${contactEmail}`, href: `mailto:${contactEmail}` },
       { label: 'What we can help with', href: `/${l}/support` },
-    ],
-  },
-  start: {
-    title: 'Try it after the show',
-    body: 'Draw a diagram from YAML in the browser with the Playground. To combine it with monitoring, deploy Shumoku Server.',
-    actions: [
-      { label: 'Playground', href: `/${l}/playground` },
-      { label: 'Deploy Server', href: docsUrl(l, 'server') },
-      { label: 'GitHub', href: repo },
     ],
   },
   community: {
