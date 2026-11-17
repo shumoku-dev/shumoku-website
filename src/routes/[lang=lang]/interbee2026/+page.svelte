@@ -1,4 +1,5 @@
 <script lang="ts">
+  import demoTopology from '$lib/assets/interbee/demo-topology.png?enhanced'
   import networkMap from '$lib/assets/interbee/network-map.png?enhanced'
   import { interbeeCopy, telhiUrl } from '$lib/content/interbee'
   import PageMeta from '$lib/PageMeta.svelte'
@@ -15,7 +16,13 @@
 </script>
 
 <PageMeta title={t.meta.title} description={t.meta.description} />
-<main id="main">
+<!--
+  An exhibition page, not a second home page. Broadcast and Media over IP product pages in Japan
+  (Sony Networked Live, Media Links) set their diagrams and equipment on dark ground under a light
+  site header, and the booth demo itself runs on a dark UI, so the page body uses the site's dark
+  tokens whatever the visitor's theme is.
+-->
+<main id="main" class="dark exhibition">
   <div class="site-container layout-grid intro">
     <dl class="event layout-sub" aria-label={t.event.label}>
       {#each t.event.items as item (item.term)}
@@ -25,34 +32,36 @@
         </div>
       {/each}
     </dl>
-    <div class="span-reading heading">
+    <div class="span-text heading">
       <h1>{t.title}</h1>
-      <p>{t.lead}</p>
+      {#each t.lead as paragraph (paragraph)}
+        <p>{paragraph}</p>
+      {/each}
       <div class="next"><Actions actions={t.actions} primary /></div>
     </div>
-  </div>
-
-  <!-- The poster sets this map on a pale green band; the page repeats it so both read as one. -->
-  <div class="map-band">
-    <div class="site-container layout-grid">
+    <div class="layout-sub span-media">
       <Frame
-        src={networkMap}
-        alt={t.map.alt}
-        caption={t.map.caption}
+        src={demoTopology}
+        alt={t.demo.alt}
+        caption={t.demo.caption}
         ratio="natural"
-        sizes={fullWidth}
         loading="eager"
         fetchpriority="high"
       />
     </div>
   </div>
 
-  <Section id="demo" title={t.demo.title}>
-    {#each t.demo.body as paragraph (paragraph)}
-      <p>{paragraph}</p>
-    {/each}
+  <Section id="about" title={t.about.title} layout="stack">
+    <p>{t.about.body}</p>
+    <RuleList items={t.about.features} label={t.about.title} />
     {#snippet media()}
-      <Frame label={t.demo.slot} />
+      <Frame
+        src={networkMap}
+        alt={t.map.alt}
+        caption={t.map.caption}
+        ratio="natural"
+        sizes={fullWidth}
+      />
     {/snippet}
   </Section>
 
@@ -61,9 +70,6 @@
       <p>{paragraph}</p>
     {/each}
     <p class="note">{t.ip.scope}</p>
-    {#snippet media()}
-      <RuleList items={t.ip.features} label={t.ip.title} />
-    {/snippet}
   </Section>
 
   <Section id="partner" title={t.partner.title} actions={t.partner.actions} large>
@@ -98,6 +104,10 @@
 </main>
 
 <style>
+  .exhibition {
+    background: var(--site-bg);
+    color: var(--site-fg);
+  }
   .intro {
     padding-block: var(--layout-block) var(--layout-section);
   }
@@ -133,12 +143,12 @@
   .heading {
     display: grid;
     gap: var(--layout-flow);
-    padding-top: var(--layout-section);
   }
   h1 {
-    font-size: clamp(2.25rem, 6vw, 4rem);
+    margin-bottom: var(--ui-space-2);
+    font-size: clamp(1.875rem, 4vw, 2.75rem);
     font-weight: 700;
-    line-height: 1.12;
+    line-height: 1.25;
     text-wrap: balance;
   }
   h1:lang(ja) {
@@ -146,7 +156,7 @@
     word-break: auto-phrase;
   }
   h1:not(:lang(ja)) {
-    letter-spacing: -0.035em;
+    letter-spacing: -0.03em;
   }
   .heading p {
     color: var(--site-muted);
@@ -155,10 +165,6 @@
   }
   .next {
     margin-top: var(--layout-flow);
-  }
-  .map-band {
-    padding-block: var(--layout-block);
-    background: var(--site-brand-wash);
   }
   .note,
   .credit {
@@ -171,8 +177,7 @@
   .partner-logo {
     display: block;
     border-radius: var(--layout-media-radius);
-  }
-  .partner-logo:hover {
-    background: var(--ui-surface);
+    /* The logo's blue and red are drawn for a light ground. */
+    background: #fbf8f3;
   }
 </style>

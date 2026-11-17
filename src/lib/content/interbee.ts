@@ -21,11 +21,12 @@ export type InterbeeCopy = {
   meta: { title: string; description: string }
   event: { label: string; items: readonly { term: string; detail: string }[] }
   title: string
-  lead: string
+  lead: readonly string[]
   actions: readonly Action[]
+  demo: { alt: string; caption: string }
+  about: { title: string; body: string; features: readonly string[] }
   map: { alt: string; caption: string }
-  demo: { title: string; body: readonly string[]; alt: string; slot: string }
-  ip: { title: string; body: readonly string[]; features: readonly string[]; scope: string }
+  ip: { title: string; body: readonly string[]; scope: string }
   partner: {
     title: string
     body: readonly string[]
@@ -53,36 +54,38 @@ const ja = (l: Locale): InterbeeCopy => ({
       { term: '出展', detail: '輝日株式会社' },
     ],
   },
-  title: 'ネットワークにも、地図を。',
-  lead: 'Shumoku は、機器から集めた接続情報でネットワークの構成図を描き、その上に通信量と監視のアラームを重ねて表示するソフトウェアです。配線を変えても、集め直せば図が追いつきます。オープンソースで公開しています。',
+  title: 'ケーブルを1本抜くと、地図が変わる。',
+  lead: [
+    'Inter BEE 2026 の輝日株式会社ブースで、ネットワーク構成図ソフトウェア Shumoku を実演しています。',
+    '2台のスイッチをつなぐ Primary を抜くと、通信は Backup へ。その切り替えが数秒で構成図に出ます。会場では、実際にケーブルを抜き差ししてご覧いただけます。',
+  ],
   actions: [
     { label: 'ライブデモを開く', href: demoUrl },
     { label: '導入・保守のご相談', href: '#partner' },
   ],
+  demo: {
+    alt: 'ブースのデモの構成図。2台のスイッチとコアスイッチ、ホストが、ポート名と VLAN つきでつながっている',
+    caption: 'ブースのデモ画面。スイッチ3台とホストを、ポート名と VLAN つきで描いています。',
+  },
+  about: {
+    title: 'Shumoku でできること',
+    body: '機器から集めた接続情報で構成図を描き、その上に通信量と監視のアラームを重ねて表示します。配線を変えても、集め直せば図が追いつきます。オープンソースで公開しています。',
+    features: [
+      'ポートまで分かる。機器ごとのポートと、その接続先まで表示します。',
+      '異常の場所が分かる。Zabbix などのアラームを、該当する機器に表示します。',
+      '通信量が線で分かる。機器のあいだのデータ量を、線の色で表示します。',
+    ],
+  },
   map: {
     alt: '実運用ネットワークの構成図。スイッチとアクセスポイントがポート名と VLAN つきでつながり、通信のあるリンクが緑の線で表示されている',
     caption:
       '実際のネットワークを描いた例。ポートごとの接続と VLAN、リンクの通信量を表示しています。',
-  },
-  demo: {
-    title: 'ブースで実演中：ケーブルを1本抜くと、地図が変わる。',
-    body: [
-      '2台のスイッチをつなぐ Primary を抜くと、通信は Backup へ。その切り替えが数秒で地図に出ます。',
-      '会場では、実際にケーブルを抜き差ししてご覧いただけます。',
-    ],
-    alt: '展示デモの構成図。2台のスイッチとコアスイッチがポート名と VLAN つきでつながっている',
-    slot: '展示デモの構成図',
   },
   ip: {
     title: 'IP 化した設備にも、地図を。',
     body: [
       'SDI の時代は、ケーブルをたどれば信号の経路が分かりました。設備が IP 化すると、経路はスイッチのポートと VLAN の設定の中に入り、配線を見ても分からなくなります。',
       'Shumoku は、SNMP や LLDP で機器から接続情報を集めて構成図を描きます。手で描いた図と違い、構成を変えても集め直せば実態に追いつきます。',
-    ],
-    features: [
-      'ポートまで分かる。機器ごとのポートと、その接続先まで表示します。',
-      '異常の場所が分かる。Zabbix などのアラームを、該当する機器に表示します。',
-      '通信量が線で分かる。機器のあいだのデータ量を、線の色で表示します。',
     ],
     scope:
       'Shumoku が見せるのはネットワークの構造と状態です。映像信号（ST 2110 など）そのものを解析する製品ではありません。',
@@ -139,35 +142,37 @@ const en = (l: Locale): InterbeeCopy => ({
       { term: 'Exhibitor', detail: 'TelHi Corporation' },
     ],
   },
-  title: 'Your network deserves a map.',
-  lead: 'Shumoku draws your network diagram from connection data collected from the devices, then overlays traffic and monitoring alarms on it. When the cabling changes, collect again and the diagram catches up. It is open source.',
+  title: 'Unplug one cable, and the map changes.',
+  lead: [
+    'At the TelHi Corporation booth at InterBEE 2026, we are demonstrating Shumoku, network diagram software.',
+    'Unplug the Primary link between two switches and traffic moves to Backup. The switch-over reaches the diagram within seconds. At the booth you can pull and reconnect the cable yourself.',
+  ],
   actions: [
     { label: 'Open the live demo', href: demoUrl },
     { label: 'Deployment and maintenance', href: '#partner' },
   ],
+  demo: {
+    alt: 'The booth demo diagram: two switches, a core switch and a host connected with port names and VLANs',
+    caption: 'The booth demo. Three switches and a host, drawn with port names and VLANs.',
+  },
+  about: {
+    title: 'What Shumoku does',
+    body: 'Shumoku draws your network diagram from connection data collected from the devices, then overlays traffic and monitoring alarms on it. When the cabling changes, collect again and the diagram catches up. It is open source.',
+    features: [
+      'Down to the port. Each device’s ports and what they connect to.',
+      'Where the problem is. Alarms from Zabbix and others, on the affected device.',
+      'Traffic on every line. The data between devices, shown by the line’s color.',
+    ],
+  },
   map: {
     alt: 'A diagram of a production network: switches and access points connected with port names and VLANs, with active links drawn as green lines',
     caption: 'A real network. Each port’s connection, VLANs and link traffic are shown.',
-  },
-  demo: {
-    title: 'Live at the booth: unplug one cable and the map changes.',
-    body: [
-      'Unplug the Primary link between two switches and traffic moves to Backup. The switch-over reaches the map within seconds.',
-      'At the booth you can pull and reconnect the cable yourself.',
-    ],
-    alt: 'The booth demo diagram: two switches and a core switch connected with port names and VLANs',
-    slot: 'Booth demo diagram',
   },
   ip: {
     title: 'A map for IP-based facilities',
     body: [
       'With SDI, following the cable told you where a signal went. Once a facility moves to IP, the path lives in switch ports and VLAN settings, and the cabling no longer tells you.',
       'Shumoku collects connection data from devices over SNMP and LLDP and draws the diagram. Unlike a hand-drawn one, it catches up with changes when you collect again.',
-    ],
-    features: [
-      'Down to the port. Each device’s ports and what they connect to.',
-      'Where the problem is. Alarms from Zabbix and others, on the affected device.',
-      'Traffic on every line. The data between devices, shown by the line’s color.',
     ],
     scope:
       'Shumoku shows the network’s structure and state. It does not analyze video signals such as ST 2110 themselves.',
