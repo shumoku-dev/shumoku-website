@@ -28,9 +28,10 @@ export type InterbeeCopy = {
   moip: {
     title: string
     body: readonly string[]
-    overviewSlot: string
+    overviewAlt: string
+    zoom: string
     sites: string
-    detailSlot: string
+    detailAlt: string
     points: readonly string[]
     integrations: string
     note: string
@@ -97,9 +98,13 @@ const ja = (l: Locale): InterbeeCopy => ({
       'BEEMO では、拠点の設備を見守る仕事を統合監視・構成管理・PTP 監視などに分け、複数の製品で受け持っています。Shumoku の担当は構成管理です。',
       '各機器から LLDP / SNMP で集めた接続情報で拠点をまたぐ構成図を描き、Zabbix のアラームと通信量を重ねています。',
     ],
-    overviewSlot: '全体図：東京・名古屋・大阪・幕張',
-    sites: '左から 幕張（会場）、大阪（堂島）、東京（赤坂）、名古屋。',
-    detailSlot: '拡大：アラームの出ている機器',
+    overviewAlt:
+      '会場デモの全体図。幕張・大阪・東京・名古屋の拠点ごとに機器をまとめ、拠点をまたぐ接続を線で描いている',
+    zoom: '全体図を原寸で開く',
+    sites:
+      '左から 幕張（会場）、大阪（堂島）、東京（赤坂）、名古屋。図をタップすると原寸で開きます。',
+    detailAlt:
+      '拡大図。アラームの出ているアクセスポイントが黄色の枠で強調され、右側にアラームの一覧が並んでいる',
     points: [
       'ポートごとのつながり。機器とポートごとに、接続先が分かります。',
       'Zabbix のアラーム。アラームの出た機器が、図の上に表示されます。',
@@ -206,9 +211,13 @@ const en = (l: Locale): InterbeeCopy => ({
       'BEEMO splits the work of watching over the sites’ facilities into integrated monitoring, configuration management, PTP monitoring and more, each handled by different products. Shumoku handles configuration management.',
       'It draws a diagram across the sites from connection data collected from each device over LLDP / SNMP, with Zabbix alarms and traffic overlaid.',
     ],
-    overviewSlot: 'Overview: Tokyo, Nagoya, Osaka and Makuhari',
-    sites: 'From the left: Makuhari (the venue), Osaka (Dojima), Tokyo (Akasaka), Nagoya.',
-    detailSlot: 'Close-up: a device with an alarm',
+    overviewAlt:
+      'Overview of the venue demo: devices grouped by site (Makuhari, Osaka, Tokyo, Nagoya), with the links between sites drawn as lines',
+    zoom: 'Open the overview at full size',
+    sites:
+      'From the left: Makuhari (the venue), Osaka (Dojima), Tokyo (Akasaka), Nagoya. Tap the diagram to open it at full size.',
+    detailAlt:
+      'Close-up: an access point with an alarm is outlined in yellow, with the list of alarms beside it',
     points: [
       'Connections by port. For each device and port, you can see what it connects to.',
       'Zabbix alarms. Devices with an alarm are marked on the diagram.',

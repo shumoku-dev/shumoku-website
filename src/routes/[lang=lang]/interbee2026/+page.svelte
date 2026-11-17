@@ -1,5 +1,7 @@
 <script lang="ts">
   import demoTopology from '$lib/assets/interbee/demo-topology.png?enhanced'
+  import moipAlert from '$lib/assets/interbee/moip-alert.png?enhanced'
+  import moipOverview from '$lib/assets/interbee/moip-overview.png?enhanced'
   import { interbeeCopy, telhiUrl } from '$lib/content/interbee'
   import PageMeta from '$lib/PageMeta.svelte'
   import Frame from '$lib/product/Frame.svelte'
@@ -53,9 +55,20 @@
       <p>{paragraph}</p>
     {/each}
     {#snippet media()}
-      <Frame label={t.moip.overviewSlot} caption={t.moip.sites} />
+      <!-- The overview is far wider than a phone; the link opens it at full size. -->
+      <a class="zoom" href={moipOverview.img.src} aria-label={t.moip.zoom}>
+        <Frame
+          src={moipOverview}
+          alt={t.moip.overviewAlt}
+          caption={t.moip.sites}
+          ratio="natural"
+          sizes="(max-width: 850px) calc(100vw - 2rem), 1120px"
+        />
+      </a>
       <div class="layout-sub detail-row">
-        <div class="detail-shot"><Frame label={t.moip.detailSlot} /></div>
+        <div class="detail-shot">
+          <Frame src={moipAlert} alt={t.moip.detailAlt} ratio="natural" />
+        </div>
         <div class="detail-text">
           <RuleList items={t.moip.points} />
           <p>{t.moip.integrations}</p>
@@ -217,6 +230,10 @@
   .credit {
     margin: 0;
     color: var(--site-muted);
+  }
+  .zoom {
+    display: block;
+    border-radius: var(--layout-media-radius);
   }
   .partner-logo {
     display: block;
