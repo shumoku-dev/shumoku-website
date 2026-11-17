@@ -18,7 +18,17 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 const locales = ['ja', 'en']
-const pages = ['', 'features', 'integrations', 'support', 'community', 'about', 'blog', 'privacy']
+const pages = [
+  '',
+  'features',
+  'integrations',
+  'support',
+  'community',
+  'about',
+  'blog',
+  'privacy',
+  'interbee2026',
+]
 const gridWidth = 1280
 const overflowWidths = [900, 375]
 /** Half a pixel: tight enough to see a 1px border pushing an image off its line. */
