@@ -23,8 +23,6 @@ https://event.ospn.jp/osc2026-fall/
 
 配りたいと思っていた[Tech Tiles](https://github.com/tech-tiles/tech-tiles)は、残念ながら準備が間に合いませんでした。こちらは次回のイベント出展に向けて頑張ります！
 
-[Tech Tiles](https://github.com/tech-tiles/tech-tiles)
-
 いろいろな方がブースに立ち寄ってくださり、賑やかな出展になりました。
 
 ![Shumokuブースで来場者と交流する様子](./images/conversations.webp)
