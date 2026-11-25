@@ -19,9 +19,15 @@ maintained usage instructions. Do not put dated event reports in the reference d
 | connpass (external) | Participate | Event dates, venues and registration |
 
 Header order: Docs, Features (機能), Integrations (連携), Playground, Blog, Community,
-For teams (導入相談). The header switches to the menu at 1100px and below. About remains
-in the footer and contextual links; its URL is unchanged. Footer groups remain
-Use Shumoku / Project / Support. Home provides an activity entry point rather than
+For teams (導入相談). At 1100px and below the links move into a full-screen menu sheet
+(a `popover`), which also holds the language switch and the GitHub, X and Discord links; from
+850px the header bar itself keeps only the wordmark, language, theme and menu buttons. About
+remains in the footer and contextual links; its URL is unchanged. The footer leads with the
+horizontal lockup (`logo-horizontal.svg`), a one-line summary and the same social links, then
+the groups Use Shumoku (Docs, Features, Integrations, Playground, Editor) / Project (About,
+Blog, Community, connpass, event quick links) / Support (For teams, Contact). License,
+Privacy and analytics preferences sit in a bottom row. Footer copy lives in
+`src/lib/content/footer.ts`. Home provides an activity entry point rather than
 claiming that unpublished articles are recent news. The shared `sitePages` registry
 feeds navigation and the sitemap, including Japanese and English Blog routes.
 

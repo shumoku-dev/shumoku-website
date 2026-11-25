@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { Languages, Menu, Moon, Sun } from '@lucide/svelte'
+  import { Languages, Menu, Moon, Sun, X } from '@lucide/svelte'
   import { onMount } from 'svelte'
-  import symbol from '#lib/assets/brand/logo-symbol.svg?url'
   import wordmark from '#lib/assets/brand/logo-wordmark.svg?url'
+  import { repositoryUrl, socialLinks } from '#lib/content/footer.ts'
   import { rememberLanguage } from '#lib/i18n/index.ts'
   import { type Locale, navigationCurrent, siteNavigation } from '#lib/site.ts'
   import {
@@ -12,15 +12,42 @@
     readThemePreference,
     themeStorageKey,
   } from '#lib/theme.ts'
-  import Disclosure from '#lib/ui/Disclosure.svelte'
+  import { controlClass } from '#lib/ui/control.ts'
   import IconButton from '#lib/ui/IconButton.svelte'
   import LinkButton from '#lib/ui/LinkButton.svelte'
   import NavLink from '#lib/ui/NavLink.svelte'
+  import SocialIcon from './SocialIcon.svelte'
   import '#lib/assets/brand/header-logo.css'
 
   let { locale, path }: { locale: Locale; path: string } = $props()
   const links = $derived(siteNavigation(locale))
   const alternate = $derived(locale === 'ja' ? 'en' : 'ja')
+  const t = $derived(
+    locale === 'ja'
+      ? {
+          nav: 'メインナビゲーション',
+          menu: 'メニュー',
+          close: 'メニューを閉じる',
+          github: 'Shumoku の GitHub リポジトリ',
+          switchTo: 'Switch to English',
+          language: 'English',
+          theme: 'ダークモード',
+        }
+      : {
+          nav: 'Main navigation',
+          menu: 'Menu',
+          close: 'Close menu',
+          github: 'Shumoku on GitHub',
+          switchTo: '日本語に切り替え',
+          language: '日本語',
+          theme: 'Dark mode',
+        },
+  )
+  let menu: HTMLElement | undefined = $state()
+  /* Client-side navigation keeps the popover open, so close it once a link is followed. */
+  function closeOnLink(event: MouseEvent) {
+    if (event.target instanceof Element && event.target.closest('a')) menu?.hidePopover()
+  }
   let dark = $state(false)
   function applyTheme(value: boolean) {
     dark = value
@@ -57,16 +84,10 @@
 
 <header class="site-header">
   <div class="site-container header-row">
-    <a href={`/${locale}`} class="site-brand" aria-label="Shumoku"
-      ><picture class="shumoku-header-logo">
-        <source media="(max-width: 850px)" srcset={symbol}>
-        <img src={wordmark} alt="Shumoku">
-      </picture></a
+    <a href={`/${locale}`} class="site-brand"
+      ><span class="shumoku-header-logo"><img src={wordmark} alt="Shumoku"></span></a
     >
-    <nav
-      class="desktop-nav"
-      aria-label={locale === 'ja' ? 'メインナビゲーション' : 'Main navigation'}
-    >
+    <nav class="desktop-nav" aria-label={t.nav}>
       {#each links as link}
         <NavLink href={link.href} aria-current={navigationCurrent(path, link.path)}
           >{link.label}</NavLink
@@ -77,26 +98,12 @@
       <LinkButton
         variant="ghost"
         size="icon"
-        href="https://github.com/konoe-akitoshi/shumoku"
-        aria-label={locale === 'ja' ? 'Shumoku の GitHub リポジトリ' : 'Shumoku on GitHub'}
+        class="github-link"
+        href={repositoryUrl}
+        aria-label={t.github}
+        title={t.github}
+        ><SocialIcon icon="github" /></LinkButton
       >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <path
-            d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7A5.4 5.4 0 0 0 19.4 4a5 5 0 0 0-.1-3.5S18.2.1 15 1.8a13.4 13.4 0 0 0-7 0C4.8.1 3.7.5 3.7.5A5 5 0 0 0 3.6 4a5.4 5.4 0 0 0-1.4 3.7c0 5.4 3.5 6.6 6.8 7A4.8 4.8 0 0 0 8 18v4"
-          />
-          <path d="M8 19c-3 .9-3-1.5-4-2" />
-        </svg>
-      </LinkButton>
       <LinkButton
         variant="ghost"
         class="locale-link"
@@ -104,39 +111,75 @@
         onclick={() => rememberLanguage(alternate)}
         hreflang={alternate}
         lang={alternate}
-        aria-label={locale === 'ja' ? 'Switch to English' : '日本語に切り替え'}
+        aria-label={t.switchTo}
         ><Languages size={20} />
         <span class="locale-name">{alternate === 'ja' ? '日本語' : 'EN'}</span></LinkButton
       >
-      <IconButton
-        type="button"
-        onclick={toggleTheme}
-        label={locale === 'ja' ? 'ダークモード' : 'Dark mode'}
-        aria-pressed={dark}
-      >
+      <IconButton type="button" onclick={toggleTheme} label={t.theme} aria-pressed={dark}>
         {#if dark}
           <Sun size={20} />
         {:else}
           <Moon size={20} />
         {/if}
       </IconButton>
-      <div class="mobile-nav">
-        <Disclosure
-          label={locale === 'ja' ? 'メニュー' : 'Menu'}
-          icon
-          variant="ghost"
-          resetKey={`${locale}${path}`}
-        >
-          {#snippet trigger()}
-            <Menu size={20} />
-          {/snippet}
-          {#each links as link}
-            <NavLink href={link.href} aria-current={navigationCurrent(path, link.path)}
-              >{link.label}</NavLink
+      <button
+        type="button"
+        class={controlClass('ghost', 'icon', 'menu-button')}
+        popovertarget="site-menu"
+        aria-label={t.menu}
+        title={t.menu}
+      >
+        <Menu size={20} />
+      </button>
+    </div>
+  </div>
+  <!-- Full-screen sheet: the popover gives Esc, focus return and the top layer without script. -->
+  <div
+    id="site-menu"
+    class="site-menu"
+    popover="auto"
+    bind:this={menu}
+    onclick={closeOnLink}
+    role="presentation"
+  >
+    <div class="site-container menu-head">
+      <a href={`/${locale}`} class="site-brand"
+        ><span class="shumoku-header-logo"><img src={wordmark} alt="Shumoku"></span></a
+      >
+      <button
+        type="button"
+        class={controlClass('ghost', 'icon')}
+        popovertarget="site-menu"
+        popovertargetaction="hide"
+        aria-label={t.close}
+        title={t.close}
+      >
+        <X size={22} />
+      </button>
+    </div>
+    <nav class="site-container menu-nav" aria-label={t.nav}>
+      {#each links as link}
+        <a href={link.href} aria-current={navigationCurrent(path, link.path)}>{link.label}</a>
+      {/each}
+    </nav>
+    <div class="site-container menu-extra">
+      <a
+        class="menu-language"
+        href={`/${alternate}${path}`}
+        onclick={() => rememberLanguage(alternate)}
+        hreflang={alternate}
+        lang={alternate}
+        ><Languages size={20} aria-hidden="true" />{t.language}</a
+      >
+      <ul class="menu-social">
+        {#each socialLinks as link}
+          <li>
+            <a href={link.href} aria-label={link.label} title={link.label}
+              ><SocialIcon icon={link.icon} /></a
             >
-          {/each}
-        </Disclosure>
-      </div>
+          </li>
+        {/each}
+      </ul>
     </div>
   </div>
 </header>
@@ -148,7 +191,8 @@
     position: relative;
     z-index: 40;
   }
-  .header-row {
+  .header-row,
+  .menu-head {
     display: flex;
     align-items: center;
     gap: var(--ui-space-6);
@@ -159,7 +203,6 @@
     display: flex;
     align-items: center;
     min-height: var(--ui-control-height);
-    min-width: var(--ui-control-height);
     font-size: 1rem;
   }
   .desktop-nav {
@@ -176,13 +219,119 @@
     border-left: 1px solid var(--site-line);
     padding-left: var(--ui-space-4);
   }
-  .mobile-nav {
+  .menu-button {
     display: none;
   }
+
+  /* Hidden until opened: the user-agent rule hides a closed popover, so only the open state sets display. */
+  .site-menu {
+    position: fixed;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100dvh;
+    max-inline-size: none;
+    max-block-size: none;
+    margin: 0;
+    padding: 0 0 var(--layout-block);
+    border: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--site-bg);
+    color: var(--site-fg);
+  }
+  .site-menu:popover-open {
+    display: flex;
+    flex-direction: column;
+  }
+  .menu-head {
+    justify-content: space-between;
+    border-bottom: 1px solid var(--site-line);
+    margin-inline: 0;
+    padding-inline: max(var(--layout-inset), (100% - var(--site-width)) / 2);
+    width: auto;
+  }
+  :global(html:has(#site-menu:popover-open)) {
+    overflow: hidden;
+  }
+  .menu-nav {
+    display: flex;
+    flex-direction: column;
+    padding-block: var(--ui-space-4);
+  }
+  .menu-nav a {
+    display: flex;
+    align-items: center;
+    min-block-size: 3.25rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--site-line) 45%, transparent);
+    font-size: 1.25rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .menu-nav a[aria-current] {
+    color: var(--site-accent);
+    font-weight: 700;
+  }
+  .menu-nav a[aria-current]::before {
+    content: "";
+    inline-size: 0.25rem;
+    block-size: 1.25rem;
+    margin-inline-end: var(--ui-space-3);
+    border-radius: 999px;
+    background: currentColor;
+  }
+  .menu-extra {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ui-space-4);
+    margin-top: var(--ui-space-4);
+  }
+  .menu-language {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ui-space-2);
+    min-block-size: var(--ui-control-height);
+    padding-inline: var(--ui-space-4);
+    border: 1px solid var(--site-control-line);
+    border-radius: var(--ui-radius);
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .menu-social {
+    display: flex;
+    gap: var(--ui-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .menu-social a {
+    display: grid;
+    place-items: center;
+    inline-size: var(--ui-control-height);
+    block-size: var(--ui-control-height);
+    border-radius: var(--ui-radius);
+    color: var(--site-muted);
+  }
+  .site-menu a:focus-visible {
+    outline: 2px solid var(--ui-focus);
+    outline-offset: 2px;
+  }
+  @media (hover: hover) {
+    .menu-nav a:hover {
+      color: var(--site-accent);
+    }
+    .menu-social a:hover,
+    .menu-language:hover {
+      background: var(--ui-control-active);
+      color: var(--site-fg);
+    }
+  }
+
   /*
    * The header keeps two viewport queries. The menu breakpoint is its own: it follows from the width
-   * of seven destinations, not from the page grid. The 850px one is the page breakpoint and must match
-   * the wordmark's <source media>, which can only read the viewport.
+   * of seven destinations, not from the page grid. The 850px one is the page breakpoint, where the
+   * controls compact and GitHub moves into the menu.
    */
   @media (max-width: 1100px) {
     .desktop-nav {
@@ -190,12 +339,22 @@
     }
     .header-controls {
       margin-left: auto;
+      border: 0;
+      padding-left: 0;
     }
-    .mobile-nav {
-      display: block;
+    .menu-button {
+      display: inline-flex;
+    }
+  }
+  @media (width > 1100px) {
+    .site-menu:popover-open {
+      display: none;
     }
   }
   @media (max-width: 850px) {
+    .header-controls :global(.github-link) {
+      display: none;
+    }
     .header-controls :global(.locale-link) {
       width: var(--ui-control-height);
       padding: 0;
@@ -204,12 +363,13 @@
       display: none;
     }
     .header-controls {
-      border: 0;
-      padding: 0;
       gap: 0;
     }
     .header-row {
       gap: var(--ui-space-4);
+    }
+    .shumoku-header-logo {
+      --logo-height: 1.5em;
     }
   }
 </style>
