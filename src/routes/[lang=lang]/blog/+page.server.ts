@@ -1,4 +1,4 @@
-import { posts, usedCategories } from '$lib/blog/posts.server'
+import { posts, usedCategories } from '#lib/blog/posts.server.ts'
 import type { PageServerLoad } from './$types'
 
 export const prerender = true

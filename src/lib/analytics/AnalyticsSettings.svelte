@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Button from '$lib/ui/Button.svelte'
+  import Button from '#lib/ui/Button.svelte'
 
   let { locale }: { locale: 'en' | 'ja' } = $props()
   let busy = $state(false)

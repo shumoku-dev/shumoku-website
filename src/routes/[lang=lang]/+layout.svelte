@@ -1,12 +1,12 @@
 <script lang="ts">
   import '../website.css'
   import type { Snippet } from 'svelte'
+  import Analytics from '#lib/analytics/Analytics.svelte'
+  import AnnouncementBar from '#lib/layout/AnnouncementBar.svelte'
+  import SiteFooter from '#lib/layout/SiteFooter.svelte'
+  import SiteHeader from '#lib/layout/SiteHeader.svelte'
+  import { sitePages } from '#lib/site.ts'
   import { page } from '$app/state'
-  import Analytics from '$lib/analytics/Analytics.svelte'
-  import AnnouncementBar from '$lib/layout/AnnouncementBar.svelte'
-  import SiteFooter from '$lib/layout/SiteFooter.svelte'
-  import SiteHeader from '$lib/layout/SiteHeader.svelte'
-  import { sitePages } from '$lib/site'
   import type { LayoutData } from './$types'
 
   let { data, children }: { data: LayoutData; children: Snippet } = $props()

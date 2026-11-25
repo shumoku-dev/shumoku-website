@@ -1,9 +1,9 @@
 <script lang="ts">
-  import CommunityMontage from '$lib/community/CommunityMontage.svelte'
-  import { photoUrl } from '$lib/community/photos'
-  import { pagesCopy } from '$lib/content/pages'
-  import PageMeta from '$lib/PageMeta.svelte'
-  import Section from '$lib/product/Section.svelte'
+  import CommunityMontage from '#lib/community/CommunityMontage.svelte'
+  import { photoUrl } from '#lib/community/photos.ts'
+  import { pagesCopy } from '#lib/content/pages.ts'
+  import PageMeta from '#lib/PageMeta.svelte'
+  import Section from '#lib/product/Section.svelte'
   import type { PageData } from './$types'
 
   let { data }: { data: PageData } = $props()

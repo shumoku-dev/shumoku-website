@@ -1,11 +1,21 @@
+import adapter from '@sveltejs/adapter-vercel'
 import { enhancedImages } from '@sveltejs/enhanced-img'
 import { sveltekit } from '@sveltejs/kit/vite'
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'vite'
 import { blogEmbeds } from './src/lib/blog/embeds/vite.ts'
 
 export default defineConfig({
-  plugins: [blogEmbeds(), tailwindcss(), enhancedImages(), sveltekit()],
+  plugins: [
+    blogEmbeds(),
+    tailwindcss(),
+    enhancedImages(),
+    sveltekit({
+      preprocess: vitePreprocess(),
+      adapter: adapter({ runtime: 'nodejs24.x' }),
+    }),
+  ],
   // Published Shumoku packages currently contain extensionless ESM imports. Bundling them for SSR
   // lets Vite resolve those imports while keeping the website independent from the source monorepo.
   ssr: {

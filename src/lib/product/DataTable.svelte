@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Row } from '$lib/content/product'
+  import type { Row } from '#lib/content/product.ts'
 
   let { head, rows }: { head: Row; rows: readonly Row[] } = $props()
 </script>

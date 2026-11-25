@@ -1,6 +1,6 @@
-import { categoriesOf, posts } from '$lib/blog/posts.server'
-import { languageRedirect } from '$lib/i18n'
-import { localizedPaths } from '$lib/localized-paths'
+import { categoriesOf, posts } from '#lib/blog/posts.server.ts'
+import { languageRedirect } from '#lib/i18n/index.ts'
+import { localizedPaths } from '#lib/localized-paths.ts'
 import type { RequestHandler } from './$types'
 
 const paths = localizedPaths(

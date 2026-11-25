@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Photo from '$lib/Photo.svelte'
+  import Photo from '#lib/Photo.svelte'
   import { articleImage } from './images'
 
   // `![alt](./images/photo.webp)` in the article's Markdown.

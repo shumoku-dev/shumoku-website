@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit'
-import { articleBody, getPost, publishedPosts } from '$lib/blog/posts.server'
-import { locales } from '$lib/site'
+import { articleBody, getPost, publishedPosts } from '#lib/blog/posts.server.ts'
+import { locales } from '#lib/site.ts'
 import type { EntryGenerator, PageServerLoad } from './$types'
 
 export const prerender = true

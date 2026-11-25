@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
-  import type { Locale } from '$lib/site'
+  import type { Locale } from '#lib/site.ts'
   import { communityPhotos, photos, photoUrl, photoWidths } from './photos'
 
   let {

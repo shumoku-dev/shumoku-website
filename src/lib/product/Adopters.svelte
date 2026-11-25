@@ -1,7 +1,7 @@
 <script lang="ts">
-  import itcuec from '$lib/assets/adopters/itcuec_logo_300.png?enhanced'
-  import janog57 from '$lib/assets/adopters/janog57_logo.png?enhanced'
-  import janog58 from '$lib/assets/adopters/janog58_logo.png?enhanced'
+  import itcuec from '#lib/assets/adopters/itcuec_logo_300.png?enhanced'
+  import janog57 from '#lib/assets/adopters/janog57_logo.png?enhanced'
+  import janog58 from '#lib/assets/adopters/janog58_logo.png?enhanced'
 
   let { label }: { label: string } = $props()
   const adopters = [

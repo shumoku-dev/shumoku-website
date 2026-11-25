@@ -67,7 +67,7 @@ and toolbars receive their full keyboard contracts rather than ARIA roles alone.
 The supplied HTML-only design-lint is not run on Svelte files. This is not a claim
 of compliance with every repository guideline (e.g. app-wide URL persistence).
 
-Use `$lib/ui` for website controls. These are Svelte 5 native-element wrappers:
+Use `#lib/ui` for website controls. These are Svelte 5 native-element wrappers:
 `$props`, typed `svelte/elements` attributes, callback event props and children snippets.
 No application state is stored in modules; disclosure state belongs to each instance.
 

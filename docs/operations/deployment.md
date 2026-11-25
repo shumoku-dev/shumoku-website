@@ -28,7 +28,9 @@ Pull requests must pass the same sequence in GitHub Actions and produce a Vercel
 - Output directory: automatic
 - Node.js: 24
 - Environment variables: `RESEND_API_KEY`, `RESEND_CONTACT_SEGMENT_JA` and
-  `RESEND_CONTACT_SEGMENT_EN` (see [contact email](contact-email.md))
+  `RESEND_CONTACT_SEGMENT_EN` (see [contact email](contact-email.md)). Every server variable the
+  code reads, including Vercel's `VERCEL` and `VERCEL_ENV`, is declared in `src/env.ts`; declare a
+  new one there before reading it from `$app/env/private`.
 
 The current production project should be transferred or reconnected only after a Preview from this
 repository matches the existing site. Do not disconnect the monorepo deployment first.

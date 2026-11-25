@@ -1,4 +1,4 @@
-import { dev } from '$app/environment'
+import { dev } from '$app/env'
 import { type Category, categories } from './categories'
 import { renderMarkdown, splitFrontmatter } from './markdown.server'
 import { type Post, parsePost } from './post'
@@ -12,8 +12,10 @@ const sources = import.meta.glob<string>('/src/content/blog/*/index.md', {
 
 const articles = Object.entries(sources).map(([path, source]) => {
   const { data, body } = splitFrontmatter(source)
+
   return { post: parsePost(path.split('/').at(-2) ?? '', data), body }
 })
+
 const all = articles.map((article) => article.post)
 
 /** Articles newest first; drafts only when asked for. */

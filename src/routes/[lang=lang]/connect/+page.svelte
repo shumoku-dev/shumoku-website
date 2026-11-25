@@ -1,7 +1,7 @@
 <script lang="ts">
   import { CalendarDays, MonitorPlay } from '@lucide/svelte'
-  import { connectCopy, connectLinks } from '$lib/content/connect'
-  import PageMeta from '$lib/PageMeta.svelte'
+  import { connectCopy, connectLinks } from '#lib/content/connect.ts'
+  import PageMeta from '#lib/PageMeta.svelte'
   import type { PageData } from './$types'
   import ContactSignup from './ContactSignup.svelte'
 

@@ -2,8 +2,8 @@
   import { darkTheme, lightTheme } from '@shumoku/core'
   import { attachCamera, type Camera } from '@shumoku/renderer'
   import ShumokuRenderer from '@shumoku/renderer/components/ShumokuRenderer.svelte'
-  import EmptyState from '$lib/ui/EmptyState.svelte'
-  import Toolbar from '$lib/ui/Toolbar.svelte'
+  import EmptyState from '#lib/ui/EmptyState.svelte'
+  import Toolbar from '#lib/ui/Toolbar.svelte'
   import type { RenderResult } from './render'
 
   let { result }: { result: RenderResult | null } = $props()

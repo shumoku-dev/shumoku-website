@@ -1,4 +1,4 @@
-import type { Locale } from '$lib/site'
+import type { Locale } from '#lib/site.ts'
 
 /** Fixed vocabulary for `category:` in article frontmatter, with labels for each UI locale. */
 export const categories = {

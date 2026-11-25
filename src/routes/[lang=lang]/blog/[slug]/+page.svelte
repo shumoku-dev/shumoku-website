@@ -1,12 +1,12 @@
 <script lang="ts">
-  import ArticleBody from '$lib/blog/ArticleBody.svelte'
-  import { authors } from '$lib/blog/authors'
-  import { categories } from '$lib/blog/categories'
-  import DraftBadge from '$lib/blog/DraftBadge.svelte'
-  import { articleImage } from '$lib/blog/images'
-  import { formatDate } from '$lib/blog/post'
-  import PageMeta from '$lib/PageMeta.svelte'
-  import { websiteOrigin } from '$lib/site'
+  import ArticleBody from '#lib/blog/ArticleBody.svelte'
+  import { authors } from '#lib/blog/authors.ts'
+  import { categories } from '#lib/blog/categories.ts'
+  import DraftBadge from '#lib/blog/DraftBadge.svelte'
+  import { articleImage } from '#lib/blog/images.ts'
+  import { formatDate } from '#lib/blog/post.ts'
+  import PageMeta from '#lib/PageMeta.svelte'
+  import { websiteOrigin } from '#lib/site.ts'
   import type { PageData } from './$types'
 
   let { data }: { data: PageData } = $props()

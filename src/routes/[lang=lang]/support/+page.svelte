@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { pagesCopy } from '$lib/content/pages'
-  import PageHeading from '$lib/layout/PageHeading.svelte'
-  import PageMeta from '$lib/PageMeta.svelte'
-  import RuleList from '$lib/product/RuleList.svelte'
-  import Section from '$lib/product/Section.svelte'
+  import { pagesCopy } from '#lib/content/pages.ts'
+  import PageHeading from '#lib/layout/PageHeading.svelte'
+  import PageMeta from '#lib/PageMeta.svelte'
+  import RuleList from '#lib/product/RuleList.svelte'
+  import Section from '#lib/product/Section.svelte'
   import type { PageData } from './$types'
 
   let { data }: { data: PageData } = $props()

@@ -1,5 +1,5 @@
-import { communityUrl } from '$lib/announcement'
-import type { Locale } from '$lib/site'
+import { communityUrl } from '#lib/announcement.ts'
+import type { Locale } from '#lib/site.ts'
 
 /** Copy for Support and Community. The Japanese text is the reviewed source (site copy plan). */
 

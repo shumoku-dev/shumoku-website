@@ -1,7 +1,11 @@
-import { env } from '$env/dynamic/private'
-import type { ContactSignupResult } from '$lib/content/contact'
-import { isLocale } from '$lib/i18n'
-import { createRateLimiter, normalizeEmail, signUpContact } from '$lib/server/contact'
+import type { ContactSignupResult } from '#lib/content/contact.ts'
+import { isLocale } from '#lib/i18n/index.ts'
+import { createRateLimiter, normalizeEmail, signUpContact } from '#lib/server/contact.ts'
+import {
+  RESEND_API_KEY,
+  RESEND_CONTACT_SEGMENT_EN,
+  RESEND_CONTACT_SEGMENT_JA,
+} from '$app/env/private'
 import type { RequestHandler } from './$types'
 
 export const prerender = false
@@ -32,12 +36,15 @@ export const POST: RequestHandler = async ({ request, getClientAddress }) => {
 
   // Hidden field that only bots fill in. Pretend success so they learn nothing.
   if (form?.get('website')) return respond('ok')
+
   const email = normalizeEmail(form?.get('email'))
+
   if (!email) return respond('invalid')
   if (!allow(getClientAddress())) return respond('limited')
 
-  const apiKey = env.RESEND_API_KEY
-  const segments = { ja: env.RESEND_CONTACT_SEGMENT_JA, en: env.RESEND_CONTACT_SEGMENT_EN }
+  const apiKey = RESEND_API_KEY
+  const segments = { ja: RESEND_CONTACT_SEGMENT_JA, en: RESEND_CONTACT_SEGMENT_EN }
+
   if (!apiKey || !segments.ja || !segments.en) {
     console.error(
       'Contact signup is not configured: set RESEND_API_KEY, RESEND_CONTACT_SEGMENT_JA and RESEND_CONTACT_SEGMENT_EN',

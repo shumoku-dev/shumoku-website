@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import { type ContactSignupResult, contactSignupCopy } from '$lib/content/contact'
-  import type { Locale } from '$lib/i18n'
-  import Button from '$lib/ui/Button.svelte'
-  import Notice from '$lib/ui/Notice.svelte'
-  import TextField from '$lib/ui/TextField.svelte'
+  import { type ContactSignupResult, contactSignupCopy } from '#lib/content/contact.ts'
+  import type { Locale } from '#lib/i18n/index.ts'
+  import Button from '#lib/ui/Button.svelte'
+  import Notice from '#lib/ui/Notice.svelte'
+  import TextField from '#lib/ui/TextField.svelte'
 
   let { lang }: { lang: Locale } = $props()
   const copy = $derived(contactSignupCopy[lang])

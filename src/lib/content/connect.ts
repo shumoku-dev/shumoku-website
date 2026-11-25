@@ -1,4 +1,4 @@
-import { communityUrl } from '$lib/announcement'
+import { communityUrl } from '#lib/announcement.ts'
 
 export const connectLinks = [
   {

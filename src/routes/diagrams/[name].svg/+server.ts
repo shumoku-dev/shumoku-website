@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit'
-import { diagramNames, renderDiagram } from '$lib/product/diagrams.server'
+import { diagramNames, renderDiagram } from '#lib/product/diagrams.server.ts'
 import type { EntryGenerator, RequestHandler } from './$types'
 
 // Build artifacts for <img>, not pages: deliberately absent from sitePages, so from the sitemap too.

@@ -1,4 +1,4 @@
-import { languageRedirect } from '$lib/i18n'
+import { languageRedirect } from '#lib/i18n/index.ts'
 import type { RequestHandler } from './$types'
 
 export const prerender = false

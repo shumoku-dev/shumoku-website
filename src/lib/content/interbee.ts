@@ -1,5 +1,5 @@
-import { announcement, communityUrl } from '$lib/announcement'
-import { docsUrl, type Locale } from '$lib/site'
+import { announcement, communityUrl } from '#lib/announcement.ts'
+import { docsUrl, type Locale } from '#lib/site.ts'
 import { contactEmail } from './pages'
 import type { Action } from './product'
 

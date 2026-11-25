@@ -1,4 +1,4 @@
-import type { Locale } from '$lib/site'
+import type { Locale } from '#lib/site.ts'
 import { type AuthorId, authors, isAuthor } from './authors'
 import { type Category, categories, isCategory } from './categories'
 

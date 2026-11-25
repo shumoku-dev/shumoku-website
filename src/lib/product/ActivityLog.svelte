@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { formatDate } from '$lib/blog/post'
-  import type { ActivityItem, ActivityKind } from '$lib/content/activity'
+  import { formatDate } from '#lib/blog/post.ts'
+  import type { ActivityItem, ActivityKind } from '#lib/content/activity.ts'
 
   /** A plain dated log of releases, articles and events, newest first. */
   let {

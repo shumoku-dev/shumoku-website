@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Play } from '@lucide/svelte'
   import type { Picture } from 'vite-imagetools'
-  import type { Locale } from '$lib/site'
+  import type { Locale } from '#lib/site.ts'
   import { type PlayerProvider, players } from './providers'
 
   // A facade: only the stored thumbnail loads with the page. The third-party iframe (and its cookies)

@@ -12,7 +12,8 @@ The source tree has the following responsibilities:
 | --- | --- |
 | `src/routes` | Pages, layouts, endpoints and route-local files |
 | `src/lib` | Shared components, browser/server utilities, localized copy and imported assets |
-| `src/params` | Route parameter matchers |
+| `src/params.ts` | Route parameter matchers |
+| `src/env.ts` | Declared environment variables (`$app/env/private`) |
 | `src/content` | Markdown article bundles and their article-local media |
 | `static` | Files that require stable public URLs and must be served without transformation |
 | `scripts` | Repository maintenance and generated-source tooling |
@@ -20,7 +21,7 @@ The source tree has the following responsibilities:
 
 Unit tests stay next to the implementation as `*.test.ts`. Add a top-level `tests` directory only
 when browser-level Playwright tests are introduced. Keep files used only by one route beside that
-route; move reusable code to `src/lib` so it is available through SvelteKit's `$lib` alias.
+route; move reusable code to `src/lib` so it is available through the `#lib/*` subpath import declared in `package.json`.
 
 ## Asset boundary
 
@@ -32,5 +33,6 @@ static assets in favor of imports, and `@sveltejs/enhanced-img` only processes l
 ## References
 
 - [SvelteKit project structure](https://svelte.dev/docs/kit/project-structure)
-- [SvelteKit `$lib` alias](https://svelte.dev/docs/kit/$lib)
+- [SvelteKit `#lib` subpath imports](https://svelte.dev/docs/kit/$lib)
+- [SvelteKit environment variables](https://svelte.dev/docs/kit/environment-variables)
 - [SvelteKit image handling](https://svelte.dev/docs/kit/images)

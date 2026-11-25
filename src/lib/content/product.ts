@@ -1,4 +1,4 @@
-import { docsUrl, editorOrigin, type Locale } from '$lib/site'
+import { docsUrl, editorOrigin, type Locale } from '#lib/site.ts'
 
 /** Copy for Home, Features and Integrations. The Japanese text is the reviewed source. */
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import PageMeta from '$lib/PageMeta.svelte'
-  import Playground from '$lib/playground/Playground.svelte'
+  import PageMeta from '#lib/PageMeta.svelte'
+  import Playground from '#lib/playground/Playground.svelte'
 </script>
 <PageMeta
   title="Playground — Shumoku"
