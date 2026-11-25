@@ -115,7 +115,13 @@
         ><Languages size={20} />
         <span class="locale-name">{alternate === 'ja' ? '日本語' : 'EN'}</span></LinkButton
       >
-      <IconButton type="button" onclick={toggleTheme} label={t.theme} aria-pressed={dark}>
+      <IconButton
+        type="button"
+        class="theme-toggle"
+        onclick={toggleTheme}
+        label={t.theme}
+        aria-pressed={dark}
+      >
         {#if dark}
           <Sun size={20} />
         {:else}
@@ -163,14 +169,24 @@
       {/each}
     </nav>
     <div class="site-container menu-extra">
-      <a
-        class="menu-language"
-        href={`/${alternate}${path}`}
-        onclick={() => rememberLanguage(alternate)}
-        hreflang={alternate}
-        lang={alternate}
-        ><Languages size={20} aria-hidden="true" />{t.language}</a
-      >
+      <div class="menu-settings">
+        <a
+          class="menu-setting"
+          href={`/${alternate}${path}`}
+          onclick={() => rememberLanguage(alternate)}
+          hreflang={alternate}
+          lang={alternate}
+          ><Languages size={20} aria-hidden="true" />{t.language}</a
+        >
+        <button type="button" class="menu-setting" onclick={toggleTheme} aria-pressed={dark}>
+          {#if dark}
+            <Sun size={20} aria-hidden="true" />
+          {:else}
+            <Moon size={20} aria-hidden="true" />
+          {/if}
+          {t.theme}
+        </button>
+      </div>
       <ul class="menu-social">
         {#each socialLinks as link}
           <li>
@@ -287,7 +303,13 @@
     gap: var(--ui-space-4);
     margin-top: var(--ui-space-4);
   }
-  .menu-language {
+  .menu-settings {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ui-space-2);
+  }
+  .menu-setting {
+    box-sizing: border-box;
     display: inline-flex;
     align-items: center;
     gap: var(--ui-space-2);
@@ -295,8 +317,15 @@
     padding-inline: var(--ui-space-4);
     border: 1px solid var(--site-control-line);
     border-radius: var(--ui-radius);
+    background: transparent;
+    color: inherit;
+    font: inherit;
     font-weight: 500;
     text-decoration: none;
+    cursor: pointer;
+  }
+  .menu-setting[aria-pressed="true"] {
+    background: var(--ui-control-active);
   }
   .menu-social {
     display: flex;
@@ -322,7 +351,7 @@
       color: var(--site-accent);
     }
     .menu-social a:hover,
-    .menu-language:hover {
+    .menu-setting:hover {
       background: var(--ui-control-active);
       color: var(--site-fg);
     }
@@ -331,7 +360,7 @@
   /*
    * The header keeps two viewport queries. The menu breakpoint is its own: it follows from the width
    * of seven destinations, not from the page grid. The 850px one is the page breakpoint, where the
-   * controls compact and GitHub moves into the menu.
+   * controls compact and GitHub and the theme toggle move into the menu.
    */
   @media (max-width: 1100px) {
     .desktop-nav {
@@ -352,7 +381,7 @@
     }
   }
   @media (max-width: 850px) {
-    .header-controls :global(.github-link) {
+    .header-controls :global(:is(.github-link, .theme-toggle)) {
       display: none;
     }
     .header-controls :global(.locale-link) {
@@ -363,7 +392,7 @@
       display: none;
     }
     .header-controls {
-      gap: 0;
+      gap: var(--ui-space-2);
     }
     .header-row {
       gap: var(--ui-space-4);

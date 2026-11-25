@@ -1,18 +1,20 @@
 <script lang="ts">
   import AnalyticsSettings from '#lib/analytics/AnalyticsSettings.svelte'
-  import lockup from '#lib/assets/brand/logo-horizontal.svg?url'
+  import lockupSource from '#lib/assets/brand/logo-lockup.svg?raw'
   import { footerContent, socialLinks } from '#lib/content/footer.ts'
   import type { Locale } from '#lib/site.ts'
   import SocialIcon from './SocialIcon.svelte'
 
   let { locale }: { locale: Locale } = $props()
   const content = $derived(footerContent(locale))
+  /* Inline so the near-black wordmark can follow the text colour in dark mode; the wing stays green. */
+  const lockup = lockupSource.replace('fill="#10201a"', 'fill="currentColor"')
 </script>
 
 <footer class="site-footer">
   <div class="site-container footer-main">
     <div class="footer-brand">
-      <a href={`/${locale}`} class="footer-logo"><img src={lockup} alt="Shumoku"></a>
+      <a href={`/${locale}`} class="footer-logo">{@html lockup}</a>
       <p class="footer-summary">{content.summary}</p>
       <ul class="footer-social">
         {#each socialLinks as link}
@@ -74,11 +76,12 @@
   }
   .footer-logo {
     display: block;
+    color: var(--site-fg);
   }
   /* The lockup keeps its intrinsic ratio; only the height is set. */
-  .footer-logo img {
+  .footer-logo :global(svg) {
     display: block;
-    block-size: 2.25rem;
+    block-size: 3.25rem;
     inline-size: auto;
   }
   .footer-summary {

@@ -20,10 +20,11 @@ maintained usage instructions. Do not put dated event reports in the reference d
 
 Header order: Docs, Features (機能), Integrations (連携), Playground, Blog, Community,
 For teams (導入相談). At 1100px and below the links move into a full-screen menu sheet
-(a `popover`), which also holds the language switch and the GitHub, X and Discord links; from
-850px the header bar itself keeps only the wordmark, language, theme and menu buttons. About
+(a `popover`), which also holds the language and theme switches and the GitHub, X and Discord
+links; from 850px the header bar itself keeps only the wordmark, language and menu buttons. About
 remains in the footer and contextual links; its URL is unchanged. The footer leads with the
-horizontal lockup (`logo-horizontal.svg`), a one-line summary and the same social links, then
+product lockup (`src/lib/assets/brand/logo-lockup.svg`, copied from the product
+repository's `assets/logos`; its wordmark is inlined with `currentColor` so it follows dark mode), a one-line summary and the same social links, then
 the groups Use Shumoku (Docs, Features, Integrations, Playground, Editor) / Project (About,
 Blog, Community, connpass, event quick links) / Support (For teams, Contact). License,
 Privacy and analytics preferences sit in a bottom row. Footer copy lives in
