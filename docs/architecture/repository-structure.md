@@ -33,5 +33,6 @@ static assets in favor of imports, and `@sveltejs/enhanced-img` only processes l
 ## References
 
 - [SvelteKit project structure](https://svelte.dev/docs/kit/project-structure)
-- [SvelteKit `#lib` imports](https://svelte.dev/docs/kit/#lib)
+- [SvelteKit `#lib` subpath imports](https://svelte.dev/docs/kit/$lib)
+- [SvelteKit environment variables](https://svelte.dev/docs/kit/environment-variables)
 - [SvelteKit image handling](https://svelte.dev/docs/kit/images)
