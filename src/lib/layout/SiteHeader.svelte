@@ -238,6 +238,19 @@
   .menu-button {
     display: none;
   }
+  /*
+   * The sun/moon icon already shows the theme. Without this, the shared pressed style leaves a
+   * filled block on the button for as long as dark mode is on, which reads as a stuck hover.
+   */
+  .header-controls :global(.ui-control.ui-control--ghost.theme-toggle[aria-pressed="true"]) {
+    background: transparent;
+  }
+  @media (hover: hover) {
+    .header-controls
+      :global(.ui-control.ui-control--ghost.theme-toggle[aria-pressed="true"]:hover) {
+      background: var(--ui-control-hover);
+    }
+  }
 
   /* Hidden until opened: the user-agent rule hides a closed popover, so only the open state sets display. */
   .site-menu {
