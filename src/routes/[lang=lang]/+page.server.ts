@@ -1,16 +1,16 @@
-import { announcement } from '$lib/announcement'
-import { posts } from '$lib/blog/posts.server'
-import type { ActivityItem } from '$lib/content/activity'
-import { releaseItems } from '$lib/content/activity'
-import { diagramNames, diagramSizes } from '$lib/product/diagrams.server'
-import { exampleDiagramName, examplePorts } from '$lib/product/example'
+import { announcement } from '#lib/announcement.ts'
+import { posts } from '#lib/blog/posts.server.ts'
+import type { ActivityItem } from '#lib/content/activity.ts'
+import { releaseItems } from '#lib/content/activity.ts'
+import { diagramNames, diagramSizes } from '#lib/product/diagrams.server.ts'
+import { exampleDiagramName, examplePorts } from '#lib/product/example.ts'
 import type { PageServerLoad } from './$types'
 
 export const prerender = true
 export const entries = () => [{ lang: 'en' }, { lang: 'ja' }]
 
 export const load: PageServerLoad = async ({ params }) => {
-  const lang = params.lang === 'ja' ? 'ja' : 'en'
+  const { lang } = params
   const event: ActivityItem = {
     date: announcement.expiresAt.slice(0, 10),
     kind: 'event',

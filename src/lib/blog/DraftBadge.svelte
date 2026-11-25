@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Locale } from '$lib/site'
+  import type { Locale } from '#lib/site.ts'
 
   // Drafts are only listed on the dev server; the badge keeps them from passing as published.
   let { lang }: { lang: Locale } = $props()

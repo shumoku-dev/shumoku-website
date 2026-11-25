@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Button from '$lib/ui/Button.svelte'
-  import Disclosure from '$lib/ui/Disclosure.svelte'
+  import Button from '#lib/ui/Button.svelte'
+  import Disclosure from '#lib/ui/Disclosure.svelte'
   import type { Format } from './export'
 
   let {

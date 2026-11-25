@@ -1,4 +1,4 @@
-import { docsOrigin, editorOrigin, websiteOrigin } from '$lib/site'
+import { docsOrigin, editorOrigin, websiteOrigin } from '#lib/site.ts'
 export const prerender = true
 export const GET = () =>
   new Response(

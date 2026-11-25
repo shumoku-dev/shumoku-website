@@ -1,5 +1,5 @@
-import type { Handle } from '@sveltejs/kit'
-import { legacyDestination } from '$lib/legacy'
+import type { Handle } from '@sveltejs/kit/hooks'
+import { legacyDestination } from '#lib/legacy.ts'
 
 export const handle: Handle = async ({ event, resolve }) => {
   if (event.request.method === 'GET' || event.request.method === 'HEAD') {

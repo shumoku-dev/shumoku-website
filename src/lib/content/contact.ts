@@ -1,4 +1,4 @@
-import type { Locale } from '$lib/i18n'
+import type { Locale } from '#lib/i18n/index.ts'
 
 export const contactAddress = 'contact@shumoku.dev'
 export const contactSender = `Shumoku <${contactAddress}>`

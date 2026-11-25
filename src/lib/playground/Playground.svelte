@@ -1,8 +1,8 @@
 <script lang="ts">
   import { sampleNetwork } from '@shumoku/core'
-  import Button from '$lib/ui/Button.svelte'
-  import FileTabs from '$lib/ui/FileTabs.svelte'
-  import Notice from '$lib/ui/Notice.svelte'
+  import Button from '#lib/ui/Button.svelte'
+  import FileTabs from '#lib/ui/FileTabs.svelte'
+  import Notice from '#lib/ui/Notice.svelte'
   import CodeEditor from './CodeEditor.svelte'
   import './workbench.css'
   import { exportDiagram, type Format } from './export'

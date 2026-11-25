@@ -1,7 +1,7 @@
 <script lang="ts">
-  import AnalyticsSettings from '$lib/analytics/AnalyticsSettings.svelte'
-  import PageHeading from '$lib/layout/PageHeading.svelte'
-  import PageMeta from '$lib/PageMeta.svelte'
+  import AnalyticsSettings from '#lib/analytics/AnalyticsSettings.svelte'
+  import PageHeading from '#lib/layout/PageHeading.svelte'
+  import PageMeta from '#lib/PageMeta.svelte'
   import type { PageData } from './$types'
 
   let { data }: { data: PageData } = $props()

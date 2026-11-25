@@ -1,4 +1,4 @@
-import { websiteOrigin } from '$lib/site'
+import { websiteOrigin } from '#lib/site.ts'
 export const prerender = true
 export const GET = () =>
   new Response(

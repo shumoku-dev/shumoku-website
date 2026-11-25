@@ -1,6 +1,6 @@
 <script lang="ts">
-  import BlogIndex from '$lib/blog/BlogIndex.svelte'
-  import { categories } from '$lib/blog/categories'
+  import BlogIndex from '#lib/blog/BlogIndex.svelte'
+  import { categories } from '#lib/blog/categories.ts'
   import type { PageData } from './$types'
 
   let { data }: { data: PageData } = $props()

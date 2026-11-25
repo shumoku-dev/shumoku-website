@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto'
-import { type ContactSignupResult, contactGreeting, contactSender } from '$lib/content/contact'
-import type { Locale } from '$lib/i18n'
+import { type ContactSignupResult, contactGreeting, contactSender } from '#lib/content/contact.ts'
+import type { Locale } from '#lib/i18n/index.ts'
 
 const resendApi = 'https://api.resend.com'
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/

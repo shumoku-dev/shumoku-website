@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
-  import type { Action } from '$lib/content/product'
+  import type { Action } from '#lib/content/product.ts'
   import Actions from './Actions.svelte'
 
   /**

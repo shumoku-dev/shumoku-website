@@ -1,5 +1,5 @@
 <script lang="ts">
-  import BlogIndex from '$lib/blog/BlogIndex.svelte'
+  import BlogIndex from '#lib/blog/BlogIndex.svelte'
   import type { PageData } from './$types'
 
   let { data }: { data: PageData } = $props()

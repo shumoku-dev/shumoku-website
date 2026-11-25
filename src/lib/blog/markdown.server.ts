@@ -5,7 +5,7 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
 import { parse as parseYaml } from 'yaml'
-import type { Locale } from '$lib/site'
+import type { Locale } from '#lib/site.ts'
 import remarkEmbeds from './embeds/remark.ts'
 import { embedTag, galleryTag, type MarkdownNode } from './markdown.ts'
 

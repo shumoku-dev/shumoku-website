@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Locale } from '$lib/site'
+  import type { Locale } from '#lib/site.ts'
   import LinkCard from './LinkCard.svelte'
   import { articleEmbed, embedImage } from './lock'
   import PlayerEmbed from './PlayerEmbed.svelte'

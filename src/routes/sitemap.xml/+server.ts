@@ -1,5 +1,5 @@
-import { categoriesOf, publishedPosts } from '$lib/blog/posts.server'
-import { locales, sitePages, websiteOrigin } from '$lib/site'
+import { categoriesOf, publishedPosts } from '#lib/blog/posts.server.ts'
+import { locales, sitePages, websiteOrigin } from '#lib/site.ts'
 export const prerender = true
 const entries: { path: string; lastmod?: string }[] = [
   ...sitePages.map((page) => ({ path: page.path })),

@@ -1,11 +1,11 @@
 <script lang="ts">
-  import laptops from '$lib/assets/photos/meetup-1-laptops.webp?enhanced'
-  import { pagesCopy } from '$lib/content/pages'
-  import PageHeading from '$lib/layout/PageHeading.svelte'
-  import PageMeta from '$lib/PageMeta.svelte'
-  import ConditionList from '$lib/product/ConditionList.svelte'
-  import Frame from '$lib/product/Frame.svelte'
-  import Section from '$lib/product/Section.svelte'
+  import laptops from '#lib/assets/photos/meetup-1-laptops.webp?enhanced'
+  import { pagesCopy } from '#lib/content/pages.ts'
+  import PageHeading from '#lib/layout/PageHeading.svelte'
+  import PageMeta from '#lib/PageMeta.svelte'
+  import ConditionList from '#lib/product/ConditionList.svelte'
+  import Frame from '#lib/product/Frame.svelte'
+  import Section from '#lib/product/Section.svelte'
   import type { PageData } from './$types'
 
   let { data }: { data: PageData } = $props()

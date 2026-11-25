@@ -57,5 +57,8 @@
     "vite": "^8.2.2",
     "vite-imagetools": "^9.0.3",
     "vitest": "^5.0.0"
+  },
+  "imports": {
+    "#lib/*": "./src/lib/*"
   }
 }

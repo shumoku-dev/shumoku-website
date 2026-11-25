@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Locale } from '$lib/site'
+  import type { Locale } from '#lib/site.ts'
   import ArticleImage from './ArticleImage.svelte'
   import Embed from './embeds/Embed.svelte'
   import { embedTag, galleryTag, type MarkdownNode } from './markdown'

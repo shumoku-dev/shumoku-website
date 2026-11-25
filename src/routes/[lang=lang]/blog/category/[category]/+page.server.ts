@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit'
-import { isCategory } from '$lib/blog/categories'
-import { categoriesOf, posts, publishedPosts, usedCategories } from '$lib/blog/posts.server'
-import { locales } from '$lib/site'
+import { isCategory } from '#lib/blog/categories.ts'
+import { categoriesOf, posts, publishedPosts, usedCategories } from '#lib/blog/posts.server.ts'
+import { locales } from '#lib/site.ts'
 import type { EntryGenerator, PageServerLoad } from './$types'
 
 export const prerender = true

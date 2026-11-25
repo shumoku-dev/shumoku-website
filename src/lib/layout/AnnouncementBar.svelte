@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import { announcement, isAnnouncementActive } from '$lib/announcement'
-  import type { Locale } from '$lib/site'
+  import { announcement, isAnnouncementActive } from '#lib/announcement.ts'
+  import type { Locale } from '#lib/site.ts'
 
   let { locale }: { locale: Locale } = $props()
   const copy = $derived(announcement[locale])

@@ -1,4 +1,4 @@
-import type { Locale } from '$lib/site'
+import type { Locale } from '#lib/site.ts'
 
 /**
  * Releases shown in the Home activity log, newest first. Dates and tags come from the product

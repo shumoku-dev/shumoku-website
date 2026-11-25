@@ -1,9 +1,9 @@
 <script lang="ts">
-  import topology from '$lib/assets/screenshots/topology.png?enhanced'
-  import weathermap from '$lib/assets/screenshots/wethermap.png?enhanced'
-  import { productCopy } from '$lib/content/product'
-  import type { Locale } from '$lib/site'
-  import LinkButton from '$lib/ui/LinkButton.svelte'
+  import topology from '#lib/assets/screenshots/topology.png?enhanced'
+  import weathermap from '#lib/assets/screenshots/wethermap.png?enhanced'
+  import { productCopy } from '#lib/content/product.ts'
+  import type { Locale } from '#lib/site.ts'
+  import LinkButton from '#lib/ui/LinkButton.svelte'
   import Frame from './Frame.svelte'
 
   /** The whole map first, then one link up close: overview and detail from the same screen. */

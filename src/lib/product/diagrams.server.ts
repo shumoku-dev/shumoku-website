@@ -1,6 +1,6 @@
 import { parser } from '@shumoku/core'
 import { prepareRender, renderSvg } from '@shumoku/renderer-svg'
-import { foundationPalettes, paletteColor } from '$lib/ui/palette-model'
+import { foundationPalettes, paletteColor } from '#lib/ui/palette-model.ts'
 import type { DiagramSize } from './diagrams'
 import { exampleDiagramName, examplePorts, exampleYaml } from './example'
 

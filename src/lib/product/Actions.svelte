@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { Action } from '$lib/content/product'
-  import LinkButton from '$lib/ui/LinkButton.svelte'
+  import type { Action } from '#lib/content/product.ts'
+  import LinkButton from '#lib/ui/LinkButton.svelte'
 
   /** The first action is the section's next step; the rest are quieter text links. */
   let {

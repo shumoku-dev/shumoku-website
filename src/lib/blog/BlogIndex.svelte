@@ -1,7 +1,7 @@
 <script lang="ts">
-  import PageMeta from '$lib/PageMeta.svelte'
-  import Frame from '$lib/product/Frame.svelte'
-  import type { Locale } from '$lib/site'
+  import PageMeta from '#lib/PageMeta.svelte'
+  import Frame from '#lib/product/Frame.svelte'
+  import type { Locale } from '#lib/site.ts'
   import { authors } from './authors'
   import { type Category, categories } from './categories'
   import DraftBadge from './DraftBadge.svelte'

@@ -1,11 +1,11 @@
 <script lang="ts">
-  import netbox from '$lib/assets/screenshots/netbox.png?enhanced'
-  import { productCopy } from '$lib/content/product'
-  import PageHeading from '$lib/layout/PageHeading.svelte'
-  import PageMeta from '$lib/PageMeta.svelte'
-  import DataTable from '$lib/product/DataTable.svelte'
-  import Frame from '$lib/product/Frame.svelte'
-  import Section from '$lib/product/Section.svelte'
+  import netbox from '#lib/assets/screenshots/netbox.png?enhanced'
+  import { productCopy } from '#lib/content/product.ts'
+  import PageHeading from '#lib/layout/PageHeading.svelte'
+  import PageMeta from '#lib/PageMeta.svelte'
+  import DataTable from '#lib/product/DataTable.svelte'
+  import Frame from '#lib/product/Frame.svelte'
+  import Section from '#lib/product/Section.svelte'
   import type { PageData } from './$types'
 
   let { data }: { data: PageData } = $props()

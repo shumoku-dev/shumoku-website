@@ -1,7 +1,7 @@
 <script lang="ts">
-  import AnalyticsSettings from '$lib/analytics/AnalyticsSettings.svelte'
-  import { communityUrl } from '$lib/announcement'
-  import { docsUrl, editorOrigin, type Locale } from '$lib/site'
+  import AnalyticsSettings from '#lib/analytics/AnalyticsSettings.svelte'
+  import { communityUrl } from '#lib/announcement.ts'
+  import { docsUrl, editorOrigin, type Locale } from '#lib/site.ts'
 
   let { locale }: { locale: Locale } = $props()
   const columns = $derived([

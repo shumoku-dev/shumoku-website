@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Action } from '$lib/content/product'
+  import type { Action } from '#lib/content/product.ts'
   import CommandPanel from './CommandPanel.svelte'
 
   /** The numbered way in, on columns 1 to 9. The second and third steps show their real command. */
