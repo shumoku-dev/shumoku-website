@@ -5,6 +5,7 @@
 
 .ui-marker-label {
   display: inline-block;
+  padding-block: var(--ui-marker-block);
   padding-inline: var(--ui-marker-inset);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;

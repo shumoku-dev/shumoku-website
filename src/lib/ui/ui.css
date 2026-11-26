@@ -22,7 +22,12 @@
   --ui-leading: 1.5rem;
   --ui-workspace-chrome: var(--ui-surface);
   --ui-workspace-canvas: var(--site-bg);
-  --ui-marker-inset: var(--ui-space-1);
+  --ui-marker-inset: var(--ui-space-2);
+  /*
+   * Uneven on purpose: line boxes put Japanese and descender-less labels about 1px above the
+   * optical centre, so the label sits 1px lower inside its 28px marker.
+   */
+  --ui-marker-block: 0.1875rem 0.0625rem;
   --ui-marker-bg: var(--ui-primary);
   --ui-marker-fg: var(--ui-on-primary);
 }
