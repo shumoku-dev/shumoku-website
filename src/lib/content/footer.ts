@@ -14,7 +14,7 @@ export type SocialIcon = (typeof socialLinks)[number]['icon']
 
 const copy = {
   ja: {
-    summary: '機器とポートの接続情報から、ネットワーク構成図を生成するオープンソースソフトウェア。',
+    summary: '機器から集めた接続情報でネットワーク構成図を作る、オープンソースのソフトウェア。',
     license: 'AGPL-3.0 のオープンソース',
     privacy: 'プライバシー',
     groups: {
@@ -34,7 +34,7 @@ const copy = {
   },
   en: {
     summary:
-      'Open-source software that generates network diagrams from device and port connection data.',
+      'Open-source software that draws network diagrams from the connection data your devices report.',
     license: 'Open source under AGPL-3.0',
     privacy: 'Privacy',
     groups: {

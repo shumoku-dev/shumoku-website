@@ -44,8 +44,8 @@ commercial infrastructure product. Do not bury the commercial route in the foote
 or imply that community participation is only for individuals. Keep both paths visible.
 This is a positioning decision, not a new pricing, licensing or SLA program.
 
-The Home sequence is hero (real JANOG57 screen and the latest release) → treating the network
-as data → generated diagrams → scenes in operations → adoption → existing integrations → try
+The Home sequence is hero (real JANOG57 screen and the latest release) → what Shumoku does
+(collect, draw, overlay) → treating the network as data → generated diagrams → scenes in operations → adoption → existing integrations → try
 and deploy (real commands) → questions → open source with a dated activity log. Details move to Features and Integrations; Home links to each. How the sections are
 expressed is recorded in [expression.md](expression.md). The closing section connects
 open-source deployment with optional hands-on commercial help.

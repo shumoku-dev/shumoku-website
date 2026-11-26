@@ -69,6 +69,15 @@
     {/snippet}
   </Section>
 
+  <Section id="people" title={t.people.title} actions={t.people.links} plainActions>
+    {#each t.people.body as paragraph (paragraph)}
+      <p>{paragraph}</p>
+    {/each}
+    {#snippet media()}
+      <ConditionList items={t.people.members} />
+    {/snippet}
+  </Section>
+
   <Section id="about-community" title={t.community.title} actions={t.community.links} plainActions>
     <p>{t.community.body}</p>
     {#snippet media()}

@@ -12,6 +12,7 @@
 <PageMeta title={`${copy.title} | Shumoku`} description={copy.description} />
 <main id="main" class="connect">
   <h1>{copy.title}</h1>
+  <p class="lead">{copy.lead}</p>
   <nav aria-label={copy.title}>
     {#each connectLinks as link}
       <a href={link.href} class="destination">
@@ -67,7 +68,15 @@
     font-size: 1.5rem;
     font-weight: 600;
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .lead {
+    margin: 0 0 1.5rem;
+    color: var(--site-muted);
+    font-size: 0.9375rem;
+    line-height: 1.8;
+    text-align: center;
+    text-wrap: pretty;
   }
   nav {
     display: grid;
