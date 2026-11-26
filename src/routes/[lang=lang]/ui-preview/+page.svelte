@@ -103,7 +103,7 @@
       <p>選択・ホバーは不透明な緑背景と白文字。文字の太さは変えない。</p>
     </div>
     <div class="section-content">
-      <p>NavLinkとTabsの共通仕様。文字の左右に0.25remの余白を取り、操作領域とは分離しています。</p>
+      <p>NavLinkとTabsの共通仕様。文字の左右に0.375remの余白を取り、操作領域とは分離しています。</p>
       <Tabs
         id="marker"
         label="文字マーカー"

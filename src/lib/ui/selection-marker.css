@@ -5,8 +5,10 @@
 
 .ui-marker-label {
   display: inline-block;
-  padding-block: var(--ui-marker-block);
+  /* Shorter line plus top padding: same outer height, text lowered by --ui-marker-nudge. */
+  padding-block: calc(2 * var(--ui-marker-nudge)) 0;
   padding-inline: var(--ui-marker-inset);
+  line-height: calc(var(--ui-leading) - 2 * var(--ui-marker-nudge));
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
