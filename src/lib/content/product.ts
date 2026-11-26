@@ -167,7 +167,7 @@ const ja = (l: Locale) => ({
       items: [
         {
           title: '運用画面を見る',
-          body: 'ライブデモで、トラフィックが表示された構成図を閲覧できます。',
+          body: 'ライブデモで、通信量を重ねた構成図を閲覧できます。',
           action: { label: 'ライブデモ', href: liveDemoUrl },
         },
         {
@@ -289,6 +289,11 @@ const ja = (l: Locale) => ({
         ['NetBox', '登録された機器・ケーブル情報', 'NetBox への接続情報と API アクセス権'],
         ['SNMP・LLDP による探索', '機器と隣接接続', '探索を始める機器、到達性、SNMP の接続設定'],
         ['Zabbix', 'ホストと LLDP の隣接情報', 'Zabbix への接続設定と必要な収集データ'],
+        [
+          'Arista CV-CUE、Huawei iMaster NCE-Campus、New Relic',
+          '各システムが把握している機器と接続',
+          '各システムへの接続設定と API アクセス権',
+        ],
       ],
       note: '探索で図にできるのは、機器から取得できた接続です。LLDP の隣接情報を取得できない接続もあるため、描きたい範囲の情報が入力元にそろっているかを確認します。',
       imageAlt: 'NetBox をデータソースとして設定する画面',
@@ -298,11 +303,13 @@ const ja = (l: Locale) => ({
       body: 'Server は、既存の監視ツールから通信量やアラートを取得し、構成図に表示します。監視ツール側で収集しているデータと、Shumoku の連携機能に応じて、表示できる情報が決まります。',
       head: ['ソース', '主な取得情報'],
       rows: [
-        ['Zabbix', 'トラフィック、ホスト情報、アラート'],
+        ['Zabbix', '通信量、ホスト情報、アラート'],
         ['Prometheus', 'メトリクス、ホスト情報、Alertmanager のアラート'],
         ['Grafana', 'Webhook または Alertmanager 経由のアラート'],
         ['Aruba Instant On', 'ホスト情報、メトリクス、アラート'],
         ['Arista CV-CUE', 'AP・スイッチの情報、メトリクス、アラート'],
+        ['Huawei iMaster NCE-Campus', 'ホスト情報、メトリクス、アラート'],
+        ['New Relic', 'ホスト情報、メトリクス、アラート'],
       ],
       settings:
         '接続先の URL、認証情報、取得対象などを Server のデータソース設定で指定します。必要な項目はソースごとに異なります。',
@@ -613,6 +620,11 @@ const en = (l: Locale): ReturnType<typeof ja> => ({
           'Hosts and LLDP neighbor data',
           'Zabbix connection settings and the required collected data',
         ],
+        [
+          'Arista CV-CUE, Huawei iMaster NCE-Campus, New Relic',
+          'The devices and links each system knows',
+          'Connection settings and API access for each system',
+        ],
       ],
       note: 'Discovery can only draw the connections that devices report. Some links have no LLDP neighbor data, so check that the source covers the area you want to draw.',
       imageAlt: 'Configuring NetBox as a data source',
@@ -627,6 +639,8 @@ const en = (l: Locale): ReturnType<typeof ja> => ({
         ['Grafana', 'Alerts via webhook or Alertmanager'],
         ['Aruba Instant On', 'Host information, metrics, alerts'],
         ['Arista CV-CUE', 'AP and switch information, metrics, alerts'],
+        ['Huawei iMaster NCE-Campus', 'Host information, metrics, alerts'],
+        ['New Relic', 'Host information, metrics, alerts'],
       ],
       settings:
         'Set the endpoint URL, credentials and targets in Server’s data source settings. The required fields differ by source.',

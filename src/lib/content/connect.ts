@@ -30,13 +30,15 @@ export const connectLinks = [
 export const connectCopy = {
   ja: {
     title: 'リンク集',
-    description: 'デモ・イベント・コミュニティ。',
+    lead: 'Shumoku（しゅもく）は、機器から集めた接続情報でネットワーク構成図を作る、オープンソースのソフトウェアです。',
+    description: 'Shumoku のデモ、イベント、コミュニティへのリンク。',
     try: 'Playgroundで試す',
     about: 'Shumokuについて',
   },
   en: {
     title: 'Links',
-    description: 'Demo, events and community.',
+    lead: 'Shumoku is open-source software that draws network diagrams from the connection data your devices report.',
+    description: 'Links to the Shumoku demo, events and community.',
     try: 'Try the Playground',
     about: 'About Shumoku',
   },

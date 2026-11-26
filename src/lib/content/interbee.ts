@@ -72,7 +72,7 @@ const ja = (l: Locale): InterbeeCopy => ({
     ],
   },
   title: 'IP 化した設備にも、地図を。',
-  lead: '機器から集めた接続情報で構成図を描き、その上に通信量と監視のアラームを重ねて表示します。配線を変えても、集め直せば図が追いつきます。',
+  lead: '機器から集めた接続情報で構成図を描き、その上に通信量と監視のアラートを重ねて表示します。配線を変えても、集め直せば図が追いつきます。',
   places: {
     label: '会場で見られる場所',
     items: [
@@ -96,7 +96,7 @@ const ja = (l: Locale): InterbeeCopy => ({
     title: '遠く離れた拠点を、一つのシステムとして見る。',
     body: [
       'BEEMO では、拠点の設備を見守る仕事を統合監視・構成管理・PTP 監視などに分け、複数の製品で受け持っています。Shumoku の担当は構成管理です。',
-      '各機器から LLDP / SNMP で集めた接続情報で拠点をまたぐ構成図を描き、Zabbix のアラームと通信量を重ねています。',
+      '各機器から LLDP / SNMP で集めた接続情報で拠点をまたぐ構成図を描き、Zabbix のアラートと通信量を重ねています。',
     ],
     overviewAlt:
       '会場デモの全体図。幕張・大阪・東京・名古屋の拠点ごとに機器をまとめ、拠点をまたぐ接続を線で描いている',
@@ -104,10 +104,10 @@ const ja = (l: Locale): InterbeeCopy => ({
     sites:
       '左から 幕張（会場）、大阪（堂島）、東京（赤坂）、名古屋。図をタップすると原寸で開きます。',
     detailAlt:
-      '拡大図。アラームの出ているアクセスポイントが黄色の枠で強調され、右側にアラームの一覧が並んでいる',
+      '拡大図。アラートの出ているアクセスポイントが黄色の枠で強調され、右側にアラートの一覧が並んでいる',
     points: [
       'ポートごとのつながり。機器とポートごとに、接続先が分かります。',
-      'Zabbix のアラーム。アラームの出た機器が、図の上に表示されます。',
+      'Zabbix のアラート。アラートの出た機器が、図の上に表示されます。',
     ],
     integrations:
       'Prometheus・Grafana にも対応しています。自社の環境に合わせた連携も、ご相談ください。',
@@ -117,7 +117,7 @@ const ja = (l: Locale): InterbeeCopy => ({
     title: 'Shumoku でできること',
     items: [
       'ポートまで分かる。機器ごとのポートと、その接続先まで表示します。',
-      '異常の場所が分かる。監視システムのアラームを、該当する機器に表示します。',
+      '異常の場所が分かる。監視システムのアラートを、該当する機器に表示します。',
       '通信量が線で分かる。機器のあいだのデータ量を、線の色で表示します。',
     ],
   },
@@ -185,7 +185,7 @@ const en = (l: Locale): InterbeeCopy => ({
     ],
   },
   title: 'A map for IP-based facilities',
-  lead: 'Shumoku draws your network diagram from connection data collected from the devices, then overlays traffic and monitoring alarms on it. When the cabling changes, collect again and the diagram catches up.',
+  lead: 'Shumoku draws your network diagram from connection data collected from the devices, then overlays traffic and monitoring alerts on it. When the cabling changes, collect again and the diagram catches up.',
   places: {
     label: 'Where to see it',
     items: [
@@ -209,7 +209,7 @@ const en = (l: Locale): InterbeeCopy => ({
     title: 'Distant sites, seen as one system.',
     body: [
       'BEEMO splits the work of watching over the sites’ facilities into integrated monitoring, configuration management, PTP monitoring and more, each handled by different products. Shumoku handles configuration management.',
-      'It draws a diagram across the sites from connection data collected from each device over LLDP / SNMP, with Zabbix alarms and traffic overlaid.',
+      'It draws a diagram across the sites from connection data collected from each device over LLDP / SNMP, with Zabbix alerts and traffic overlaid.',
     ],
     overviewAlt:
       'Overview of the venue demo: devices grouped by site (Makuhari, Osaka, Tokyo, Nagoya), with the links between sites drawn as lines',
@@ -217,10 +217,10 @@ const en = (l: Locale): InterbeeCopy => ({
     sites:
       'From the left: Makuhari (the venue), Osaka (Dojima), Tokyo (Akasaka), Nagoya. Tap the diagram to open it at full size.',
     detailAlt:
-      'Close-up: an access point with an alarm is outlined in yellow, with the list of alarms beside it',
+      'Close-up: an access point with an alert is outlined in yellow, with the list of alerts beside it',
     points: [
       'Connections by port. For each device and port, you can see what it connects to.',
-      'Zabbix alarms. Devices with an alarm are marked on the diagram.',
+      'Zabbix alerts. Devices with an alert are marked on the diagram.',
     ],
     integrations:
       'Prometheus and Grafana are supported too. Ask us about integrations for your own environment.',
@@ -230,7 +230,7 @@ const en = (l: Locale): InterbeeCopy => ({
     title: 'What Shumoku does',
     items: [
       'Down to the port. Each device’s ports and what they connect to.',
-      'Where the problem is. Alarms from your monitoring, on the affected device.',
+      'Where the problem is. Alerts from your monitoring, on the affected device.',
       'Traffic on every line. The data between devices, shown by the line’s color.',
     ],
   },

@@ -88,6 +88,24 @@ const ja = (l: Locale) => ({
         { label: '設計思想', href: `${repo}/blob/main/docs/PHILOSOPHY.md` },
       ],
     },
+    people: {
+      title: 'つくっている人',
+      body: [
+        'Shumoku は、Shumoku Project が開発しているオープンソースソフトウェアです。技術方針とリリースは、プロジェクトリードとメンテナーが決めています。',
+        '導入や連携の作業を有償で支援する商用サポートは、商用サポートパートナーと協力して提供しています。',
+      ],
+      members: [
+        { term: '佐伯 明俊', detail: 'プロジェクトリード・作者　@konoe-akitoshi' },
+        { term: 'Joichiro Hayashi', detail: 'メンテナー　@jo16oh' },
+        { term: 'Koichi Hirachi', detail: 'メンテナー　@csenet' },
+        { term: '黒猫', detail: 'メンテナー　@jg1vxg' },
+        { term: 'nullpo7z', detail: 'メンテナー　@nullpo7z' },
+      ],
+      links: [
+        { label: 'プロジェクトの運営方針', href: `${repo}/blob/main/GOVERNANCE.md` },
+        { label: '導入相談', href: `/${l}/support` },
+      ],
+    },
     community: {
       title: 'コミュニティと育てる',
       body: '2026年9月8日、最初の Shumoku Meetup を開催しました。ネットワーク図の使い方を発表する人、PCを持ち寄る人、会話を楽しむ人。コードだけでなく、使う人どうしが出会う場もつくっています。',
@@ -223,6 +241,24 @@ const en = (l: Locale): ReturnType<typeof ja> => ({
           href: `${repo}/blob/main/docs/ORIGIN.md`,
         },
         { label: 'Design philosophy (Japanese)', href: `${repo}/blob/main/docs/PHILOSOPHY.md` },
+      ],
+    },
+    people: {
+      title: 'Who builds it',
+      body: [
+        'Shumoku is open-source software developed by the Shumoku Project. The project lead and the maintainers decide technical direction and releases.',
+        'Paid help with deployment and integration is provided together with commercial support partners.',
+      ],
+      members: [
+        { term: 'Akitoshi Saeki', detail: 'Project lead and author, @konoe-akitoshi' },
+        { term: 'Joichiro Hayashi', detail: 'Maintainer, @jo16oh' },
+        { term: 'Koichi Hirachi', detail: 'Maintainer, @csenet' },
+        { term: '黒猫', detail: 'Maintainer, @jg1vxg' },
+        { term: 'nullpo7z', detail: 'Maintainer, @nullpo7z' },
+      ],
+      links: [
+        { label: 'Governance', href: `${repo}/blob/main/GOVERNANCE.md` },
+        { label: 'For teams', href: `/${l}/support` },
       ],
     },
     community: {
