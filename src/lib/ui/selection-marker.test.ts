@@ -46,4 +46,11 @@ describe('shared text marker', () => {
     expect(css).toContain('padding-inline: var(--ui-marker-inset)')
     expect(css).not.toMatch(/font-weight|opacity|text-stroke|color-mix/)
   })
+
+  it('keeps the marker one line tall while lowering its text', () => {
+    const css = readFileSync(new URL('./selection-marker.css', import.meta.url), 'utf8')
+    // What the line loses must come back as top padding, or the marker stops matching the line.
+    expect(css).toContain('padding-block: calc(2 * var(--ui-marker-nudge)) 0')
+    expect(css).toContain('line-height: calc(var(--ui-leading) - 2 * var(--ui-marker-nudge))')
+  })
 })

@@ -22,7 +22,13 @@
   --ui-leading: 1.5rem;
   --ui-workspace-chrome: var(--ui-surface);
   --ui-workspace-canvas: var(--site-bg);
-  --ui-marker-inset: var(--ui-space-1);
+  /* At least the clearance above and below the text once it is centred (about 5.5px for kanji). */
+  --ui-marker-inset: 0.375rem;
+  /*
+   * The marker stays one line (--ui-leading) tall. Line boxes put Japanese and descender-less
+   * labels about 1px above the optical centre, so the text moves down by this much inside it.
+   */
+  --ui-marker-nudge: 1px;
   --ui-marker-bg: var(--ui-primary);
   --ui-marker-fg: var(--ui-on-primary);
 }
