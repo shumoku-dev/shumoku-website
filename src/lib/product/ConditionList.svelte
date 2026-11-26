@@ -1,13 +1,18 @@
 <script lang="ts">
   /** Terms and what they mean, on the page's tracks: two columns of term, four of detail. */
-  let { items }: { items: readonly { term: string; detail: string }[] } = $props()
+  let { items }: { items: readonly { term: string; detail: string; note?: string }[] } = $props()
 </script>
 
 <dl class="layout-sub">
   {#each items as item (item.term)}
     <div class="layout-sub">
       <dt>{item.term}</dt>
-      <dd>{item.detail}</dd>
+      <dd>
+        {item.detail}
+        {#if item.note}
+          <span class="note">{item.note}</span>
+        {/if}
+      </dd>
     </div>
   {/each}
 </dl>
@@ -33,6 +38,12 @@
     margin: 0;
     color: var(--site-muted);
     line-height: 1.7;
+  }
+  .note {
+    display: block;
+    margin-top: var(--ui-space-1);
+    color: var(--site-fg);
+    font-size: 0.875rem;
   }
   /* Below the page breakpoint: side by side while there is room for both. */
   @container (min-width: 37rem) {

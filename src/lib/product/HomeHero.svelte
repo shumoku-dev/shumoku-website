@@ -9,7 +9,7 @@
   /** The whole map first, then one link up close: overview and detail from the same screen. */
   let { locale }: { locale: Locale } = $props()
   const t = $derived(productCopy(locale).home.hero)
-  /** Splits "地図[が]必要だ。" into runs; bracketed runs are particles set smaller. */
+  /** Splits "地図[を]。" into runs; bracketed runs are particles set smaller. */
   const runs = (line: string) =>
     line
       .split(/(\[[^\]]+\])/)
@@ -23,22 +23,25 @@
 <section class="hero" aria-labelledby="hero-title">
   <div class="site-container layout-grid stack">
     <div class="intro layout-sub">
-      <h1 id="hero-title">
-        {#each t.title as line, index (line)}
-          {#if index}
-            <br>
-          {/if}
-          <span class:outline={index === 1}>
-            {#each runs(line) as run, part (part)}
-              {#if run.particle}
-                <span class="particle">{run.text}</span>
-              {:else}
-                {run.text}
-              {/if}
-            {/each}
-          </span>
-        {/each}
-      </h1>
+      <div class="head">
+        <p class="label">{t.label}</p>
+        <h1 id="hero-title">
+          {#each t.title as line, index (line)}
+            {#if index}
+              <br>
+            {/if}
+            <span class:outline={index === 1}>
+              {#each runs(line) as run, part (part)}
+                {#if run.particle}
+                  <span class="particle">{run.text}</span>
+                {:else}
+                  {run.text}
+                {/if}
+              {/each}
+            </span>
+          {/each}
+        </h1>
+      </div>
       <div class="lead">
         {#each t.body as paragraph (paragraph)}
           <p>{paragraph}</p>
@@ -80,9 +83,16 @@
   .intro {
     align-items: end;
   }
-  h1,
+  .head,
   .lead {
     grid-column: span 6;
+  }
+  /* What kind of thing this is, said once above the line, as beside the logo in print. */
+  .label {
+    margin: 0 0 var(--ui-space-4);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.5;
   }
   /*
    * "Give an outline to a structure that already exists": the second line arrives as an outline

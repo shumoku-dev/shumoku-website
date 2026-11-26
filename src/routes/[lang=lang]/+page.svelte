@@ -9,14 +9,17 @@
   import BeforeAfter from '#lib/product/BeforeAfter.svelte'
   import Column from '#lib/product/Column.svelte'
   import Columns from '#lib/product/Columns.svelte'
+  import ConditionList from '#lib/product/ConditionList.svelte'
   import Faq from '#lib/product/Faq.svelte'
   import Frame from '#lib/product/Frame.svelte'
   import Gallery from '#lib/product/Gallery.svelte'
   import HomeHero from '#lib/product/HomeHero.svelte'
   import ModelDemo from '#lib/product/ModelDemo.svelte'
+  import RuleList from '#lib/product/RuleList.svelte'
   import Section from '#lib/product/Section.svelte'
   import SourceList from '#lib/product/SourceList.svelte'
   import Steps from '#lib/product/Steps.svelte'
+  import UseCases from '#lib/product/UseCases.svelte'
   import type { PageData } from './$types'
 
   let { data }: { data: PageData } = $props()
@@ -28,6 +31,16 @@
 <PageMeta title={t.meta.title} description={t.meta.description} />
 <main id="main" class="flex-1">
   <HomeHero locale={lang} />
+
+  <Section id="work" title={t.work.title} large>
+    <p class="problem">{t.work.problem}</p>
+    <h3 class="sub">{t.work.worriesLabel}</h3>
+    <RuleList items={t.work.worries} label={t.work.worriesLabel} />
+    {#snippet media()}
+      <ConditionList items={t.work.steps} />
+      <p class="plugins">{t.work.plugins}</p>
+    {/snippet}
+  </Section>
 
   <Section id="model" title={t.model.title} layout="stack" large>
     {#each t.model.body as paragraph (paragraph)}
@@ -51,7 +64,6 @@
   </Section>
 
   <Section id="scenes" title={t.scenes.title} layout="stack" actions={[t.scenes.action]} large>
-    <p class="problem">{t.scenes.problem}</p>
     {#snippet media()}
       <Columns>
         {#each t.scenes.items as item, index (item.title)}
@@ -79,6 +91,7 @@
 
   <Section id="adoption" title={t.adoption.title}>
     <p>{t.adoption.body}</p>
+    <UseCases items={t.adoption.cases} label={t.adoption.title} />
     <Adopters label={t.adoption.adoptersLabel} />
     {#snippet media()}
       <Frame
@@ -134,5 +147,17 @@
   .problem {
     color: var(--site-fg);
     font-size: 1.0625rem;
+  }
+  .sub {
+    margin: var(--ui-space-2) 0 0;
+    color: var(--site-fg);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .plugins {
+    margin: 0;
+    color: var(--site-muted);
+    font-size: 0.875rem;
+    line-height: 1.7;
   }
 </style>

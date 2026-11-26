@@ -11,15 +11,16 @@ export type Row = readonly string[]
 const ja = (l: Locale) => ({
   home: {
     meta: {
-      title: 'Shumoku — ネットワークにも、地図が必要だ。',
+      title: 'Shumoku — ネットワークにも、地図を。',
       description:
-        'Shumoku は、機器とポートの接続情報からネットワーク構成図を生成するオープンソースのソフトウェアです。',
+        'Shumoku（しゅもく）は、機器から集めた接続情報でネットワーク構成図を作る、オープンソースのソフトウェアです。',
     },
     hero: {
+      label: 'ネットワーク構成図ソフトウェア',
       // Particles in [brackets] are set smaller so the nouns carry the line.
-      title: ['ネットワーク[にも]、', '地図[が]必要だ。'],
+      title: ['ネットワーク[にも]、', '地図[を]。'],
       body: [
-        'Shumoku は、機器とポートの接続情報からネットワーク構成図を生成するオープンソースのソフトウェアです。',
+        'Shumoku（しゅもく）は、機器から集めた接続情報でネットワーク構成図を作る、オープンソースのソフトウェアです。配線を変えても、集め直せば図が追いつきます。',
         '自分たちの環境で動かす運用アプリ Shumoku Server では、構成図に通信量やアラートを重ねて表示できます。気になる機器や接続を見つけ、その周辺に何がつながっているかを同じ図で確認できます。',
       ],
       demo: { label: 'ライブデモを見る', href: liveDemoUrl },
@@ -34,10 +35,38 @@ const ja = (l: Locale) => ({
       },
       notes: 'リリースノート',
     },
+    work: {
+      title: 'Shumoku がすること',
+      problem:
+        '手で描いた構成図は、機器や配線が変わるたびに直す必要があり、やがて実際の構成と合わなくなります。Shumoku は、機器や管理台帳のデータから構成図を作ります。構成が変わっても、データを取り直せば図も更新されます。',
+      worriesLabel: 'こんなときに',
+      worries: [
+        '構成図が古く、いまの構成と合っていない',
+        '全体の構成を、担当者しか把握していない',
+        '監視の画面が、ツールごとに分かれている',
+        '障害のとき、影響する範囲を追いにくい',
+      ],
+      steps: [
+        {
+          term: '集める',
+          detail: '機器や管理台帳から、接続情報を集めます。',
+          note: '例　SNMP・LLDP、NetBox、YAML',
+        },
+        {
+          term: '構成図にする',
+          detail: '機器の配置と配線を自動で決めて、構成図を作ります。',
+          note: '出力　ブラウザー、SVG、PNG',
+        },
+        {
+          term: '状態を重ねる',
+          detail: '監視システムの通信量とアラートを、図に重ねます。',
+          note: '例　Zabbix、Prometheus、Grafana',
+        },
+      ],
+      plugins: 'ここに名前のないシステムも、プラグインを追加すればつなげられます。',
+    },
     scenes: {
       title: '運用で役立つ場面',
-      problem:
-        '手で描いた構成図は、配線や機器の変更に更新が追いつかず、いつの間にか実態とずれていきます。Shumoku は接続情報から図を生成し直すので、図を変更に追従させられます。',
       items: [
         {
           title: '配線変更後の図を更新する',
@@ -60,8 +89,26 @@ const ja = (l: Locale) => ({
       action: { label: '機能を見る', href: `/${l}/features` },
     },
     adoption: {
-      title: '利用実績',
-      body: 'ネットワーク技術者のイベント JANOG57 では、ネットワーク運用チーム（NOC）が Shumoku を利用しました。構成図上にトラフィックを表示し、NOC のダッシュボードにも組み込みました。',
+      title: '利用例',
+      body: 'イベント会場、大学、映像設備のネットワークで使われています。',
+      cases: [
+        {
+          scene: 'イベント会場のネットワーク',
+          name: 'JANOG57・JANOG58 NOC',
+          use: '会場ネットワークの運用チームが、通信量を重ねた構成図で監視しました。NOC のダッシュボードにも組み込みました。',
+        },
+        {
+          scene: '大学のキャンパスネットワーク',
+          name: '電気通信大学 情報基盤センター',
+          use: 'Zabbix と連携して、リンクの通信量を構成図に表示しています。',
+        },
+        {
+          scene: '離れた拠点をつなぐ映像設備',
+          name: 'INTER BEE MoIP',
+          use: 'Inter BEE 2026 の企画展示で、国内 4 拠点の設備を 1 枚の図に表示しました。',
+          href: `/${l}/interbee2026`,
+        },
+      ],
       imageAlt: 'JANOG57 NOC のダッシュボード。構成図とメトリクスが並んでいる',
       caption: 'JANOG57 NOC のダッシュボード',
       adoptersLabel: 'Shumoku を利用した組織とイベント',
@@ -281,14 +328,15 @@ const ja = (l: Locale) => ({
 const en = (l: Locale): ReturnType<typeof ja> => ({
   home: {
     meta: {
-      title: 'Shumoku — Your network needs a map, too.',
+      title: 'Shumoku — Networks need maps, too.',
       description:
-        'Shumoku is open-source software that generates network diagrams from device and port connection data.',
+        'Shumoku is open-source software that draws network diagrams from the connection data your devices report.',
     },
     hero: {
-      title: ['Your network', 'needs a map, too.'],
+      label: 'Network diagram software',
+      title: ['Networks need', 'maps, too.'],
       body: [
-        'Shumoku is open-source software that generates network diagrams from device and port connection data.',
+        'Shumoku is open-source software that draws network diagrams from the connection data your devices report. Diagrams that don’t drift away from reality: recable, collect again, and the diagram catches up.',
         'Shumoku Server, the operations app you run in your own environment, overlays traffic and alerts on those diagrams. Spot a device or link that needs attention, and see what connects around it on the same diagram.',
       ],
       demo: { label: 'View the live demo', href: liveDemoUrl },
@@ -301,10 +349,38 @@ const en = (l: Locale): ReturnType<typeof ja> => ({
         `${name} was released on ${new Date(`${date}T00:00:00Z`).toLocaleDateString('en', { month: 'long', day: 'numeric', timeZone: 'UTC' })}.`,
       notes: 'Release notes',
     },
+    work: {
+      title: 'What Shumoku does',
+      problem:
+        'Hand-drawn diagrams need fixing after every change, and eventually stop matching the network. Shumoku draws the diagram from your devices and inventory. When the network changes, collect the data again and the diagram follows.',
+      worriesLabel: 'When it helps',
+      worries: [
+        'The diagram is old and no longer matches the network',
+        'Only one person knows how the whole network fits together',
+        'Monitoring is split across a screen per tool',
+        'During an incident, it is hard to trace what is affected',
+      ],
+      steps: [
+        {
+          term: 'Collect',
+          detail: 'Gather connection data from devices and your inventory.',
+          note: 'e.g. SNMP and LLDP, NetBox, YAML',
+        },
+        {
+          term: 'Draw',
+          detail: 'Place devices and route links automatically to make the diagram.',
+          note: 'Output: browser, SVG, PNG',
+        },
+        {
+          term: 'Overlay',
+          detail: 'Put traffic and alerts from your monitoring on the diagram.',
+          note: 'e.g. Zabbix, Prometheus, Grafana',
+        },
+      ],
+      plugins: 'Systems not named here can be connected by adding a plugin.',
+    },
     scenes: {
       title: 'Where it helps in operations',
-      problem:
-        'Hand-drawn diagrams fall behind every recabling and device change until they no longer match the network. Shumoku regenerates the diagram from connection data, so it keeps up with the change.',
       items: [
         {
           title: 'Update the diagram after recabling',
@@ -328,7 +404,25 @@ const en = (l: Locale): ReturnType<typeof ja> => ({
     },
     adoption: {
       title: 'In use',
-      body: 'At JANOG57, a conference for network engineers, the network operations team (NOC) used Shumoku. They showed traffic on the topology and built it into the NOC dashboard.',
+      body: 'Shumoku is used on event venue, university and broadcast video networks.',
+      cases: [
+        {
+          scene: 'Event venue network',
+          name: 'JANOG57 and JANOG58 NOC',
+          use: 'The venue’s network operations team monitored on a diagram with traffic overlaid, and built it into the NOC dashboard.',
+        },
+        {
+          scene: 'University campus network',
+          name: 'Information Technology Center, The University of Electro-Communications',
+          use: 'Connected to Zabbix to show link traffic on the diagram.',
+        },
+        {
+          scene: 'Video facilities linking distant sites',
+          name: 'INTER BEE MoIP',
+          use: 'At a special exhibit of Inter BEE 2026, equipment at four sites in Japan was shown on one diagram.',
+          href: `/${l}/interbee2026`,
+        },
+      ],
       imageAlt: 'The JANOG57 NOC dashboard with topologies and metrics side by side',
       caption: 'The JANOG57 NOC dashboard',
       adoptersLabel: 'Organizations and events that have used Shumoku',
